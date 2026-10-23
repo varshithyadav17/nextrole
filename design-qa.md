@@ -1,44 +1,54 @@
-# Trail implementation — design QA
+# Scout city and page actions — design QA
 
 final result: blocked
 
-## Release decision — 23 October 2026
+## Approved scope — 23 October 2026
 
-After the review draft and browser limitation were disclosed, the owner asked to proceed. Publication is proceeding under that instruction; the visual QA result remains blocked. A further supported preview start reported running, but the supervised HTTP port was unreachable. No browser policy was bypassed and no successful visual check is claimed. Deployment/API health checks are separate release evidence.
+The owner approved the city, Saved and page-action concepts and requested implementation, changing the foreground company sign to NEXT JOB. This replaces the earlier countryside header and running-Scout loading effect. Existing authorization to publish persists; visual QA remains a separate, unmet verification gate.
 
-## Comparison target and evidence
+## Comparison targets
 
-- Source visual truth: `docs/design/trail-refined-jobs.webp`; overall direction: `docs/design/trail-selected-board.webp`.
-- Intended viewport: 1440 × 1024 CSS px, desktop Jobs, light theme; 390 px mobile follow-up.
-- Refined source dimensions: 1487 × 1058 px; whole-product board: 1024 × 1536 px. The desktop source has essentially the target viewport ratio and can be uniformly normalized to 1440 × 1024 for comparison. No implementation density normalization or side-by-side comparison is possible without an implementation capture.
-- Implementation screenshot: unavailable.
-- State: local development fixture with synthetic profile/jobs; no production account is impersonated.
+- Jobs: `docs/design/scout-city-jobs-target.webp`, 1487 × 1058 px. This is the revised NEXT JOB target.
+- Saved: `docs/design/scout-saved-target.webp`, 1487 × 1058 px.
+- Other page actions: `docs/design/scout-page-actions-target.webp`, 1182 × 1330 px. This is a grid of header studies, not a full-page reference for each destination.
+- Intended Jobs/Saved capture: 1440 × 1024 CSS px, light theme, development-only synthetic fixture; follow-up at 390 px width. A uniform normalization is appropriate for the two desktop targets. The header studies require matching component crops, not a full-page overlay.
+- Implementation captures: unavailable. No density normalization, combined comparison image or visual iteration can be completed without them.
 
-## Blocker and comparison history
+The target images were opened. Production raster assets were also inspected and mechanically resized/encoded to WebP. Artwork inspection is not a rendered UI comparison.
 
-1. The supported preview supervisor reported a running app, but the cloud browser returned `net::ERR_CONNECTION_REFUSED` for its HTTP preview URL.
-2. A concrete local setup defect was identified: a portable execution profile in the managed environment. The provided Sites helper changed the checkout-local profile to managed Linux and the supervised preview was restarted.
-3. The supervisor again reported running. The browser then rejected observation of the error tab under its URL/security policy. No raw browser commands, alternate browser surface or other access workaround was attempted.
-4. The preview was stopped. A browser-rendered capture, console inspection and reference/implementation comparison remain unavailable. This is not a passed visual iteration.
+## Current blocker and history
 
-## Fidelity surfaces awaiting browser evidence
+The supported preview supervisor again reported `http://terminal.local:4173/` running, but its local HTTP listener returned connection refused (HTTP 000). The prior managed-profile repair is retained. The earlier browser error-page policy rejection was not bypassed, and no alternate server, browser, CDP access or endpoint was used. The supervised preview was stopped.
 
-- Fonts/typography: Trail uses serif display headings and the existing sans UI stack; actual rendering, wraps and font fallback are unverified.
-- Spacing/layout: the source implements the narrow navigation, header artwork, flat job rows and expanded-filter state; desktop/mobile geometry and overflow need captures.
-- Colours/tokens: ivory/tangerine/teal are implemented, with a darker primary button colour for readable labels. Computed contrast and semantic states need browser inspection.
-- Images: separate generated formal Scout, running Scout and landscape assets are integrated and mechanically optimized for web delivery. Actual crop, halos, scaling and motion need rendered review.
-- Copy/content: fictional data remains confined to the development fixture and labelled admin demonstration. Real eligibility/source fields remain in the authenticated product. Visual density and short labels still need review in context.
+There is no implementation screenshot, browser console evidence, desktop/mobile interaction result or reference/implementation comparison. Build checks and successful deployment cannot establish visual fidelity.
 
-## Interactions and console
+## Five required fidelity surfaces
 
-Primary interactions tested in browser: none. Browser console errors checked: unavailable. Isolated code checks, PDF tests and a successful build do not substitute for these checks.
+| Surface | Implemented intent | Rendered evidence |
+| --- | --- | --- |
+| Fonts / typography | Existing Trail serif headings and sans controls; shorter copy | Pending: actual wrapping, fallback and heading density |
+| Spacing / layout | Inset city scene, separate heading/art columns, mobile stacking and compact page mascots | Pending: overlap, geometry, overflow, scroll and touch targets |
+| Colours / tokens | Retained ivory, tangerine and teal; existing readable form fields | Pending: computed contrast and focus/active states |
+| Images | NEXT JOB city, formal Scout and ten page-specific poses; transparent WebP assets | Assets inspected; actual crop, edges, scale and animation pending |
+| Copy / content | Short page titles/status labels; fictional data confined to local fixture and labelled admin demo | Pending: density and truncation in real rendered states |
 
-## Implementation checklist
+No objective visual differences can be scored without implementation evidence. There is no claimed P0/P1/P2 pass.
 
-1. Restore supported preview/browser access.
-2. Capture Jobs at the target viewport and combine it with the reference in one comparison image.
-3. Capture focused header, job row and composer comparisons; inspect the other selected product surfaces.
-4. Test filters, sidebar/account menu, job/back navigation, saved/applied history, chat/PDF flow and reduced motion at desktop and mobile widths.
-5. Fix any P0/P1/P2 findings, repeat the comparison, and change the result to passed only when that evidence exists.
+## Non-browser checks completed for this revision
 
-No visual match, responsive pass or production readiness is claimed for this draft.
+- Source TypeScript checking passed.
+- Native production build passed.
+- Generated Render-forwarding Next.js frontend production build and its TypeScript phase passed.
+- Existing navigation-hook checks passed 10 cases, including job/back/forward, filter and scroll restoration. These use simulated history and are not real-device proof.
+- CSS parsing and `git diff --check` passed.
+- Eleven new production WebP assets total 347,490 bytes. The existing formal Scout is reused. No new runtime dependency was added.
+
+Previous one-page résumé, provider isolation and application workflow checks are historical evidence from the preceding release; those backend implementations were not changed in this revision.
+
+## Remaining browser review
+
+1. Restore supported preview access and capture Jobs/Saved at the intended viewport and state.
+2. Combine each capture with its corresponding normalized reference. Compare focused header, job-row and assistant-composer regions as well as the overall page.
+3. Capture Applications, job details, Progress, Preferences, Résumé/profile, Alerts, Help, archive and admin headers against their studies. Check landing/account and onboarding as supporting surfaces.
+4. Exercise sidebar/account menus, logout, filters, job/back/forward, save/Applied/restore, Scout/PDF interactions and Advanced preferences on desktop and mobile.
+5. Inspect console errors, image delivery, pause/reduced-motion/hidden-document behaviour, and report printing. Fix observed P0/P1/P2 issues and compare revised captures before changing this result to passed.

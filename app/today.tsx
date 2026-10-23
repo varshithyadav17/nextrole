@@ -4,7 +4,7 @@ import {ArrowRight,Bookmark,CalendarClock,CheckCheck,AlertCircle,RefreshCw,Spark
 import type {JobView,Profile} from '../lib/types';
 import type {CatalogueSummary} from '../lib/catalogue-types';
 import type {TodayPlan} from '../lib/today';
-import ScoutScene from './scout';
+import {ScoutHeading} from './trail-scout';
 
 type Props={profile:Profile;matches:JobView[];summary:CatalogueSummary|null|undefined;loading:boolean;lastSync:string|null;refresh:number;onOpen:(id:string)=>void;onBrowse:(review?:boolean)=>void;onSaved:()=>void;onApplications:()=>void;onProfile:()=>void;onHelp:()=>void;onSurvey?:()=>void};
 function when(value:string){return new Date(value).toLocaleString('en-IN',{day:'numeric',month:'short',hour:'numeric',minute:'2-digit'});}
@@ -14,7 +14,7 @@ export default function Today({profile,matches,summary,loading,lastSync,refresh,
  async function dismiss(jobId:string){setBusy(jobId);try{const r=await fetch('/api/app',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'dismiss-intent',jobId})});if(!r.ok)throw new Error('Could not dismiss this reminder. Try again.');setRetry(n=>n+1);}catch(e){setError(e instanceof Error?e.message:'Try again.');}finally{setBusy('');}}
  const counts=summary?.counts,fresh=lastSync&&Date.now()-Date.parse(lastSync)<24*3600000;
  return <div className="today-page">
-  <div className="today-intro restored-intro"><div><span className="eyebrow">ONE STEP AT A TIME</span><h1>Your next<br/><em>small step.</em></h1><div className="preference-chips">{profile.roles.slice(0,2).map(role=><span key={role}>{role}</span>)}<span>{profile.experience===0?'Fresher':profile.experience+' years'}</span><button type="button" onClick={onProfile}>Edit profile</button></div></div><ScoutScene mood={loading?'searching':'idle'}/></div>
+  <ScoutHeading pose="applications" title="Your next small step."><div className="preference-chips">{profile.roles.slice(0,2).map(role=><span key={role}>{role}</span>)}<span>{profile.experience===0?'Fresher':profile.experience+' years'}</span><button type="button" onClick={onProfile}>Edit profile</button></div></ScoutHeading>
   <div className="today-links"><button onClick={()=>onBrowse()}><Sparkles size={18}/><span><strong>{counts?.discover??'—'}</strong>matches</span><ArrowRight size={16}/></button><button onClick={onSaved}><Bookmark size={18}/><span><strong>{counts?.interested??'—'}</strong>saved</span><ArrowRight size={16}/></button><button onClick={onApplications}><CheckCheck size={18}/><span><strong>{counts?.applications??'—'}</strong>applied</span><ArrowRight size={16}/></button></div>
   <section className="today-section"><div className="today-section-heading"><h2>Next steps</h2><button className="text-button" disabled={!!busy} onClick={()=>setRetry(n=>n+1)} aria-label="Refresh next steps"><RefreshCw size={15}/></button></div>
    {error&&<p className="form-error" role="alert">{error} <button className="text-button" onClick={()=>setRetry(n=>n+1)}>Retry</button></p>}

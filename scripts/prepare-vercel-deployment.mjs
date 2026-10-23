@@ -13,5 +13,5 @@ for(const entry of [...manifest.files,{path:'VERCEL-SOURCE-MANIFEST.json'}]){
  else if(/\.(?:png|webp|avif|jpe?g|gif|zip|woff2?|ttf|ico|pdf)$/i.test(entry.path))files.push({file:entry.path,data:data.toString('base64'),encoding:'base64'});
  else files.push({file:entry.path,data:data.toString('utf8'),encoding:'utf-8'});
 }
-await writeFile(out,JSON.stringify({requestBody:{name:'nextrole-scout',project:'prj_6MsqOzhV4nAgtZSve5zhjqoecd2M',target:'production',files,gitMetadata:{commitSha:commit,commitRef:'main',commitMessage:'NextRole: Trail workspace, formal Scout and one-page resumes',dirty:false},projectSettings:{framework:'nextjs',nodeVersion:'22.x'}}}));
+await writeFile(out,JSON.stringify({requestBody:{name:'nextrole-scout',project:'prj_6MsqOzhV4nAgtZSve5zhjqoecd2M',target:'production',files,gitMetadata:{commitSha:commit,commitRef:'main',commitMessage:'NextRole: NEXT JOB city and page-specific Scout actions',dirty:false},projectSettings:{framework:'nextjs',nodeVersion:'22.x'}}}));
 console.log(JSON.stringify({output:out,files:files.length,referencedExistingLargeBlobs:files.filter(f=>f.sha).map(f=>({file:f.file,sha:f.sha,size:f.size}))}));
