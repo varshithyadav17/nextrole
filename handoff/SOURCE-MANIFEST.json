@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
   "release": "Dedicated admin analytics, measured active time, PDF reports and prepared Render/Google migration",
-  "generatedAt": "2026-10-23T12:31:33.237Z",
-  "parentCommit": "f6bb89bf9b9014dd767dae1c89c4af5a90e593e3",
+  "generatedAt": "2026-10-23T12:43:34.672Z",
+  "parentCommit": "ca78d28d9f48314bac2fd488efb93796b18c028a",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11222,
-      "sha256": "c68656142c8770ed11c4f4186091c052cb83b69218d04992ece6efaa78432f59"
+      "bytes": 11437,
+      "sha256": "33fc40aca45f139cd11992d5ff375bf42f29563bdd0bf45df7b420d75b6ed1e0"
     },
     {
       "path": "RELEASE-14.md",
@@ -136,6 +136,11 @@
       "sha256": "36d35676658a557ba6ab9b2334a27a07934d4f5bf4c78e7ff8676ba4b0f8a4f5"
     },
     {
+      "path": "app/account/page.tsx",
+      "bytes": 962,
+      "sha256": "23bcf12b401d03f43f9d1baca0bf08ee1f084dfcdf8ca90b867841cc1840a2e2"
+    },
+    {
       "path": "app/admin.css",
       "bytes": 15452,
       "sha256": "b785da1fcac28cc30b6067073a48f72e3167be9d4d6cbeedd228d9cea3963fe8"
@@ -162,8 +167,8 @@
     },
     {
       "path": "app/api/auth/options/route.ts",
-      "bytes": 602,
-      "sha256": "28015ea5336b4055fe871e474b4cf883ce00c49a120f65eb30651d9f55a6948c"
+      "bytes": 580,
+      "sha256": "69ba3ef92405deb9231890546eac2ff8ab8c0b2487ca1be0d2c7779d439adec1"
     },
     {
       "path": "app/api/automation/route.ts",
@@ -372,8 +377,8 @@
     },
     {
       "path": "app/host-dashboard.tsx",
-      "bytes": 31670,
-      "sha256": "495ee92fa6c1c28c5487f72b4ade115111461afe98e983c9b378270464cd3e12"
+      "bytes": 31731,
+      "sha256": "fbd88fb7510f80dc73383dd0aea1537261f5aeb5f49a8dfede373941d5b6dd4b"
     },
     {
       "path": "app/job-import.tsx",
@@ -1017,8 +1022,8 @@
     },
     {
       "path": "deploy/vercel/google-login.ts.template",
-      "bytes": 6245,
-      "sha256": "d362a5f812b13c2cfab4a9215f8bc6745e689f2e3a85acdb1ce29c24e466dd00"
+      "bytes": 6223,
+      "sha256": "2077e9683ac9a146461cf62fac7b0747d31a70b4a101de2c9c08476a8668e6ac"
     },
     {
       "path": "deploy/vercel/login.ts.template",
@@ -2297,8 +2302,8 @@
     },
     {
       "path": "scripts/verify-vercel-google.mjs",
-      "bytes": 6450,
-      "sha256": "d753088503e4596ff6e25391e60119075f78509bbcbf87cf9b7dd154bf7cac46"
+      "bytes": 6470,
+      "sha256": "a989169547e4da99cfbcc9ab290a0f40109cd61707a02b9497bb7c42db6b78b4"
     },
     {
       "path": "scripts/verify-vercel.mjs",

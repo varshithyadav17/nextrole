@@ -78,19 +78,19 @@ See the [complete event/metric definitions and caveats](handoff/ADMIN-ANALYTICS.
 
 ## Architecture and deployment status
 
-The deployed product currently uses a Vercel Next.js frontend and an owner-authorized Site backend with Cloudflare D1 and private R2. The native Site remains available. Existing maintenance tools preserve source, alert and delivery checkpoints.
+The deployed product uses a Vercel Next.js frontend, a stateless Render authentication/API gateway, and an owner-authorized Site data service with Cloudflare D1 and private R2. The native Site remains available. Existing maintenance tools preserve source, alert and delivery checkpoints.
 
 ```mermaid
 flowchart TD
-  A["Student or admin UI / Vercel"] --> B["Authenticated application API"]
+  A["Student or admin UI / Vercel"] --> B["Authentication and API gateway / Render"]
   B --> C["D1 / private account records"]
   B --> D["R2 / private resume files"]
   E["Owner maintenance"] --> B
 ```
 
-A **prepared Render migration** adds a stateless Google-authentication/API tier and a frontend mode that holds no OAuth/signing secrets. It deliberately preserves existing storage and account IDs. This is not a claim that database migration or live Google activation has already happened. The [cutover guide](handoff/RENDER-MIGRATION.md) explains configuration, explicit account linking, verification and rollback.
+Render runs the Google-authentication/API tier; the frontend's forwarding mode needs no OAuth/signing secrets. Existing storage and canonical account IDs remain in place. Live checks verify Google configuration, authorization redirects, secure cookies and anonymous access boundaries. An actual account owner's consent/token exchange and account linking require that owner's sign-in. The [cutover guide](handoff/RENDER-MIGRATION.md) explains verification and rollback; a full database migration is not claimed.
 
-Google-only sign-in is gated until the owner's OAuth client is configured and existing accounts are linked safely. No password login is introduced. The current working sign-in remains during the transition.
+Google-only sign-in is gated until existing accounts are linked safely. Students can connect Google from Preferences; admins have a dedicated **Account** entry and `/account` page. No password login is introduced. The current working sign-in remains during the transition.
 
 ## Run and verify
 

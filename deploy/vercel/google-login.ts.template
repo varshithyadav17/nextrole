@@ -16,7 +16,7 @@ export async function googleStart(request:Request){return start(request,false);}
 export async function googleLink(request:Request){return start(request,true);}
 async function start(request:Request,link:boolean){
  const config=serverConfig();if(!config)return new Response('Sign-in is temporarily unavailable.',{status:503,headers:security});
- const requested=new URL(request.url),returnTo=link?'/?tab=settings&settings=alerts':safeReturnPath(requested.searchParams.get('return_to')||'/');
+ const requested=new URL(request.url),returnTo=link?'/account':safeReturnPath(requested.searchParams.get('return_to')||'/');
  if(link&&request.headers.get('origin')!==config.audience)return new Response('Start from your NextRole account.',{status:403,headers:security});
  if(requested.origin!==config.audience)return NextResponse.redirect(config.audience+'/auth/google?return_to='+encodeURIComponent(returnTo),302);
  const google=googleConfiguration(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET);if(!google)return failed(config.audience,'google-not-ready',returnTo);
