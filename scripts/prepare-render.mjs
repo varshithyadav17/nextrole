@@ -1,9 +1,21 @@
 /** Stateless Render authentication/API tier. Existing D1/R2 remains the durable data service. */
-import {mkdir,readFile,writeFile,cp,readdir} from 'node:fs/promises';
+import {mkdir,readFile,writeFile,cp,readdir,lstat,rm} from 'node:fs/promises';
 import path from 'node:path';
 const root=path.resolve(import.meta.dirname,'..'),out=path.resolve(process.argv[process.argv.indexOf('--out')+1]||'');
 if(!process.argv.includes('--out')||out===root||out.startsWith(root+path.sep)&&out!==path.join(root,'.deploy/render'))throw new Error('Provide --out with an empty directory outside the checkout or .deploy/render.');
-await mkdir(out,{recursive:true});if((await readdir(out)).length)throw new Error('Output must be empty.');
+const managed=out===path.join(root,'.deploy/render');
+// Render restores this generated directory from its build cache on later deploys.
+// Only our marked, fixed build directory may be refreshed; arbitrary output stays protected.
+if(managed){for(const directory of [path.dirname(out),out]){const info=await lstat(directory).catch(error=>{if(error.code==='ENOENT')return null;throw error;});if(info?.isSymbolicLink())throw new Error('Managed Render output must not use symlinks.');}}
+await mkdir(out,{recursive:true});const previous=await readdir(out);
+if(previous.length){
+ if(!managed)throw new Error('Output must be empty.');
+ const marker=path.join(out,'RENDER-SOURCE-MANIFEST.json'),info=await lstat(marker).catch(()=>null);
+ if(!info?.isFile())throw new Error('Refusing to replace unrecognized Render output.');
+ const manifest=JSON.parse(await readFile(marker,'utf8'));
+ if(manifest.schema!==1||manifest.source!=='NextRole canonical source')throw new Error('Refusing to replace unrecognized Render output.');
+ for(const name of previous)if(!['node_modules','.next'].includes(name))await rm(path.join(out,name),{recursive:true,force:true});
+}
 for(const dir of ['app','lib/bridge'])await mkdir(path.join(out,dir),{recursive:true});
 for(const file of ['package.json','pnpm-lock.yaml','pnpm-workspace.yaml','tsconfig.json'])await cp(path.join(root,file),path.join(out,file));
 for(const [from,to] of [['deploy/vercel/auth.ts.template','app/chatgpt-auth.ts'],['deploy/vercel/auth-role.ts.template','app/auth-role.ts'],['deploy/vercel/proxy.ts.template','lib/vercel-proxy.ts'],['deploy/vercel/login.ts.template','lib/vercel-login.ts'],['deploy/vercel/google-login.ts.template','lib/vercel-google.ts'],['deploy/vercel/next.config.ts.template','next.config.ts'],['deploy/render/handlers.ts.template','lib/render-handlers.ts'],['lib/bridge/session.ts','lib/bridge/session.ts'],['lib/google-oidc.ts','lib/google-oidc.ts'],['lib/http-json.ts','lib/http-json.ts']])await cp(path.join(root,from),path.join(out,to));

@@ -6,6 +6,8 @@ Vercel keeps the NextRole UI. A stateless Render service runs Google OIDC, signs
 
 `scripts/prepare-render.mjs --out .deploy/render` generates the Render service. `render.yaml` describes it without secrets. The service uses the existing OpenID SDK, PKCE, state/nonce validation, signature verification, explicit Google account linking and independent application session secret. It uses no student AI key for identity or source maintenance.
 
+Repeat builds safely refresh the marked `.deploy/render` output restored by Render's cache, removing stale generated routes while retaining dependency/compiler caches. Nonempty arbitrary directories, unmarked managed output and symlinked managed paths are refused. Run `node scripts/verify-render-preparation.mjs` to verify fresh and cached preparation plus cleanup boundaries.
+
 `scripts/prepare-vercel.mjs --out <empty-directory> --render-backend` generates the corresponding frontend. In that mode Vercel has no OAuth client secret or application signing secret. It forwards only fixed routes, selected host-only cookies and necessary headers. Render validates identity; spoofed native identity / bypass headers are never forwarded. Upload sizes, origin checks, no-store behavior and restricted secure cookie forwarding are retained.
 
 The default generator still targets the current backend. Do not switch the production frontend before the Render service is healthy and its auth flows are verified.
