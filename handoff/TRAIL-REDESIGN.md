@@ -1,5 +1,7 @@
 # Trail redesign — implementation and release notes
 
+This describes the preceding Trail release. The [approved Scout city revision](SCOUT-CITY.md) supersedes its countryside header, running loader and sidebar ScoutX entry. Its one-page résumé and historical regression evidence remain relevant.
+
 The owner selected the Trail direction and requested a formal Scout carrying a file. The source implements that direction across the student workspace, dedicated ScoutX conversation, job detail/application surfaces, preferences, landing/sign-in and admin analytics.
 
 Browser visual verification remains blocked; see [design QA](../design-qa.md). After this limit and the review draft were disclosed, the owner asked to proceed with publication on 23 October 2026. Deployment receipts establish the actual released version and URL; no visual pass or completed desktop/mobile review is claimed.

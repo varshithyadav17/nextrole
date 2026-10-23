@@ -1,0 +1,68 @@
+/* Page artwork stays inside its header, away from reading and action areas. */
+.scout-jobs-hero{position:relative;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:44px;min-height:254px;margin:0 0 24px;padding:4px 12px 8px 0;isolation:isolate}
+.scout-jobs-copy{min-width:0;padding:12px 0 20px}
+.scout-jobs-hero h1{font:600 clamp(36px,3.65vw,54px)/1.12 Georgia,'Times New Roman',serif;letter-spacing:-1.8px;color:#223c34;margin:0 0 18px;max-width:520px;text-wrap:balance}
+.scout-jobs-hero .trail-profile-link{max-width:440px}
+.scout-city-scene{position:relative;isolation:isolate;min-width:0;width:100%;aspect-ratio:2/1;align-self:center;overflow:visible}
+.scout-city-street{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
+.scout-city-walker{position:absolute;left:39%;bottom:3%;width:30%;aspect-ratio:1;display:block;padding:0;margin:0;background:none;border:0;border-radius:22px;transform-origin:50% 94%}
+button.scout-city-walker{cursor:pointer}
+.scout-city-walker .trail-formal-scout{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 94%;user-select:none;pointer-events:none}
+.scout-city-walker:focus-visible{outline:2px solid #b64a1d;outline-offset:3px}
+.scout-city-scene.scout-landing-city{width:100%;max-width:620px;justify-self:center}
+.scout-page-heading{display:grid;grid-template-columns:minmax(0,1fr) 200px;align-items:center;column-gap:44px;min-height:192px;margin:8px 0 26px;padding:4px 22px 4px 0}
+.scout-heading-copy{min-width:0}
+.scout-page-heading h1{font:500 clamp(32px,3.1vw,46px)/1.16 Georgia,'Times New Roman',serif;letter-spacing:-1.2px;max-width:760px;margin:0;text-wrap:balance}
+.scout-page-heading .scout-heading-copy>p{font-size:13px;line-height:1.75;color:#677568;margin:13px 0 0;max-width:570px}
+.scout-heading-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px}
+.scout-heading-actions .export-button{position:static;inset:auto}
+.scout-heading-actions>.preference-chips{margin-top:0}
+.scout-moment{position:relative;display:block;flex-shrink:0;width:100%;max-width:190px;aspect-ratio:1;justify-self:center;pointer-events:none;user-select:none}
+.scout-moment img{display:block;width:100%;height:100%;object-fit:contain;transform-origin:50% 89%}
+.scout-page-heading--saved{grid-template-columns:minmax(0,1fr) 245px}
+.scout-page-heading--saved>.scout-moment{max-width:245px;aspect-ratio:1.2}
+.scout-detail-moment{width:128px;max-width:128px;align-self:center;margin-left:12px}
+.detail-header>div:not(.company-logo){flex:1;min-width:0}
+.detail-header h1{overflow-wrap:anywhere}
+.admin-sidebar-spacer{flex:1;min-height:30px}
+.admin-shell .admin-heading{display:grid;grid-template-columns:minmax(0,1fr) 136px auto;align-items:center;gap:24px;min-height:160px}
+.admin-heading-copy{min-width:0}
+.scout-admin-moment{width:136px;max-width:136px}
+.scout-account-moment{width:122px;max-width:122px;margin:0 auto 14px}
+.extension-art .scout-extension-moment{width:min(100%,260px);max-width:260px;margin:0 auto}
+.scout-onboarding-moment{width:172px;max-width:172px;position:absolute;right:14px;top:15px}
+.onboarding-intro:has(.scout-onboarding-moment){position:relative;padding-right:200px;min-height:195px}
+.scout-work-status{display:flex;align-items:center;gap:9px;min-height:26px;margin:12px 0;color:#647469;font-size:13px;line-height:1.65}
+.scout-work-status svg{flex-shrink:0;color:#9e542f}
+.scout-work-status.is-compact{font-size:12px;min-height:23px;margin:8px 0}
+.scout-jobs-hero>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* A single, short action on arrival or a confirmed action; never a mascot loader. */
+.motion-root[data-motion=on] .scout-city-walker .trail-formal-scout{animation:scout-city-step 1.2s ease-out both}
+.motion-root[data-motion=on] .scout-city-scene.is-greeting .trail-formal-scout{animation:scout-page-nod .7s ease-in-out both}
+.motion-root[data-motion=on] .scout-moment img{animation:scout-page-arrive .65s cubic-bezier(.2,.7,.3,1) both}
+.motion-root[data-motion=on] .scout-moment--saved img{animation:scout-page-peek .75s cubic-bezier(.2,.7,.3,1) both}
+.motion-root[data-motion=on] .scout-moment--applications img,.motion-root[data-motion=on] .scout-moment--preferences img,.motion-root[data-motion=on] .scout-moment--admin img{animation:scout-page-nod .7s ease-in-out both}
+.motion-root[data-motion=on] .scout-moment--job-detail img{animation:scout-page-inspect .8s ease-out both}
+.motion-root[data-motion=on] .scout-moment--progress img{animation:scout-page-cheer .75s ease-out both}
+.motion-root[data-motion=on] .scout-moment--resume img,.motion-root[data-motion=on] .scout-moment--archive img{animation:scout-page-file .7s ease-out both}
+.motion-root[data-motion=on] .scout-moment--alerts img{animation:scout-page-ring .75s ease-in-out both}
+.motion-root[data-motion=on] .scout-moment--help img{animation:scout-page-wave .8s ease-in-out both}
+@keyframes scout-city-step{0%{transform:translateX(-15px) rotate(-2deg)}24%{transform:translateX(-11px) translateY(-3px) rotate(1.5deg)}48%{transform:translateX(-7px) rotate(-1.5deg)}73%{transform:translateX(-3px) translateY(-2px) rotate(1deg)}100%{transform:translateX(0) rotate(0)}}
+@keyframes scout-page-arrive{from{opacity:.3;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scout-page-peek{0%{opacity:.5;transform:translateY(12px)}65%{opacity:1;transform:translateY(-3px) rotate(-1deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes scout-page-nod{0%,100%{transform:rotate(0)}35%{transform:translateY(2px) rotate(-2deg)}70%{transform:translateY(-1px) rotate(1deg)}}
+@keyframes scout-page-inspect{0%{opacity:.5;transform:translateX(6px) rotate(3deg)}55%{opacity:1;transform:translateX(-2px) rotate(-1deg)}100%{opacity:1;transform:translateX(0) rotate(0)}}
+@keyframes scout-page-cheer{0%,100%{transform:translateY(0)}40%{transform:translateY(-7px) rotate(-2deg)}70%{transform:translateY(1px) rotate(1deg)}}
+@keyframes scout-page-file{0%{opacity:.5;transform:translateY(4px) rotate(-2deg)}65%{opacity:1;transform:translateY(0) rotate(1deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes scout-page-ring{0%,100%{transform:rotate(0)}25%{transform:rotate(-2deg)}50%{transform:rotate(2deg)}75%{transform:rotate(-1deg)}}
+@keyframes scout-page-wave{0%,100%{transform:rotate(0)}30%{transform:rotate(-3deg)}65%{transform:rotate(2deg)}}
+.motion-root[data-motion=off] .scout-moment img,.motion-root[data-motion=off] .scout-city-walker img,.motion-root[data-motion=off] .scout-work-status .spin{animation:none!important;transition:none!important}
+
+@media(min-width:1600px){.scout-jobs-hero{min-height:275px;gap:64px}.scout-page-heading{min-height:208px}}
+@media(max-width:1150px){.scout-jobs-hero{gap:28px;min-height:220px}.scout-jobs-hero h1{font-size:43px}.scout-page-heading{grid-template-columns:minmax(0,1fr) 170px;column-gap:28px;min-height:175px;padding-right:10px}.scout-page-heading--saved{grid-template-columns:minmax(0,1fr) 205px}.scout-page-heading>.scout-moment{max-width:170px}.scout-page-heading--saved>.scout-moment{max-width:205px}.admin-shell .admin-heading{grid-template-columns:minmax(0,1fr) 125px;gap:12px 22px}.admin-shell .admin-exports{grid-column:1/-1;justify-self:end}.scout-admin-moment{max-width:125px;width:125px}}
+@media(max-width:900px){.scout-jobs-hero{gap:24px;min-height:200px}.scout-jobs-hero h1{font-size:37px;letter-spacing:-1.2px}.scout-page-heading{column-gap:24px;grid-template-columns:minmax(0,1fr) 145px}.scout-page-heading>.scout-moment{max-width:145px}.scout-page-heading--saved{grid-template-columns:minmax(0,1fr) 180px}.scout-page-heading--saved>.scout-moment{max-width:180px}.scout-detail-moment{width:105px;max-width:105px;margin-left:4px}}
+@media(max-width:760px){.scout-jobs-hero{grid-template-columns:1fr;gap:6px;min-height:0;margin-bottom:22px;padding:0 8px}.scout-jobs-copy{padding:14px 0 2px}.scout-jobs-hero h1{font-size:clamp(35px,7.2vw,45px);max-width:510px;letter-spacing:-1.2px;margin-bottom:13px;text-wrap:pretty}.scout-jobs-hero>.scout-city-scene{width:min(100%,390px);justify-self:center;margin:0 0 4px}.scout-jobs-hero .trail-profile-link{max-width:100%}.scout-page-heading{grid-template-columns:minmax(0,1fr) 124px;column-gap:20px;min-height:150px;margin:6px 0 23px;padding:4px 4px 4px 0}.scout-page-heading h1{font-size:34px;letter-spacing:-.8px}.scout-page-heading>.scout-moment{max-width:124px}.scout-page-heading--saved{grid-template-columns:minmax(0,1fr) 148px}.scout-page-heading--saved>.scout-moment{max-width:148px}.scout-page-heading .scout-heading-copy>p{font-size:12px;line-height:1.7;margin-top:10px}.scout-heading-actions{margin-top:13px}.scout-heading-actions .button{font-size:12px;min-height:40px}.scout-detail-moment{width:88px;max-width:88px;margin-left:0}.scout-city-scene.scout-landing-city{max-width:460px;justify-self:center;margin:2px 0 16px}.scout-onboarding-moment{width:125px;max-width:125px;right:0;top:30px}.onboarding-intro:has(.scout-onboarding-moment){padding-right:144px;min-height:180px}.onboarding-intro:has(.scout-onboarding-moment) h1{font-size:42px;letter-spacing:-1.5px}.admin-shell .admin-heading{min-height:0;grid-template-columns:minmax(0,1fr) 105px;gap:12px 16px}.scout-admin-moment{width:105px;max-width:105px}}
+@media(max-width:430px){.scout-jobs-hero{padding:0 2px;gap:9px}.scout-jobs-hero h1{font-size:36px;max-width:330px}.scout-jobs-hero>.scout-city-scene{width:100%;max-width:355px}.scout-page-heading{grid-template-columns:minmax(0,1fr) 108px;gap:14px;min-height:136px}.scout-page-heading h1{font-size:30px;letter-spacing:-.7px}.scout-page-heading>.scout-moment{max-width:108px}.scout-page-heading--saved{grid-template-columns:minmax(0,1fr) 127px}.scout-page-heading--saved>.scout-moment{max-width:127px}.scout-detail-moment{width:72px;max-width:72px}.detail-header .company-logo{width:35px;height:35px;min-width:35px}.job-detail-page .detail-header h1{font-size:25px}.scout-onboarding-moment{width:105px;max-width:105px}.onboarding-intro:has(.scout-onboarding-moment){padding-right:120px}.onboarding-intro:has(.scout-onboarding-moment) h1{font-size:36px}.admin-shell .admin-heading{grid-template-columns:minmax(0,1fr) 88px;gap:12px}.scout-admin-moment{width:88px;max-width:88px}}
+@media(prefers-reduced-motion:reduce){.scout-moment img,.scout-city-walker img,.scout-work-status .spin{animation:none!important;transition:none!important}}
+@media print{.scout-moment,.scout-city-scene,.scout-work-status,.scout-jobs-hero>.sr-only{display:none!important}.scout-page-heading,.admin-shell .admin-heading,.scout-jobs-hero{display:block;min-height:0;padding:0}.scout-heading-copy{max-width:100%}}

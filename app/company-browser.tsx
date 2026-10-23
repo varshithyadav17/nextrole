@@ -1,5 +1,6 @@
 "use client";
 import {useState} from 'react';
+import {ScoutHeading} from './trail-scout';
 import {Building2,ArrowUpRight,BriefcaseBusiness,Search,ShieldCheck} from 'lucide-react';
 import {ROLE_CATEGORIES} from '../lib/categories';
 import type {CompanyCounts} from '../lib/catalogue-types';
@@ -8,7 +9,7 @@ export default function CompanyBrowser({facets,view,onView,onExplore}:{facets:Co
  const scopeKey=view==='all'?'all':view==='review'?'review':'for-you';
  const visible=facets.filter(facet=>facet.company.toLowerCase().includes(query.toLowerCase()));
  const scope=view==='all'?'current':view==='review'?'needing review':'matching';
- return <><div className="page-heading simple-heading"><span className="eyebrow">START WITH THE PLACES YOU LIKE</span><h1>A company.<br/><em>A direction.</em></h1><p>Explore connected employers while keeping your saved experience, graduation and other preferences active.</p></div>
+ return <><ScoutHeading pose="job-detail" title="Find your company." subtitle="Explore employers with your preferences active."/>
  <div className="segmented-tabs company-scope" aria-label="Company eligibility scope">{[{id:'for-you',label:'For you'},{id:'review',label:'Needs review'},{id:'all',label:'All openings · unfiltered'}].map(item=><button key={item.id} className={view===item.id?'active':''} aria-pressed={view===item.id} onClick={()=>onView(item.id)}>{item.label}</button>)}</div>
  <div className={'eligibility-scope '+(view==='all'?'scope-warning':'')} role="status"><ShieldCheck size={17}/><p>{view==='all'?'All openings ignores your saved profile, including experience and graduation year. Senior and ineligible roles are included.':view==='review'?'These listings need eligibility confirmation. They are excluded from For you and new-match alerts.':'Counts show only jobs passing the checked preferences. Unknown requirements are in Needs review.'}</p></div>
  <div className="company-search"><label className="search-input"><Search size={18}/><input aria-label="Search connected companies" value={query} placeholder="Find a connected company" onChange={e=>setQuery(e.target.value)}/></label><label className="field-label">Role category<select value={role} onChange={e=>setRole(e.target.value)}><option value="all">All role categories</option>{ROLE_CATEGORIES.map(r=><option key={r}>{r}</option>)}</select></label></div>

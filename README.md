@@ -6,7 +6,7 @@ NextRole helps students and early-career candidates discover relevant openings, 
 
 [Open NextRole](https://nextrole-scout.vercel.app) · [Explore the synthetic admin demo](https://nextrole-scout.vercel.app/demo/admin) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
 
-> **Trail redesign:** the selected ivory/orange/teal system, formal Scout artwork, running loading state, full-page ScoutX and verified one-page résumé preparation are implemented. [Design targets and release notes](handoff/TRAIL-REDESIGN.md) document the changes. The owner requested publication after the [browser design QA](design-qa.md) limitation was disclosed. QA remains blocked; deployment receipts establish release status separately.
+> **Scout city revision:** the approved NEXT JOB city scene and page-specific Scout actions build on the ivory/orange/teal Trail design. The running mascot loader and sidebar ScoutX entry have been removed; the floating assistant and full-page conversation remain. [Design targets and release notes](handoff/SCOUT-CITY.md) document the changes. [Browser design QA](design-qa.md) remains blocked by preview infrastructure; deployment receipts establish release status separately.
 
 > **Portfolio data disclosure:** the public admin demonstration and report images below use synthetic, illustrative data. The example 973 profiles are not a real campus adoption claim. Live admin analytics use actual recorded activity and are owner-only.
 

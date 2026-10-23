@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
-  "release": "Dedicated admin analytics, measured active time, PDF reports and prepared Render/Google migration",
-  "generatedAt": "2026-10-23T17:32:44.293Z",
-  "parentCommit": "4b5365140f4d0876fcd8578e64c6d64dfdf083f5",
+  "release": "Approved Scout city, NEXT JOB sign and page-specific actions; running loader removed",
+  "generatedAt": "2026-10-23T19:06:25.348Z",
+  "parentCommit": "88344ae029b59b210d6fff77b07c79a9aa016773",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11884,
-      "sha256": "4787216ac9786fdfe709484227bb1b121bf49d0bf07368bb2f72e5c2ef6decb9"
+      "bytes": 11917,
+      "sha256": "c21d6f145f080412129ca3325921149cf6a1f13d231fb77a175f4b49cde01304"
     },
     {
       "path": "RELEASE-14.md",
@@ -137,8 +137,8 @@
     },
     {
       "path": "app/account/page.tsx",
-      "bytes": 962,
-      "sha256": "23bcf12b401d03f43f9d1baca0bf08ee1f084dfcdf8ca90b867841cc1840a2e2"
+      "bytes": 1030,
+      "sha256": "2d67f8c65bdc027edf5713b89dc548c686d9138b48c1373625e51cbc23b2090e"
     },
     {
       "path": "app/admin.css",
@@ -262,8 +262,8 @@
     },
     {
       "path": "app/application-analytics.tsx",
-      "bytes": 3592,
-      "sha256": "cb9373fcab2bab87d1eb1fc9e46a95ac68fe17e5864a4c992991ed45b32b3053"
+      "bytes": 3563,
+      "sha256": "87271857aa444a598898e33005232a56e837957baf2c1aec9c5d8aba45196de5"
     },
     {
       "path": "app/application-assistant.tsx",
@@ -307,13 +307,13 @@
     },
     {
       "path": "app/company-browser.tsx",
-      "bytes": 3865,
-      "sha256": "fee1edc4b47f659379df0de6539324c4ec1a47df615a72f444dc2bb3d18a2349"
+      "bytes": 3757,
+      "sha256": "2b501b66f483b805daf13efeacb8267b31dd21830d98b36f07ceb703e13d2e96"
     },
     {
       "path": "app/dashboard.tsx",
-      "bytes": 77416,
-      "sha256": "3f42266fa32bed83789482fc48bd5afae2a17199cdca3f4b1304a7fc5ef23b55"
+      "bytes": 77805,
+      "sha256": "7ca68abf7ddac64d413b7e49a118c150e238d978ba2849e48d58fbc55f0b100e"
     },
     {
       "path": "app/demo/admin/page.tsx",
@@ -367,8 +367,8 @@
     },
     {
       "path": "app/extension/setup-guide.tsx",
-      "bytes": 7705,
-      "sha256": "b441c1e6bee53c3f8994fb38738d0b9554214c932fded053911074d8fcfc6c85"
+      "bytes": 7793,
+      "sha256": "feefefc021e66a4091fbe009ef08995d88f257ca94998038d6bcc24bfab587c1"
     },
     {
       "path": "app/extension/store.css",
@@ -387,8 +387,8 @@
     },
     {
       "path": "app/host-dashboard.tsx",
-      "bytes": 31731,
-      "sha256": "c4a68f4eb5e90d6240cde4c0a0ced60835aaccd6c916e36609051bd7a117a710"
+      "bytes": 31748,
+      "sha256": "73d39c81008d2948b8b9704538b9834deb59a3dc1cb0bedd7a019fc0a1f376ff"
     },
     {
       "path": "app/job-import.tsx",
@@ -402,13 +402,13 @@
     },
     {
       "path": "app/landing.tsx",
-      "bytes": 4291,
-      "sha256": "63e716d6aa70518826e63c0cac35a3b119dac3ed3dbda2e75d7b302b052f20e4"
+      "bytes": 3970,
+      "sha256": "a4bc105fb83a59d76300baabb83c6fd759b1d05cf5b64aab7c106a474dd72e44"
     },
     {
       "path": "app/layout.tsx",
-      "bytes": 686,
-      "sha256": "d10022cc6a83207de65717251232794e11ea648f1b832ddc99012ad4156bfcbb"
+      "bytes": 714,
+      "sha256": "80db0e40d5bbbe7fd53b4372ce2b64b90e13eddb6b10d77972ab42aebfcab704"
     },
     {
       "path": "app/login/page.tsx",
@@ -452,8 +452,8 @@
     },
     {
       "path": "app/scout-chat.tsx",
-      "bytes": 24183,
-      "sha256": "696223e4fa24b41f8bcac2540786dfdce76e490bbee20f6d92c25e1ec2748c45"
+      "bytes": 24181,
+      "sha256": "8e76e3d3f370bf35e2af267d0103bac349cad9e007ac18267d392671260004ed"
     },
     {
       "path": "app/scout-drafts.tsx",
@@ -469,6 +469,11 @@
       "path": "app/scout-motion.tsx",
       "bytes": 1889,
       "sha256": "364f4a1498e7cdd17d450f33cb9bb34b386553cc06899023a50e9b0a4dcaab81"
+    },
+    {
+      "path": "app/scout-pages.css",
+      "bytes": 10777,
+      "sha256": "538784a42a5740e15435fefbeeea4e195b26630ba2923d0c41152e2ed97dd55d"
     },
     {
       "path": "app/scout-reply.tsx",
@@ -527,18 +532,18 @@
     },
     {
       "path": "app/today.tsx",
-      "bytes": 5865,
-      "sha256": "4239c325147908669ce7afb117e6adb1d9c958b6b396ddc3d8e8e0b08681f744"
+      "bytes": 5752,
+      "sha256": "ca86a4ee937e032b469cf7b4ab8a5132e7de523543e17a204463eeb2fb0afec7"
     },
     {
       "path": "app/trail-scout.tsx",
-      "bytes": 2556,
-      "sha256": "56d06fbda93fa0552d3087e71ed6c5bfbd6aafb32556f095638ea5a56b6d9d6e"
+      "bytes": 4259,
+      "sha256": "357dd2bf86db7b2e600f3fa887e0955dbf67751e0722580659b5bc52d7fa92fe"
     },
     {
       "path": "app/trail.css",
-      "bytes": 30669,
-      "sha256": "d77e6f09c24b2d42378babc29e30bd3560be00f2598b5f43614ac94a4111091c"
+      "bytes": 25090,
+      "sha256": "2a648e09871636e70d3d9334deefc903e822124def414a6b649d3ea60c1baeca"
     },
     {
       "path": "app/use-active-time.ts",
@@ -1062,8 +1067,23 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 3854,
-      "sha256": "3f8c8f0080fb021bd5349af7280b8ecb3b830932279c2aa978eb22b83171e76d"
+      "bytes": 4640,
+      "sha256": "1780521126e63a67d4d3b7269e9a2335d723e4c8fa82390b0d8fb3e43246c81d"
+    },
+    {
+      "path": "docs/design/scout-city-jobs-target.webp",
+      "bytes": 1142086,
+      "sha256": "c933d58f8379262c671caad8b30133e2a23d9c90a2a91fd8c41392fc9a47a88f"
+    },
+    {
+      "path": "docs/design/scout-page-actions-target.webp",
+      "bytes": 1160558,
+      "sha256": "9c0eb3d1effbcae771f514e5b0b0a40a90f12c84c9693789cca21bfb79746cd4"
+    },
+    {
+      "path": "docs/design/scout-saved-target.webp",
+      "bytes": 877180,
+      "sha256": "2026de6e392b52f53e1e8ef1fcf932d3e45ccb7e01a3822d80fd68a85f7cff6a"
     },
     {
       "path": "docs/design/trail-refined-jobs.webp",
@@ -1411,6 +1431,11 @@
       "sha256": "96b63680f0ae7b06c532f062e5f26eafad325a6b6c92ad5518235a3437693be4"
     },
     {
+      "path": "handoff/SCOUT-CITY.md",
+      "bytes": 3193,
+      "sha256": "882ea62b56ce135d12959396673e4b3dd47ced6375ebf7b485c5d93331f17fae"
+    },
+    {
       "path": "handoff/SCOUT-COMPANION.md",
       "bytes": 5891,
       "sha256": "90343e53b985bba72889119de7c04853b38570bd575a876e87bea7b58fad8f66"
@@ -1437,8 +1462,8 @@
     },
     {
       "path": "handoff/TRAIL-REDESIGN.md",
-      "bytes": 6027,
-      "sha256": "313dcb477f020dd8060ad019a8fc91f61c2219d76dd9a85a773dcf0583def329"
+      "bytes": 6272,
+      "sha256": "f61c28531cb4436d48fc4c73f7b1de2726b43eafe9ecb258ea05b648bbd65b34"
     },
     {
       "path": "handoff/V13-SOURCE-MANIFEST.json",
@@ -2036,6 +2061,61 @@
       "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
     },
     {
+      "path": "public/art/scout-pages/city-street.webp",
+      "bytes": 131098,
+      "sha256": "ffabbd27daef73d65f20cc7b7d5fddca19346b3d8ae25ddf620909246acc95ec"
+    },
+    {
+      "path": "public/art/scout-pages/scout-admin.webp",
+      "bytes": 22974,
+      "sha256": "9f5baf8b5c32d1f01ab5799838111eb9d22eb073bec91ba93b3cd5ebf4add811"
+    },
+    {
+      "path": "public/art/scout-pages/scout-alerts.webp",
+      "bytes": 20326,
+      "sha256": "333a603233c15df9c56dac1d4a27922a01709445a39fcf73637a82bb3cc42c88"
+    },
+    {
+      "path": "public/art/scout-pages/scout-applications.webp",
+      "bytes": 19746,
+      "sha256": "9d14a2f010d63914cf6ef1e1c8d72ef7f5400668d3df39dfec0edefe37659ba2"
+    },
+    {
+      "path": "public/art/scout-pages/scout-archive.webp",
+      "bytes": 19290,
+      "sha256": "056855055ff407e25e421c001f4f5525465baa1957d6dcad1b8ef2f4cba3c35f"
+    },
+    {
+      "path": "public/art/scout-pages/scout-help.webp",
+      "bytes": 19614,
+      "sha256": "af80afc261af2ee2c3beb32bb8769f49ee6cabd92593b3422d443cf588f7e275"
+    },
+    {
+      "path": "public/art/scout-pages/scout-job-detail.webp",
+      "bytes": 20230,
+      "sha256": "172a2bb454292277632e71feefba9003adbe56165bc6925a79e4bea4fa9050d9"
+    },
+    {
+      "path": "public/art/scout-pages/scout-preferences.webp",
+      "bytes": 18582,
+      "sha256": "54e444fb7982de04a0120ae0cf592cbe3372bc055d40d40e4cd58d01f1da3732"
+    },
+    {
+      "path": "public/art/scout-pages/scout-progress.webp",
+      "bytes": 21026,
+      "sha256": "f6bc44d28494e279667e752544dbae4f97c0f1e7e8ba1e6d7decab00743b2f19"
+    },
+    {
+      "path": "public/art/scout-pages/scout-resume.webp",
+      "bytes": 22910,
+      "sha256": "e26f60ef15632cf367386f75d880245d015b891bf030c497b3a528145d29139f"
+    },
+    {
+      "path": "public/art/scout-pages/scout-saved.webp",
+      "bytes": 31694,
+      "sha256": "b02c52332d1377dba6bdf00962f6857592950312ccb6aed0c2fa500ba436cba6"
+    },
+    {
       "path": "public/art/trail/header-landscape.webp",
       "bytes": 61604,
       "sha256": "37bc55bc3f812b2bd3cf321cd126a7a0790c03a5a47962e671cf99b38c1de185"
@@ -2167,8 +2247,8 @@
     },
     {
       "path": "scripts/prepare-vercel-deployment.mjs",
-      "bytes": 1823,
-      "sha256": "78730c40adfb4ca459811501d4ba75b17847659e121e2b0851ce7fd3f7e210f1"
+      "bytes": 1818,
+      "sha256": "641fc3b00c9b7b280dc98dc0e7030f5197beb4a2251e367d29367deafb41ba84"
     },
     {
       "path": "scripts/prepare-vercel.mjs",
@@ -2197,8 +2277,8 @@
     },
     {
       "path": "scripts/update-source-manifest.mjs",
-      "bytes": 1274,
-      "sha256": "e378c0d92844e7e2126e5e5847cdb37351c343ae3ec6fb42c99832669514f578"
+      "bytes": 1261,
+      "sha256": "c6a34f6d028473f8203fc4cf7858270db960127134b0d48d2dfd55d5e645e722"
     },
     {
       "path": "scripts/verify-admin-analytics.mjs",
