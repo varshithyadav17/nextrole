@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
   "release": "Dedicated admin analytics, measured active time, PDF reports and prepared Render/Google migration",
-  "generatedAt": "2026-10-23T17:17:11.359Z",
-  "parentCommit": "d75c34364382c857e467815703a8e38930c82e7c",
+  "generatedAt": "2026-10-23T17:32:44.293Z",
+  "parentCommit": "4b5365140f4d0876fcd8578e64c6d64dfdf083f5",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11808,
-      "sha256": "8ba076441ff820b09b7d8792b3fb7adfc994ebd3364057ebdd761914522ab3c0"
+      "bytes": 11884,
+      "sha256": "4787216ac9786fdfe709484227bb1b121bf49d0bf07368bb2f72e5c2ef6decb9"
     },
     {
       "path": "RELEASE-14.md",
@@ -1062,8 +1062,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 3402,
-      "sha256": "7c1c7ec30fba1d0e843d64461ff7c60e6c213ff19ce5139d709f0e32e4088a58"
+      "bytes": 3854,
+      "sha256": "3f8c8f0080fb021bd5349af7280b8ecb3b830932279c2aa978eb22b83171e76d"
     },
     {
       "path": "docs/design/trail-refined-jobs.webp",
@@ -1437,8 +1437,8 @@
     },
     {
       "path": "handoff/TRAIL-REDESIGN.md",
-      "bytes": 5703,
-      "sha256": "ff4541056bba3ad852942c8a9991b82eef7ee2706f35a2736492983dce7f745a"
+      "bytes": 6027,
+      "sha256": "313dcb477f020dd8060ad019a8fc91f61c2219d76dd9a85a773dcf0583def329"
     },
     {
       "path": "handoff/V13-SOURCE-MANIFEST.json",
@@ -2167,8 +2167,8 @@
     },
     {
       "path": "scripts/prepare-vercel-deployment.mjs",
-      "bytes": 1807,
-      "sha256": "1193e040d621a44d30a85013fe67d9c08161742c24a1bb4d8febc89be9cf5576"
+      "bytes": 1823,
+      "sha256": "78730c40adfb4ca459811501d4ba75b17847659e121e2b0851ce7fd3f7e210f1"
     },
     {
       "path": "scripts/prepare-vercel.mjs",

@@ -1,8 +1,8 @@
-# Trail redesign — implementation draft
+# Trail redesign — implementation and release notes
 
 The owner selected the Trail direction and requested a formal Scout carrying a file. The source implements that direction across the student workspace, dedicated ScoutX conversation, job detail/application surfaces, preferences, landing/sign-in and admin analytics.
 
-This draft is not a production rollout. Browser visual verification is blocked; see [design QA](../design-qa.md). The existing deployed version remains the release baseline.
+Browser visual verification remains blocked; see [design QA](../design-qa.md). After this limit and the review draft were disclosed, the owner asked to proceed with publication on 23 October 2026. Deployment receipts establish the actual released version and URL; no visual pass or completed desktop/mobile review is claimed.
 
 ## Visual targets
 
@@ -42,9 +42,10 @@ The page badge describes the rendered PDF. Exported LaTeX keeps the supplied sou
 - The isolated existing regression suite passed 1,006 checks; 26 separate Worker adapter checks also passed.
 - `node --experimental-strip-types scripts/verify-one-page.mjs` passed 34 checks, including fixed template fidelity, true one-page output, unchanged facts, essential-content overflow refusal and byte-identical historical PDF rendering.
 - The native production build and the generated Render-forwarding Next.js frontend production build passed, including frontend TypeScript checking.
+- The updated Scout/upload/preparation scope passed 275 checks, including a first conversational one-page request and preservation of earlier drafts.
 - `app/design-preview` is a development-only, browser-memory fixture. Production returns 404. It intercepts fixture API calls locally and cannot establish identity, access account records or forward an action to a production API. Its mock responses are not evidence of backend/UI integration.
 - Browser interaction, screenshots at desktop/mobile sizes, console review and visual comparison remain blocked. No successful browser verification or completed rollout is claimed.
 
 ## Resume the review
 
-Open the local development fixture with the supported preview browser when access is restored. Compare Jobs to the refined target and inspect ScoutX, Applications, Preferences and the public synthetic admin demo. Check the mobile drawer, account menu/logout, filters, job/back navigation, save/restore/Applied, chat input, PDF upload/preview, one-page overflow, motion pause and device reduced motion. Save real captures and complete `design-qa.md` before merging or deploying this redesign.
+Open the local development fixture with the supported preview browser when access is restored. Compare Jobs to the refined target and inspect ScoutX, Applications, Preferences and the public synthetic admin demo. Check the mobile drawer, account menu/logout, filters, job/back navigation, save/restore/Applied, chat input, PDF upload/preview, one-page overflow, motion pause and device reduced motion. Save real captures and complete `design-qa.md` before describing the redesign as visually verified.

@@ -2,6 +2,10 @@
 
 final result: blocked
 
+## Release decision — 23 October 2026
+
+After the review draft and browser limitation were disclosed, the owner asked to proceed. Publication is proceeding under that instruction; the visual QA result remains blocked. A further supported preview start reported running, but the supervised HTTP port was unreachable. No browser policy was bypassed and no successful visual check is claimed. Deployment/API health checks are separate release evidence.
+
 ## Comparison target and evidence
 
 - Source visual truth: `docs/design/trail-refined-jobs.webp`; overall direction: `docs/design/trail-selected-board.webp`.
