@@ -35,7 +35,14 @@ export async function verifyScout({database,bucket,put,check,defaultProfile,raw,
   identity(user);check((await scoutPOST(new Request('https://nextrole.test/api/scout',{method:'POST',headers:{Origin:'https://evil.example','Content-Type':'application/json'},body:'{}'}))).status===403,'Authenticated Scout writes reject another origin.');
   check((await post(prepPOST,'/api/preparation',{action:'career-save',profile:career,expectedRevision:null})).ok,'Confirmed career facts save before Scout prepares documents.');
   const view=await getJob(user,job.id,profile);check(view.match.relevant&&!view.match.uncertain,'The automation fixture has genuinely known compatible preferences and eligibility.');
-  let result=await chat('build');check(result.response.ok&&kitId,'Scout builds a job-specific fixed-template résumé.');
+  let result=await chat('message',{message:'Please make my résumé one page.'});
+  check(result.response.ok&&kitId&&result.data.performedAction==='build','A first one-page request builds a reviewed-facts draft without requiring an earlier preparation.');
+  const firstPageKit=await getKit(user,kitId),{resumePageCount}=await import('../lib/resume-one-page.ts');
+  check(firstPageKit.pagePolicy==='one-page'&&await resumePageCount(firstPageKit.resume)===1,'The first conversational draft is actually one rendered PDF page.');
+  result=await chat('one-page');check(result.response.ok&&kitId!==firstPageKit.id&&JSON.stringify((await getKit(user,firstPageKit.id)).resume)===JSON.stringify(firstPageKit.resume),'A one-page copy creates a new version and preserves the earlier draft.');
+  const layout=await(await prepGET(new Request('https://nextrole.test/api/preparation?kitId='+kitId+'&layout=1'))).json();
+  check(layout.pages===1&&Array.isArray(layout.omitted),'The authenticated layout endpoint reports actual pages and omitted facts.');
+  result=await chat('build');check(result.response.ok&&kitId,'Scout builds a job-specific fixed-template résumé.');
   check(provider===0,'Building a factual résumé does not use an API key or LLM credits.');
   const original=await getKit(user,kitId);check(original.resume.template==='nextrole-letter-v1','Scout uses the retained versioned résumé template.');
   check((await getJob(user,job.id,profile)).status===null,'Chat preparation never marks a job Applied.');

@@ -7,7 +7,7 @@ import {FEEDBACK_CATEGORIES,type FeedbackRow} from '../lib/community-types';
 import {SECTION_LABELS,type AdminReport,type AdminSection} from '../lib/admin-report-types';
 import './admin.css';
 import {demoAdminReport} from '../lib/admin-demo';
-const colors=['#29765c','#75a88a','#e4ae62','#8199b6','#bb87a2','#adb9ac'];
+const colors=['#167c7c','#df9164','#83a9b2','#c8a788','#8fa685','#b398b2'];
 const num=(v:number)=>v.toLocaleString('en-IN');
 const pct=(a:number,b:number)=>b?(a/b*100).toFixed(1)+'%':'—';
 const duration=(s:number)=>s>=3600?(s/3600).toFixed(1)+'h':Math.round(s/60)+'m';

@@ -1,7 +1,7 @@
-export type Tab = 'today' | 'discover' | 'interested' | 'applications' | 'archive' | 'sources' | 'settings' | 'companies' | 'analytics' | 'host';
+export type Tab = 'today' | 'discover' | 'interested' | 'applications' | 'archive' | 'sources' | 'settings' | 'companies' | 'analytics' | 'host' | 'scout';
 export type RadarLocation = {tab:Tab;query:string;view:string;mode:string;sort:string;selected:string|null;visibleCount:number;updates:boolean;company:string;role:string;settingsView:'profile'|'career'|'ai'|'alerts'|'help'|'automation'};
 export const defaultLocation:RadarLocation = {tab:'discover',query:'',view:'for-you',mode:'All arrangements',sort:'Best match',selected:null,visibleCount:20,updates:false,company:'all',role:'all',settingsView:'profile'};
-const tabs = ['today','discover','interested','applications','archive','sources','settings','companies','analytics','host'];
+const tabs = ['today','discover','interested','applications','archive','sources','settings','companies','analytics','host','scout'];
 export function readRadarLocation(search:string,pathname='/'):RadarLocation {
  const p = new URLSearchParams(search);
  let pageJob:string|null=null;const match=pathname.match(/^\/jobs\/([^/]+)\/?$/);

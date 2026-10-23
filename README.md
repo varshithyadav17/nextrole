@@ -6,6 +6,8 @@ NextRole helps students and early-career candidates discover relevant openings, 
 
 [Open NextRole](https://nextrole-scout.vercel.app) · [Explore the synthetic admin demo](https://nextrole-scout.vercel.app/demo/admin) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
 
+> **Trail redesign draft:** the selected ivory/orange/teal system, formal Scout artwork, running loading state, full-page ScoutX and verified one-page résumé preparation are implemented in this branch. [Design targets and handoff](handoff/TRAIL-REDESIGN.md) document the changes. [Browser design QA](design-qa.md) is blocked; this redesign is not claimed as deployed.
+
 > **Portfolio data disclosure:** the public admin demonstration and report images below use synthetic, illustrative data. The example 973 profiles are not a real campus adoption claim. Live admin analytics use actual recorded activity and are owner-only.
 
 ## The product problem

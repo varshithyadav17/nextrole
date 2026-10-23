@@ -9,8 +9,9 @@ import {digest} from './keyring';
 import {resumeCheck,type ResumeCheck} from './resume-check';
 import type {JobView,Match} from './types';
 import {applyResumeEdits,type ResumeEdit} from './resume-edits';
+import {onePageResume,requireOnePage} from './resume-one-page';
 
-export type ApplicationKit={id:string;revision:string;jobKey:string;jobSnapshot:Pick<JobView,'id'|'key'|'title'|'company'|'description'|'url'|'location'|'lastChecked'|'deadline'|'provenance'>;snapshotHash:string;profileRevision:string;profileSnapshot:CareerProfile;selectedFactIds:string[];sourceResume?:{id:string;revision:string;name:string};resumeEdits?:ResumeEdit[];resume:ResumeDocument;compatibility?:ResumeCheck;fit:Match;questions:PreparationQuestion[];createdAt:string;updatedAt:string;method:'verified-facts'|'ai-selection';notice:string};
+export type ApplicationKit={id:string;revision:string;jobKey:string;jobSnapshot:Pick<JobView,'id'|'key'|'title'|'company'|'description'|'url'|'location'|'lastChecked'|'deadline'|'provenance'>;snapshotHash:string;profileRevision:string;profileSnapshot:CareerProfile;selectedFactIds:string[];sourceResume?:{id:string;revision:string;name:string};resumeEdits?:ResumeEdit[];pagePolicy?:'one-page';onePageSelection?:string[];resume:ResumeDocument;compatibility?:ResumeCheck;fit:Match;questions:PreparationQuestion[];createdAt:string;updatedAt:string;method:'verified-facts'|'ai-selection';notice:string};
 export async function careerState(userId:string){
  const stored=await one<{data:string;revision:string;updated_at:string}>('SELECT data,revision,updated_at FROM career_profiles WHERE user_id=?',userId);
  return stored?{profile:careerSchema.parse(JSON.parse(stored.data)),revision:stored.revision,updatedAt:stored.updated_at}:{profile:emptyCareer,revision:null,updatedAt:null};
@@ -62,6 +63,8 @@ async function prepareTarget(userId:string,job:PreparationTarget,value:z.infer<t
  }
  const limits:Record<string,number>={education:2,experience:3,project:3,skill:8,certification:2,achievement:2},used:Record<string,number>={};
  selected=selected.filter(id=>{const kind=profile.facts.find(f=>f.id===id)!.kind;used[kind]=(used[kind]||0)+1;return used[kind]<=limits[kind];}).slice(0,14);
+ const pageFit=await onePageResume(profile,selected);selected=pageFit.selected;
+ if(pageFit.omitted.length)notice+=' One-page selection: '+pageFit.omitted.length+' additional facts remain in your profile.';
  const observed=value.inspectForm?await observedQuestions(job as JobView):{questions:[],notice:''};
  const inputs:[string,PreparationQuestion['origin'],string|null,string|null][]=[...observed.questions.map(q=>[q.text,'observed',q.sourceUrl,q.observedAt] as [string,'observed',string,string]),...value.questions.map(q=>[q,'user-pasted',null,null] as [string,'user-pasted',null,null])];
  if(!inputs.length)inputs.push(['Describe a project relevant to this role.','suggested',null,null],['Which skills from your background support this application?','suggested',null,null],['Why are you interested in this employer and role?','suggested',null,null]);
@@ -70,6 +73,7 @@ async function prepareTarget(userId:string,job:PreparationTarget,value:z.infer<t
  const snapshot={id:jobId,key,title,company,description,url,location,lastChecked,deadline,...(provenance?{provenance}:{})};
  const now=new Date().toISOString(),kit:ApplicationKit={id,revision:crypto.randomUUID(),jobKey:job.key,jobSnapshot:snapshot,snapshotHash:await digest(JSON.stringify(snapshot)),profileRevision:career.revision,profileSnapshot:profile,selectedFactIds:selected,resume:resumeDocument(profile,selected),fit:job.match,questions,createdAt:now,updatedAt:now,method,notice:[notice,observed.notice].filter(Boolean).join(' ')};
  kit.compatibility=resumeCheck(kit.resume,kit.jobSnapshot.description);
+ kit.pagePolicy='one-page';kit.onePageSelection=pageFit.omitted.map(id=>profile.facts.find(f=>f.id===id)!.title);
  if(uploaded){kit.sourceResume=uploaded.source;kit.notice='Prepared from uploaded résumé facts you reviewed. Your master Career profile is unchanged.';}
  await db().prepare('INSERT INTO application_kits(user_id,id,job_key,data,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind(userId,id,job.key,JSON.stringify(kit),now,now).run();
  return kit;
@@ -88,12 +92,23 @@ export async function prepareDescription(userId:string,description:string){
  kit.notice+=' Personal pasted JD only; no published opening or application was created.';
  await db().prepare('UPDATE application_kits SET data=? WHERE user_id=? AND id=?').bind(JSON.stringify(kit),userId,kit.id).run();return kit;
 }
+/** A new draft, so earlier preparations and submitted copies keep their exact contents. */
+export async function onePagePreparation(userId:string,original:ApplicationKit){
+ const count=await one<{n:number}>('SELECT COUNT(*) as n FROM application_kits WHERE user_id=?',userId);
+ if((count?.n||0)>=100)throw new PublicError('Delete an older preparation before creating another draft. Your existing versions are retained.');
+ const fit=await onePageResume(original.profileSnapshot,original.selectedFactIds,ids=>applyResumeEdits(resumeDocument(original.profileSnapshot,ids),original.resumeEdits));
+ const now=new Date().toISOString(),kit:ApplicationKit={...original,id:'kit-'+crypto.randomUUID(),revision:crypto.randomUUID(),createdAt:now,updatedAt:now,selectedFactIds:fit.selected,resume:fit.resume,pagePolicy:'one-page',onePageSelection:fit.omitted.map(id=>original.profileSnapshot.facts.find(f=>f.id===id)!.title),notice:'One-page copy using your template and reviewed facts. Earlier versions and facts remain available.'};
+ kit.compatibility=resumeCheck(kit.resume,kit.jobSnapshot.description);
+ await db().prepare('INSERT INTO application_kits(user_id,id,job_key,data,created_at,updated_at) VALUES(?,?,?,?,?,?)').bind(userId,kit.id,kit.jobKey,JSON.stringify(kit),now,now).run();
+ return kit;
+}
 const updateSchema=z.object({kitId:z.string().regex(/^kit-[a-f0-9-]{36}$/),expectedRevision:z.string().uuid(),answers:z.array(z.object({id:z.string().uuid(),answer:z.string().max(6000),reviewed:z.boolean()})).max(60).optional(),selectedFactIds:z.array(z.string().uuid()).min(1).max(30).optional()});
 export async function updatePreparation(userId:string,input:unknown){
  const value=updateSchema.parse(input),kit=await getKit(userId,value.kitId);if(!kit)throw new PublicError('Preparation not found.',404);
  if(kit.revision!==value.expectedRevision)throw new PublicError('This preparation changed in another tab. Reload it before saving.',409);
  for(const answer of value.answers||[]){const question=kit.questions.find(q=>q.id===answer.id);if(!question)throw new PublicError('This question is not part of the saved preparation.');if(answer.reviewed&&!answer.answer.trim())throw new PublicError('An unanswered question cannot be marked reviewed.');if(question.answer!==answer.answer)delete question.evidence;question.answer=answer.answer;question.reviewed=answer.reviewed;}
  if(value.selectedFactIds){if(value.selectedFactIds.some(id=>!kit.profileSnapshot.facts.some(f=>f.id===id&&f.verified)))throw new PublicError('A resume can only include facts verified in this saved profile version.');kit.selectedFactIds=[...new Set(value.selectedFactIds)];kit.resume=applyResumeEdits(resumeDocument(kit.profileSnapshot,kit.selectedFactIds,kit.resume.template||'legacy'),kit.resumeEdits);}
+ if(kit.pagePolicy==='one-page')await requireOnePage(kit.resume,kit.createdAt);
  kit.compatibility=resumeCheck(kit.resume,kit.jobSnapshot.description);kit.updatedAt=new Date().toISOString();kit.revision=crypto.randomUUID();
  const updated=await db().prepare("UPDATE application_kits SET data=?,updated_at=? WHERE user_id=? AND id=? AND json_extract(data,'$.revision')=?").bind(JSON.stringify(kit),kit.updatedAt,userId,kit.id,value.expectedRevision).run();
  if(!updated.meta.changes)throw new PublicError('This preparation changed. Reload it before saving.',409);

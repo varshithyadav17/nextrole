@@ -4,7 +4,7 @@ import {engagement,indiaDay} from './product';
 import {isHost} from './admin';
 import type {ChatGPTUser} from '../app/chatgpt-auth';
 
-export const ACTIVITY_SECTIONS=['discover','job','interested','applications','analytics','archive','companies','sources','settings','help'] as const;
+export const ACTIVITY_SECTIONS=['discover','job','interested','applications','analytics','archive','companies','sources','settings','help','scout'] as const;
 export const activityInput=z.object({minutes:z.array(z.object({minute:z.number().int().positive(),seconds:z.number().int().min(1).max(60),section:z.enum(ACTIVITY_SECTIONS)}).strict()).min(1).max(4)}).strict();
 /** A recent cumulative minute sample; MAX makes network retries and parallel tabs idempotent. */
 export async function recordActivity(user:ChatGPTUser,input:unknown,now=Date.now()){

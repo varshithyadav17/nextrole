@@ -18,8 +18,9 @@ export async function GET(request:Request){
   const params=new URL(request.url).searchParams,id=params.get('kitId');
   if(params.get('drafts')==='1')return respond({history:await preparationHistory(user.userId,undefined,true)});
   if(id){const kit=await getKit(user.userId,z.string().regex(/^kit-[a-f0-9-]{36}$/).parse(id));if(!kit)return respond({error:'Preparation not found.'},404);
+   if(params.get('layout')==='1'){const {resumePageCount}=await import('../../../lib/resume-one-page');const pages=await resumePageCount(kit.resume,kit.createdAt);return respond({pages,onePage:pages===1,template:kit.resume.template||'legacy',revision:kit.revision,omitted:kit.profileSnapshot.facts.filter(f=>f.verified&&!kit.selectedFactIds.includes(f.id)).map(f=>f.title)});}
    if(params.get('format')==='tex'||params.get('format')==='txt'){const txt=params.get('format')==='txt';return new Response(resumeLatex(kit.resume),{headers:{'Content-Type':txt?'text/plain; charset=utf-8':'application/x-tex; charset=utf-8','Content-Disposition':'attachment; filename="'+(txt?'NextRole_resume_LaTeX.txt':'NextRole_resume.tex')+'"','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});}
-   if(params.get('format')==='pdf'){const {resumePDF}=await import('../../../lib/resume-pdf');return new Response(await resumePDF(kit.resume,kit.createdAt),{headers:{'Content-Type':'application/pdf','Content-Disposition':'attachment; filename="NextRole_resume.pdf"','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});}
+   if(params.get('format')==='pdf'){const {resumePDF}=await import('../../../lib/resume-pdf');return new Response(await resumePDF(kit.resume,kit.createdAt),{headers:{'Content-Type':'application/pdf','Content-Disposition':(params.get('preview')==='1'?'inline':'attachment')+'; filename="NextRole_resume.pdf"','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});}
    return respond({kit:{...kit,compatibility:resumeCheck(kit.resume,kit.jobSnapshot.description)}});
   }
   const jobId=params.get('jobId'),job=jobId?await getJob(user.userId,z.string().max(200).parse(jobId),await getProfile(user.userId)):null;
