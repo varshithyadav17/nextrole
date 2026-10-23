@@ -1,0 +1,1 @@
+CREATE INDEX `product_people_last_idx` ON `product_people` (`last_seen`);

@@ -1,0 +1,145 @@
+{
+  "release": 16,
+  "status": "local review; not deployed",
+  "runtime": {
+    "node": "v24.19.0",
+    "pnpm": "11.25.0"
+  },
+  "verification": [
+    {
+      "syntheticScale": {
+        "profiles": 1001,
+        "additionalListings": 500,
+        "alertPages": 21,
+        "profilesProcessed": 1004,
+        "workspaceReads": 100,
+        "readConcurrency": 10,
+        "p50Ms": 842,
+        "p95Ms": 967,
+        "largestWorkspaceBytes": 719901,
+        "elapsedMs": 40500,
+        "environment": "isolated Miniflare; not production capacity or browser proof"
+      }
+    },
+    {
+      "catalogueScale": {
+        "listings": 10000,
+        "coldMs": 1064,
+        "warmMs": 25,
+        "firstPageBytes": 31833,
+        "coldScanQueries": 41,
+        "maxRowsPerScan": 250,
+        "hydration": "SQLite integer primary key",
+        "productionCapacityProven": false
+      }
+    },
+    {
+      "passed": true,
+      "checks": 643,
+      "coverage": [
+        "profile persistence",
+        "manual Applied",
+        "source refresh",
+        "per-user isolation",
+        "archive and restore",
+        "application stages and notes",
+        "source failure recovery",
+        "closed job history",
+        "matching boundaries",
+        "reminder rules",
+        "authentication",
+        "URL navigation serialization",
+        "metadata-preserving recovery",
+        "reminder delivery windows",
+        "notification ownership",
+        "maintenance boundary",
+        "encrypted per-user keys",
+        "three-provider fallback",
+        "secret-safe CRUD and export",
+        "AI search source grounding",
+        "quota and refusal handling",
+        "owner-only MCP",
+        "account deletion",
+        "company and role filters"
+      ]
+    }
+  ],
+  "v16Coverage": [
+    "professional and project links",
+    "internal JD compatibility",
+    "consented AI answer drafting with exact supporting quotes",
+    "personal declarations excluded",
+    "unsupported generated numbers and skills rejected",
+    "immutable submitted PDF/hash",
+    "metadata correction without document mutation",
+    "milestone independence and concurrency",
+    "unknown dates and safe role aggregation",
+    "bounded complete-history export",
+    "newsletter evidence, HTML escaping and authenticated recipient",
+    "over-20-match complete CSV attachment",
+    "disabled transport and nightly window",
+    "duplicate-send prevention",
+    "unsubscribe and uncertain acceptance pause",
+    "daily mail budget and cleanup",
+    "Jobicy cursors, checkpoint resume and hourly traversal policy",
+    "rolling-window absence is not closure",
+    "private data export and deletion"
+  ],
+  "productionDependencyAudit": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "dependencies": 160,
+    "devDependencies": 0,
+    "optionalDependencies": 94,
+    "totalDependencies": 254
+  },
+  "featureLint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "globalLint": {
+    "errors": 45,
+    "warnings": 20
+  },
+  "typecheck": "passed",
+  "productionBuild": "passed",
+  "localMigrationCLI": {
+    "recordedMigrations": 12,
+    "latest": "0011_application_journey_and_digests.sql",
+    "repeatSucceeded": true,
+    "productionTargeted": false
+  },
+  "schemaGeneration": "no schema changes",
+  "liveSources": {
+    "atsFeedsPassed": 20,
+    "atsRawListings": 889,
+    "jobicyBoundedPage": {
+      "source": "jobicy-public",
+      "provider": "jobicy",
+      "checkedAt": "2026-10-18T07:21:05.935Z",
+      "ok": true,
+      "jobs": 100,
+      "partial": true,
+      "internships": 0,
+      "parsedEligibility": 18
+    },
+    "fullJobicyTraversalVerified": false,
+    "cohortCoverageVerified": false
+  },
+  "pdfQA": {
+    "syntheticFixture": true,
+    "pages": 1,
+    "professionalAndProjectLinksExtracted": true,
+    "visualLayoutReviewed": true,
+    "sameSubmittedAndPreparationBytes": true
+  },
+  "browserQA": "not performed; supported control-browser capability unavailable",
+  "actualMailOrAIProviderDeliveryTested": false,
+  "productionDataOrSubmissionsUsed": false,
+  "sourceIdentityAndPreviousMigrationsPreserved": true
+}

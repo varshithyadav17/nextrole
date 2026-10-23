@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-23",
+  "release": "ScoutX conversational context and reply presentation",
+  "typecheck": "passed",
+  "fullRegression": {"passed": true, "checks": 985},
+  "nativeWorkerAdapters": {"passed": true, "checks": 26},
+  "vercelBridgeAndProxy": {"passed": true, "checks": 19},
+  "nativeProductionBuild": "passed",
+  "nextProductionBuild": "passed using webpack",
+  "providerTests": "Intercepted synthetic OpenAI, Gemini and Groq requests; no student keys, real provider charges or real submissions.",
+  "conversationCoverage": ["real multi-turn roles", "context older than six messages", "history-aware caching", "explicit consent", "bounded redacted history", "cross-account isolation", "PDF and JD in one message", "current-check context", "clear chat", "no-key guided fallback", "escaped reply formatting", "incomplete Markdown"],
+  "syntheticScale": {"profiles": 1001, "additionalListings": 500, "profilesProcessed": 1004, "workspaceReads": 100, "readConcurrency": 10, "p50Ms": 964, "p95Ms": 1251, "productionCapacityProven": false},
+  "catalogueScale": {"listings": 10000, "coldMs": 1129, "warmMs": 27, "firstPageBytes": 54164, "productionCapacityProven": false},
+  "browserQA": {"verified": false, "reason": "Managed preview previously returned ERR_CONNECTION_REFUSED; no new browser or device sign-off."},
+  "publication": "Exact source, saved version and deployment receipts are tracked separately."
+}

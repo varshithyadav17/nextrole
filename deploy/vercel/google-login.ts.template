@@ -1,0 +1,51 @@
+import {NextResponse} from 'next/server';
+import {cookies} from 'next/headers';
+import {getChatGPTUser,serverConfig,sessionToken,SESSION_COOKIE} from '../app/chatgpt-auth';
+import {googleConfiguration,googleAuthorization,googleIdentity} from './google-oidc';
+import {randomToken,proof,verifyProof,base64url,sha256,safeReturnPath,verifySession,SESSION_SECONDS} from './bridge/session';
+import {boundedJSON} from './http-json';
+const COOKIE='__Host-nextrole-google';
+const cookieOptions={httpOnly:true,secure:true,sameSite:'lax' as const,path:'/'};
+const security={'Cache-Control':'private, no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'};
+export function googleReady(){return !!serverConfig()&&!!googleConfiguration(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET);}
+function failed(origin:string,code:string,returnTo='/'){
+ const url=new URL('/login',origin);url.searchParams.set('error',code);url.searchParams.set('return_to',safeReturnPath(returnTo));const response=NextResponse.redirect(url,303);
+ response.cookies.set(COOKIE,'',{...cookieOptions,maxAge:0});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
+}
+export async function googleStart(request:Request){return start(request,false);}
+export async function googleLink(request:Request){return start(request,true);}
+async function start(request:Request,link:boolean){
+ const config=serverConfig();if(!config)return new Response('Sign-in is temporarily unavailable.',{status:503,headers:security});
+ const requested=new URL(request.url),returnTo=link?'/?tab=settings&settings=alerts':safeReturnPath(requested.searchParams.get('return_to')||'/');
+ if(link&&request.headers.get('origin')!==config.audience)return new Response('Start from your NextRole account.',{status:403,headers:security});
+ if(requested.origin!==config.audience)return NextResponse.redirect(config.audience+'/auth/google?return_to='+encodeURIComponent(returnTo),302);
+ const google=googleConfiguration(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET);if(!google)return failed(config.audience,'google-not-ready',returnTo);
+ const previous=link?await sessionToken():null,user=previous?await verifySession(config,previous):null;
+ if(link&&!user)return failed(config.audience,'google-signin-first',returnTo);
+ const transaction=await googleAuthorization(google,config.audience+'/auth/google/callback');
+ const payload=base64url(new TextEncoder().encode(JSON.stringify({state:transaction.state,nonce:transaction.nonce,verifier:transaction.verifier,expires:Date.now()+600000,returnTo:returnTo.length<=1500?returnTo:'/',mode:link?'link':'login',linkUserId:user?.userId||null,linkSession:previous?await sha256(previous):null})));
+ const response=NextResponse.redirect(transaction.url,302);response.cookies.set(COOKIE,payload+'.'+await proof(config,'google-login-v1',payload),{...cookieOptions,maxAge:600});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
+}
+export async function googleCallback(request:Request){
+ const config=serverConfig();if(!config)return new Response('Sign-in is temporarily unavailable.',{status:503,headers:security});let returnTo='/';
+ try{
+  const url=new URL(request.url),saved=(await cookies()).get(COOKIE)?.value,google=googleConfiguration(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET);
+  if(!google||url.origin!==config.audience||url.pathname!=='/auth/google/callback'||!saved||saved.length>4096)throw new Error('Invalid sign-in.');
+  const [payload,signature,...extra]=saved.split('.');if(extra.length||!await verifyProof(config,'google-login-v1',payload,signature))throw new Error('Invalid state.');
+  const value=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(atob(payload.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))));
+  if(!Number.isSafeInteger(value.expires)||value.expires<=Date.now()||value.expires>Date.now()+600000||value.state!==url.searchParams.get('state')||!['login','link'].includes(value.mode)||![value.state,value.nonce,value.verifier].every(s=>typeof s==='string'&&/^[A-Za-z0-9_-]{43}$/.test(s)))throw new Error('Invalid state.');
+  returnTo=safeReturnPath(value.returnTo);if(url.searchParams.has('error'))return failed(config.audience,'google-cancelled',returnTo);
+  const previous=value.mode==='link'?await sessionToken():null,user=previous?await verifySession(config,previous):null;
+  if(value.mode==='link'&&(!user||user.userId!==value.linkUserId||await sha256(previous!)!==value.linkSession))return failed(config.audience,'google-signin-first',returnTo);
+  const identity=await googleIdentity(google,url,value),packet=base64url(new TextEncoder().encode(JSON.stringify({identity,mode:value.mode,previousSession:previous,issuedAt:Date.now(),requestId:randomToken()})));
+  const upstream=await fetch(config.issuer+'/api/bridge/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:packet,signature:await proof(config,'google-identity-v1',packet)}),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
+  if(upstream.status===409)return failed(config.audience,'google-conflict',returnTo);
+  if(!upstream.ok)throw new Error('Identity could not be saved.');const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');
+  const response=NextResponse.redirect(config.audience+returnTo,303);response.cookies.set(SESSION_COOKIE,result.session,{...cookieOptions,maxAge:SESSION_SECONDS});response.cookies.set(COOKIE,'',{...cookieOptions,maxAge:0});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
+ }catch{return failed(config.audience,'google-failed',returnTo);}
+}
+export async function authOptions(){
+ const user=await getChatGPTUser();let linked=false;
+ if(user){try{const {proxy}=await import('./vercel-proxy');const r=await proxy(new Request(serverConfig()!.audience+'/api/auth/options'),'/api/auth/options');if(r.ok){const data=await r.json() as {linked?:boolean};linked=!!data.linked;}}catch{}}
+ return Response.json({googleReady:googleReady(),googleExternal:false,linked},{headers:security});
+}

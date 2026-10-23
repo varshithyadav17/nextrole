@@ -1,0 +1,16 @@
+{
+  "release": "Scout Companion 0.2",
+  "parentCommit": "36eab7d8d103c32a71815a6cfcc006535c56543a",
+  "checks": {
+    "fullIsolatedApplicationSuite": {"passed": true, "assertions": 852},
+    "nativeWorkerEgress": {"passed": true, "assertions": 26},
+    "extensionBehavior": {"passed": true, "assertions": 49},
+    "typescript": {"passed": true},
+    "browserPreview": {"passed": true, "scope": "Mock Chrome API only: job link/paste, explicit local draft save, draft list, single-job summary and Scout deep link, 345px client width equals 345px scroll width"}
+  },
+  "noActualEmployerSubmission": true,
+  "noStudentAIKeyUsed": true,
+  "noProviderActivation": true,
+  "pending": ["Real Chrome/Edge unpacked installation and sidePanel lifecycle", "Real supported ATS file/validation/confirmation flow in a controlled test", "Chrome Web Store publication", "Campus load and device validation"],
+  "notice": "Native and Vercel build/deployment results and exact source commit are recorded separately in the external deployment receipt. No production student mutations were performed by these tests."
+}

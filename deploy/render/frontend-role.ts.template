@@ -1,0 +1,2 @@
+import {authenticatedSession,type ChatGPTUser} from './chatgpt-auth';
+export async function getWorkspaceRole(_user:ChatGPTUser){return (await authenticatedSession())?.role||'student';}

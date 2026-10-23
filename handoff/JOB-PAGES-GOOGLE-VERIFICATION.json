@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-23",
+  "release": "Job pages, Back navigation and optional Google OIDC",
+  "fullRegression": {"passed": true, "checks": 1007},
+  "nativeWorkerAdapters": {"passed": true, "checks": 26},
+  "navigationHook": {"passed": true, "checks": 10, "environment": "simulated history; no browser proof"},
+  "vercelHandlers": {"passed": true, "checks": 31, "scope": "Google OIDC, existing sign-in, callback, proxy and upload boundaries"},
+  "typecheck": "passed",
+  "nativeProductionBuild": "passed",
+  "vercelProductionBuild": "passed; includes jobs/[id], login and Google callback routes",
+  "googleCredentialsConfigured": false,
+  "googleRealAccountTest": "pending owner OAuth client setup",
+  "providerTestData": "synthetic signed RS256 tokens and intercepted requests only; no real credentials, applications or email sends",
+  "migration": "0014_google_sign_in; additive unique account connection table",
+  "syntheticScale": {"profiles": 1001, "additionalListings": 500, "workspaceReads": 100, "readConcurrency": 10, "p50Ms": 891, "p95Ms": 1062, "productionCapacityProven": false},
+  "catalogueScale": {"listings": 10000, "coldMs": 1154, "warmMs": 25, "firstPageBytes": 54164, "productionCapacityProven": false},
+  "browserQA": {"verified": false, "reason": "Managed preview reports running but cloud browser entry returned ERR_CONNECTION_REFUSED. Supervisor was stopped after diagnosis."},
+  "publication": "Exact source commit, saved version and hosting receipts are tracked separately."
+}

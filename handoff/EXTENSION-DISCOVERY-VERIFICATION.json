@@ -1,0 +1,21 @@
+{
+  "release": "Scout Companion 0.3.1 — recent job inbox and store distribution preparation",
+  "parentCommit": "7dac3be3f99e07de3577157bd17f9596774131aa",
+  "checks": {
+    "isolatedApplicationSuite": {"passed": true, "assertions": 860},
+    "nativeWorkerEgress": {"passed": true, "assertions": 26},
+    "extensionExistingFlows": {"passed": true, "assertions": 60},
+    "radarAndConnection": {"passed": true, "assertions": 37},
+    "shippedDeveloperAndStorePackages": {"passed": true, "assertions": 73},
+    "generatedFrontendSecurity": {"passed": true, "assertions": 19},
+    "typescript": {"passed": true},
+    "nativeProductionBuild": {"passed": true},
+    "publicBrowserPreview": {"passed": true, "scope": "Store availability gate, normal install instructions, coverage details and unregistered-connection rejection; consumer ZIP links were subsequently removed"}
+  },
+  "storePublished": false,
+  "noRealEmployerApplicationSubmitted": true,
+  "noStudentAIKeyUsed": true,
+  "noMailOrDataProviderActivated": true,
+  "pending": ["Publisher account and actual extension ID", "Google review and approved store listing", "Actual installed Chrome/Edge lifecycle and optional notification prompts", "Live authenticated extension-to-native service transport; prior public tests returned 403/error 1010", "Real supported employer ATS flow"],
+  "notice": "The deployment receipt identifies the exact pushed source and hosted build. Fixture assertions do not prove a real browser installation or native service transport. Existing 0.2 verification files describe historical releases."
+}

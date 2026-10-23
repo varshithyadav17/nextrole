@@ -1,0 +1,3 @@
+# Preserve upstream license/manifest bytes, including their original whitespace.
+vendor/resume-fonts/latin-modern/LPPL-1.3c.txt -whitespace
+vendor/resume-fonts/latin-modern/UPSTREAM-MANIFEST-Latin-Modern.TXT -whitespace

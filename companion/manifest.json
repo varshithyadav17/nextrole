@@ -1,0 +1,13 @@
+{
+ "manifest_version":3,"name":"NextRole Scout Companion","version":"0.3.1","minimum_chrome_version":"116",
+ "description":"New job matches, optional desktop alerts and reviewed application assistance for your NextRole account.",
+ "permissions":["storage","alarms","sidePanel","scripting","activeTab"],
+ "optional_permissions":["notifications"],
+ "host_permissions":["https://nextrole-job-radar.ivorypine64.chatgpt.site/*","https://job-boards.greenhouse.io/*","https://boards.greenhouse.io/*","https://jobs.lever.co/*","https://jobs.eu.lever.co/*","https://jobs.ashbyhq.com/*"],
+ "background":{"service_worker":"background.mjs","type":"module"},
+ "icons":{"16":"icons/scout-16.png","32":"icons/scout-32.png","48":"icons/scout-48.png","128":"icons/scout-128.png"},
+ "action":{"default_popup":"popup.html","default_title":"Scout Companion","default_icon":{"16":"icons/scout-16.png","32":"icons/scout-32.png"}},
+ "side_panel":{"default_path":"panel.html"},
+ "externally_connectable":{"matches":["https://nextrole-scout.vercel.app/*"]},
+ "content_security_policy":{"extension_pages":"script-src 'self'; object-src 'none'"}
+}

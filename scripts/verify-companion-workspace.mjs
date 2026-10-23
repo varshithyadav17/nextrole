@@ -1,0 +1,56 @@
+export async function verifyCompanionWorkspace({database,put,check,defaultProfile}){
+ const {automationAction,withCompanionLease}=await import('../lib/automation.ts');
+ const {POST}=await import('../app/api/companion/route.ts');
+ const {getJob}=await import('../lib/store.ts');
+ const user='extension-workspace',other='extension-other';let token;
+ const request=async(body,key=token)=>{const response=await POST(new Request('https://nextrole.test/api/companion',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},body:JSON.stringify(body)}));return {response,data:await response.json()};};
+ const pair=async(consent,who=user)=>{const result=await withCompanionLease(who,()=>automationAction(who,{action:'pair',consent}));if(who===user)token=result.token;return result;};
+ const input={url:'https://www.linkedin.com/jobs/view/987000?utm_source=extension',title:'Software Engineer · 4–8 years experience',company:'Extension test employer',description:'We require four to eight years of professional software engineering experience. Python and SQL. Bengaluru, India. Full-time, on-site.',location:'Bengaluru, India',mode:'On-site',jobType:'Full-time'};
+ let imported;
+ try{
+  await put({action:'profile',profile:{...defaultProfile,experience:0,graduationYear:'2027',completed:true}},user);
+  const legacy=await pair();check(!legacy.state.workspacePaired,'Legacy tokens are not silently given workspace capabilities.');
+  check((await request({action:'session'})).data.workspace===false,'A legacy token can verify its limited pairing without profile access.');
+  check((await request({action:'lookup-job',url:input.url})).response.status===403,'Legacy pairing cannot look up private job status.');
+  check((await request({action:'import-job',...input,data:input,confirmation:'REVIEWED_JOB'})).response.status===403,'Legacy pairing cannot use the new text import capability.');
+  const fresh=await pair('COMPANION_WORKSPACE');check(fresh.state.workspacePaired,'Workspace access is granted only to the exact newly consented token.');
+  check((await request({action:'session'},legacy.token)).response.status===401,'Replacing pairing invalidates the previous token.');
+  const session=(await request({action:'session'})).data;check(session.workspace&&session.expiresAt&&!JSON.stringify(session).includes('token_hash'),'Session returns only capability and expiration, never a token hash or student profile.');
+  check((await request({action:'import-job',url:input.url,data:input})).response.status===400,'Reviewed-job confirmation is required by the server.');
+  check((await request({action:'import-job',url:'http://localhost/private',data:input,confirmation:'REVIEWED_JOB'})).response.status===400,'Imports reject unsafe or non-HTTPS URLs.');
+  let result=await request({action:'import-job',url:input.url,data:input,confirmation:'REVIEWED_JOB'});imported=result.data.job;
+  check(result.response.ok&&imported?.status==='interested'&&imported.imported&&imported.availability==='unknown','Reviewed board imports are private, Interested and explicitly unverified.');
+  check(imported.match.relevant===false,'A 4–8 year requirement in the title excludes a zero-experience student.');
+  check((await getJob(user,imported.id,{...defaultProfile,graduationYear:'2027'})).minExperience>=4,'Imported title experience is retained as evidence.');
+  const lookup=await request({action:'lookup-job',url:'https://www.linkedin.com/jobs/view/987000?utm_campaign=other'});
+  check(lookup.data.job.id===imported.id,'Tracking lookup deduplicates canonical links with different campaign parameters.');
+  const otherToken=(await pair('COMPANION_WORKSPACE',other)).token;
+  check((await request({action:'lookup-job',url:input.url},otherToken)).data.job===null,'One student cannot look up another student’s private import.');
+  check((await request({action:'job-status',jobId:imported.id,status:'applied',expectedStatus:'interested',expectedStatusAt:imported.statusAt,confirmation:'I_APPLIED'},otherToken)).response.status===404,'Knowing a private job ID cannot change another student’s tracking.');
+  await put({action:'status',jobId:imported.id,status:'interested',note:'Keep my original note',remindAt:'2099-01-01T00:00:00Z'},user);
+  check((await request({action:'job-status',jobId:imported.id,status:'dismissed',expectedStatus:imported.status,expectedStatusAt:'1999-01-01T00:00:00Z'})).response.status===409,'Stale extension changes cannot overwrite newer web tracking.');
+  imported=(await request({action:'lookup-job',url:input.url})).data.job;
+  const change=(status,confirmation)=>request({action:'job-status',jobId:imported.id,status,expectedStatus:imported.status,expectedStatusAt:imported.statusAt,confirmation});
+  check((await change('applied')).response.status===400,'An Apply click or missing explicit submission confirmation cannot mark Applied.');
+  result=await change('dismissed');check(result.response.ok&&result.data.job.status==='dismissed','Not interested is an explicit status action.');
+  imported=result.data.job;
+  result=await request({action:'import-job',url:input.url,data:input,confirmation:'REVIEWED_JOB'});
+  check(result.data.job.status==='dismissed','Saving a duplicate never restores a dismissed opening.');
+  imported=result.data.job;result=await change('applied','I_APPLIED');check(result.response.ok&&result.data.job.status==='applied','Manual Applied is saved only after the user confirms submission.');
+  imported=result.data.job;
+  const row=await database.prepare('SELECT note,remind_at,stage FROM user_jobs WHERE user_id=? AND job_id=?').bind(user,imported.id).first();
+  check(row.note==='Keep my original note'&&row.remind_at===null&&row.stage==='Applied','Status actions preserve notes and remove future apply reminders.');
+  check(!(await request({action:'lookup-job',url:input.url})).data.job.note,'The extension receives a narrow job summary without private notes or career facts.');
+  check((await request({action:'import-job',url:input.url,data:input,confirmation:'REVIEWED_JOB'})).data.job.status==='applied','Duplicate imports preserve Applied and its history.');
+  check((await change('interested')).response.status===409,'Applied cannot be accidentally reset from the extension.');
+  const revision=await withCompanionLease(user,()=>automationAction(user,{action:'pair'}));token=revision.token;
+  check(!revision.state.workspacePaired&&(await request({action:'lookup-job',url:input.url})).response.status===403,'A new limited token also removes the previous workspace grant.');
+  await pair('COMPANION_WORKSPACE');await withCompanionLease(user,()=>automationAction(user,{action:'revoke'}));
+  check(!await database.prepare('SELECT value FROM meta WHERE key=?').bind('companion_workspace:'+user).first(),'Revocation deletes the workspace capability.');
+  check((await request({action:'session'})).response.status===401,'Revoked tokens cannot verify or access the workspace.');
+  await pair('COMPANION_WORKSPACE');await database.prepare('UPDATE automation_tokens SET expires_at=? WHERE user_id=?').bind('2000-01-01T00:00:00Z',user).run();
+  check((await request({action:'session'})).response.status===401,'Expired pairing cannot read or mutate tracking.');
+  await pair('COMPANION_WORKSPACE');await put({action:'delete-account-data',confirmation:'DELETE'},user);
+  check(!await database.prepare('SELECT value FROM meta WHERE key=?').bind('companion_workspace:'+user).first(),'Workspace deletion removes extension capability metadata.');
+ }finally{for(const who of [user,other])await put({action:'delete-account-data',confirmation:'DELETE'},who);}
+}

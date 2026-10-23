@@ -1,0 +1,4 @@
+import {ArrowUpRight,Puzzle} from 'lucide-react';
+import {chromeStoreUrl} from '../lib/companion-channel';
+
+export default function ExtensionEntry(){return <aside className="extension-entry" aria-label="Scout Companion"><div><div className="extension-entry-icon"><Puzzle size={19}/><h3>Let Scout bring your matches.</h3></div><p>A job inbox and optional desktop alerts beside your browser. See coverage, setup and store availability.</p><p className="version-note">{chromeStoreUrl?'Chrome Web Store release':'Chrome Web Store release coming soon'}</p></div><div className="extension-entry-actions"><a className="button primary" href={chromeStoreUrl||'/extension'} target="_blank" rel="noopener noreferrer"><Puzzle size={15}/>{chromeStoreUrl?'Add to Chrome':'Meet Scout Companion'}</a><a className="text-button" href="/extension" target="_blank" rel="noopener noreferrer">How it works <ArrowUpRight size={14}/></a></div></aside>;}

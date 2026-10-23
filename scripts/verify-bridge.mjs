@@ -1,0 +1,39 @@
+export async function verifyBridge({database,check}){
+ const {bridgeConfig,sha256,randomToken,proof,verifySession,issueSession,safeReturnPath,exchangeValue}=await import('../lib/bridge/session.ts');
+ const {authorizationParams,issueAuthorization,consumeAuthorization,clearAuthorizations}=await import('../lib/bridge/site.ts');
+ const config=bridgeConfig('7a'.repeat(32),'https://backend.example.test','https://nextrole.example.test'),user={userId:'bridge-fixture',email:'bridge@example.test',displayName:'Fixture',fullName:'Bridge Fixture'},now=Date.now();
+ const rejects=async f=>{try{await f();return false;}catch{return true;}};
+ check(!bridgeConfig('short',config.issuer,config.audience)&&!bridgeConfig(config.secret,'http://backend.test',config.audience)&&!bridgeConfig(config.secret,config.issuer,config.audience+'/path'),'The bridge requires a full independent secret and exact HTTPS origins.');
+ const token=await issueSession(config,user,Math.floor(now/1000));
+ check((await verifySession(config,token)).userId===user.userId,'A validated bridge session preserves the existing Site-scoped student identity.');
+ check(!await verifySession({...config,audience:'https://other.example.test'},token)&&!await verifySession({...config,issuer:'https://other.example.test'},token),'Sessions are bound to both the exact backend issuer and Vercel audience.');
+ check(!await verifySession(config,token.slice(0,-3)+'abc')&&!await verifySession(config,'none.'+token)&&!await verifySession(config,token,Math.floor(now/1000)+86401),'Tampered, unknown-version and expired sessions are rejected.');
+ check(!await verifySession(config,await issueSession(config,user,Math.floor(now/1000)+120)),'Future-issued session tokens are rejected.');
+ check(safeReturnPath('//evil.test/')==='/'&&safeReturnPath('/\\evil.test/')==='/'&&safeReturnPath('/callback?code=x')==='/'&&safeReturnPath('/?tab=applications')==='/?tab=applications','Login and logout return paths reject external and reserved destinations.');
+ const verifier=randomToken(),params={redirectUri:config.audience+'/callback',challenge:await sha256(verifier)},url=new URL(config.issuer+'/api/bridge/authorize');for(const [k,v] of Object.entries({redirect_uri:params.redirectUri,code_challenge:params.challenge,code_challenge_method:'S256',state:randomToken()}))url.searchParams.set(k,v);
+ check(authorizationParams(config,url).challenge===params.challenge,'Authorization accepts only S256 PKCE with high-entropy state.');
+ const evil=new URL(url);evil.searchParams.set('redirect_uri','https://evil.test/callback');check(await rejects(()=>authorizationParams(config,evil)),'An authenticated browser cannot send an authorization code to an arbitrary redirect origin.');
+ const code=await issueAuthorization(config,user,params,now),exchange=async(code,verifier,redirectUri=params.redirectUri)=>({code,verifier,redirectUri,proof:await proof(config,'exchange-v1',exchangeValue(code,verifier,redirectUri))});
+ const persisted=await database.prepare("SELECT value FROM meta WHERE key LIKE 'bridge_code:%'").all();check(persisted.results.some(r=>JSON.parse(r.value).user.userId===user.userId)&&!JSON.stringify(persisted.results).includes(code),'Only the authorization-code hash and short-lived trusted identity are stored.');
+ const bad=await exchange(code,randomToken());check(await rejects(()=>consumeAuthorization(config,bad,now)),'Even the configured frontend cannot redeem a code with the wrong PKCE verifier.');
+ const valid=await exchange(code,verifier);check(await rejects(()=>consumeAuthorization(config,{...valid,proof:'forged'},now)),'A Site bypass value or forged client proof cannot redeem a student code.');
+ const result=await consumeAuthorization(config,valid,now);check((await verifySession(config,result.session)).userId===user.userId,'A valid one-time exchange issues the existing student a bounded application session.');
+ check(await rejects(()=>consumeAuthorization(config,valid,now)),'A consumed authorization code cannot be replayed.');
+ const racing=await issueAuthorization(config,user,params,now),raceInput=await exchange(racing,verifier),race=await Promise.allSettled([consumeAuthorization(config,raceInput,now),consumeAuthorization(config,raceInput,now)]);check(race.filter(r=>r.status==='fulfilled').length===1,'Atomic D1 deletion permits only one successful exchange under concurrent requests.');
+ const expired=await issueAuthorization(config,user,params,now);check(await rejects(async()=>consumeAuthorization(config,await exchange(expired,verifier),now+120001)),'Expired codes cannot create a session.');
+ const wrongRedirect=await issueAuthorization(config,user,params,now);check(await rejects(async()=>consumeAuthorization(config,await exchange(wrongRedirect,verifier,'https://evil.test/callback'),now)),'Code exchange rechecks the fixed redirect URI.');
+ const prefix='bridge_code:'+await sha256(user.userId)+':';await clearAuthorizations(user.userId);check(!(await database.prepare('SELECT key FROM meta WHERE key>=? AND key<?').bind(prefix,prefix+'~').first()),'Deleting a workspace also invalidates its outstanding sign-in codes.');
+ for(let i=0;i<10;i++)await issueAuthorization(config,user,params,now);check(await rejects(()=>issueAuthorization(config,user,params,now)),'Unused sign-in codes have a bounded per-user storage quota.');
+ await issueAuthorization(config,user,params,now+120001);check((await database.prepare('SELECT COUNT(*) as n FROM meta WHERE key>=? AND key<?').bind(prefix,prefix+'~').first()).n===1,'A new sign-in removes this user’s expired code records before applying its quota.');
+ await clearAuthorizations(user.userId);
+ const {GET:authorize}=await import('../app/api/bridge/authorize/route.ts'),{POST:exchangePOST}=await import('../app/api/bridge/token/route.ts'),env=globalThis.__nextroleTestEnv,previous={secret:env.NEXTROLE_BRIDGE_SECRET,issuer:env.NEXTROLE_BRIDGE_ISSUER,audience:env.NEXTROLE_VERCEL_ORIGIN,user:globalThis.__nextroleTestUser};
+ try{
+  env.NEXTROLE_BRIDGE_SECRET=config.secret;env.NEXTROLE_BRIDGE_ISSUER=config.issuer;env.NEXTROLE_VERCEL_ORIGIN=config.audience;
+  globalThis.__nextroleTestUser=null;const anonymous=await authorize(new Request(url));check(anonymous.status===302&&anonymous.headers.get('Location').startsWith('/signin-with-chatgpt?return_to='),'Anonymous authorization enters the native top-level Site sign-in flow.');
+  const bypass=await authorize(new Request(url,{headers:{'OAI-Sites-Authorization':'Bearer forged'}}));check(bypass.status===302&&bypass.headers.get('Location').startsWith('/signin-with-chatgpt?'),'A Site bypass header does not establish an applicant for authorization.');
+  globalThis.__nextroleTestUser=user;const redirect=await authorize(new Request(url)),destination=new URL(redirect.headers.get('Location'));check(redirect.status===302&&destination.origin===config.audience&&destination.searchParams.get('state')===url.searchParams.get('state')&&redirect.headers.get('Referrer-Policy')==='no-referrer','Native trusted identity gets only the exact configured callback with state and no-referrer protection.');
+  const code=destination.searchParams.get('code'),body=await exchange(code,verifier),post=origin=>new Request(config.issuer+'/api/bridge/token',{method:'POST',headers:{'Content-Type':'application/json',...(origin?{Origin:origin}:{})},body:JSON.stringify(body)});
+  check((await exchangePOST(post('https://evil.test'))).status===403,'The public exchange endpoint rejects an unrelated browser Origin.');
+  const exchanged=await exchangePOST(post(null)),result=await exchanged.json();check(exchanged.ok&&(await verifySession(config,result.session)).userId===user.userId,'The deployed token route performs the bounded signed one-time exchange.');
+ }finally{env.NEXTROLE_BRIDGE_SECRET=previous.secret;env.NEXTROLE_BRIDGE_ISSUER=previous.issuer;env.NEXTROLE_VERCEL_ORIGIN=previous.audience;globalThis.__nextroleTestUser=previous.user;await clearAuthorizations(user.userId);}
+}

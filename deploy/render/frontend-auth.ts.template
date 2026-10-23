@@ -1,0 +1,16 @@
+import {cookies} from 'next/headers';
+import {redirect} from 'next/navigation';
+import {safeReturnPath,type BridgeUser} from '../lib/bridge/session';
+import {renderOrigin} from '../lib/render-proxy';
+export type ChatGPTUser=BridgeUser;
+export const SESSION_COOKIE='__Host-nextrole-session';
+export async function sessionToken(){return (await cookies()).get(SESSION_COOKIE)?.value||null;}
+export async function authenticatedSession(){
+ const origin=renderOrigin(),token=await sessionToken();if(!origin||!token||token.length>4096)return null;
+ try{const r=await fetch(origin+'/api/auth/session',{headers:{cookie:SESSION_COOKIE+'='+token},cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});if(!r.ok)return null;const data=await r.json() as {user?:BridgeUser;role?:string};if(!data.user||typeof data.user.userId!=='string'||typeof data.user.email!=='string'||typeof data.user.displayName!=='string')return null;return {user:data.user,role:data.role==='host'?'host':'student'};}catch{return null;}
+}
+export async function getChatGPTUser(){return (await authenticatedSession())?.user||null;}
+export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
+export async function getSignInOptions(){const origin=renderOrigin();try{if(origin){const r=await fetch(origin+'/api/auth/options',{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});if(r.ok){const d=await r.json() as {googleReady?:boolean;googleOnly?:boolean};return {googleReady:!!d.googleReady,googleOnly:!!d.googleOnly,googleExternal:false,googleOrigin:''};}}}catch{}return {googleReady:false,googleOnly:false,googleExternal:false,googleOrigin:''};}
+export function chatGPTSignInPath(returnTo:string){return '/login?return_to='+encodeURIComponent(safeReturnPath(returnTo));}
+export function chatGPTSignOutPath(returnTo='/'){return '/signout-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(returnTo));}

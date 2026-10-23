@@ -1,0 +1,72 @@
+export async function verifyImports({database,put,check,defaultProfile,raw}){
+ const {POST:sourcePOST}=await import('../app/api/sources/route.ts');
+ const {loadSources}=await import('../lib/source-registry.ts');
+ const {sourceFeedUrl,fetchSourceJobs,SourceFetchError}=await import('../lib/job-feeds.ts');
+ const {syncJobs}=await import('../lib/sync.ts');
+ const {getData,getJob}=await import('../lib/store.ts');
+ const {parseJobPosting}=await import('../lib/import-jobs.ts');
+ const owner=globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL;
+ const native=globalThis.fetch;
+ const callSource=body=>sourcePOST(new Request('https://nextrole.test/api/sources',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://nextrole.test'},body:JSON.stringify(body)}));
+ const definition={company:'Source fixture',provider:'greenhouse',token:'nextrole-fixture',careerUrl:'https://example.test/careers',policyUrl:'https://example.test/terms',permissionConfirmed:true};
+ try{
+  globalThis.__nextroleTestUser=null;
+  check((await callSource(definition)).status===401,'Connecting a shared source requires authentication.');
+  globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL='source-admin@example.test';
+  globalThis.__nextroleTestUser={userId:'source-student',email:'student@example.test',displayName:'Student'};
+  check((await callSource(definition)).status===403,'Students cannot change the shared source registry.');
+  globalThis.__nextroleTestUser={userId:'source-admin',email:'source-admin@example.test',displayName:'Owner'};
+  check((await callSource({...definition,permissionConfirmed:false})).status===400,'A source requires an explicit permission review.');
+  check((await callSource({...definition,token:'https://127.0.0.1/'})).status===400,'A board token cannot turn a fixed API endpoint into an arbitrary server request.');
+  const before=(await loadSources()).length;
+  const connected=await callSource(definition);check(connected.status===201,'The owner can append another employer board without editing source code.');
+  const custom=(await connected.json()).source,sources=await loadSources();
+  check(sources.length===before+1&&sources.at(-1).id===custom.id,'Appended boards keep the existing registry order and IDs.');
+  check(new URL(sourceFeedUrl(custom)).hostname==='boards-api.greenhouse.io','A custom source still uses its documented provider endpoint.');
+  check((await callSource(definition)).status===409,'Duplicate board registration is rejected.');
+  globalThis.fetch=async input=>{const u=new URL(String(input));return Response.json(u.hostname==='api.lever.co'?[]:{jobs:u.pathname.includes('/'+definition.token+'/')?[{...raw,id:77201,internal_job_id:77201}]:[],meta:{total:u.pathname.includes('/'+definition.token+'/')?1:0}});};
+  await syncJobs(true);
+  check((await getData('source-student','Student')).sources.some(s=>s.id===custom.id&&s.run?.success),'The actual ingestion and workspace paths use configured sources.');
+  globalThis.fetch=async()=>new Response('busy',{status:429,headers:{'Retry-After':'1200'}});
+  let rate;try{await fetchSourceJobs(custom,new Date().toISOString());}catch(error){rate=error;}
+  check(rate instanceof SourceFetchError&&rate.retryAfterMs===1200000,'An upstream Retry-After is preserved as a bounded cooldown.');
+ }finally{
+  globalThis.fetch=native;globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=owner;
+  await database.prepare('DELETE FROM meta WHERE key=?').bind('source_registry_v1').run();
+ }
+ const input={kind:'text',url:'https://employer.example.test/opportunities/graduate-14',data:{company:'Private employer',title:'Software Engineer Graduate',description:'No prior experience required. Build Python services. Full-time on-site opportunity.',location:'Bengaluru, India',mode:'On-site',jobType:'Full-time'}};
+ const created=await put({action:'import-job',import:input},'import-owner');
+ check(created.ok,'An authenticated student can privately import an actual pasted description.');
+ const {jobId}=await created.json();
+ const own=(await getData('import-owner','Owner')).jobs.find(j=>j.id===jobId);
+ check(own&&own.provenance.kind==='user-import'&&own.match.uncertain&&!own.lastChecked,'Private imports are labelled and never claim independent verification.');
+ check(own.status==='interested','Saving a private import adds it to Interested so it remains easy to find.');
+ check(!(await getData('import-other','Other')).jobs.some(j=>j.id===jobId),'Another workspace cannot see private imported jobs.');
+ check((await put({action:'detail',jobId},'import-other')).status===404&&(await put({action:'analyse',jobId},'import-other')).status===404,'Private detail and AI endpoints enforce import ownership.');
+ check((await put({action:'status',jobId,status:'applied'},'import-other')).status===404,'A guessed private import ID cannot be tracked by another account.');
+ check((await put({action:'status',jobId,status:'applied',note:'Keep my import history'},'import-owner')).ok,'Imported openings support the ordinary application tracker.');
+ check((await put({action:'verify',jobId},'import-owner')).ok,'Rechecking a private import returns an explicit unverified result without website scraping.');
+ const repeat=await (await put({action:'import-job',import:input},'import-owner')).json();
+ check(repeat.jobId===jobId&&(await getJob('import-owner',jobId,defaultProfile)).note==='Keep my import history','Repeated imports are idempotent and preserve existing decisions.');
+ await put({action:'profile',profile:{...defaultProfile,name:'Import owner',completed:true,alerts:false,reminders:true}},'import-owner');
+ await put({action:'status',jobId,status:'interested',remindAt:new Date(Date.now()+86400000).toISOString()},'import-owner');
+ await database.prepare('UPDATE user_jobs SET remind_at=? WHERE user_id=? AND job_key=?').bind(new Date(Date.now()-60000).toISOString(),'import-owner',own.key).run();
+ const {createPersonalAlerts}=await import('../lib/alerts.ts');await createPersonalAlerts('import-owner');
+ check((await database.prepare("SELECT COUNT(*) as n FROM notifications WHERE user_id=? AND job_key=? AND type='reminder'").bind('import-owner',own.key).first()).n===1,'User-chosen reminders work for private imported opportunities without claiming source verification.');
+ const structured={'@context':'https://schema.org','@graph':[{'@type':'JobPosting',title:'Data Analyst Intern',hiringOrganization:{name:'Structured employer'},description:'No experience required. Python and SQL internship.',employmentType:'INTERN',jobLocation:{address:{addressLocality:'Bengaluru',addressCountry:'India'}},baseSalary:{currency:'INR',value:{minValue:15000,maxValue:20000,unitText:'MONTH'}},validThrough:'2099-01-01T00:00:00Z'}]};
+ const parsed=parseJobPosting(structured,'https://example.test/jobs/2');
+ check(parsed.company==='Structured employer'&&parsed.jobType==='Internship'&&parsed.compensation.minimum===15000&&parsed.compensation.period==='MONTH','Structured imports preserve actual employer, compensation and pay period without conversion.');
+ check((await put({action:'import-job',import:{kind:'jsonld',url:'https://example.test/jobs/2',data:JSON.stringify(structured)}},'import-owner')).ok,'The real import endpoint accepts a single graph-contained JobPosting.');
+ check((await put({action:'import-job',import:{...input,url:'https://127.0.0.1/private'}},'import-owner')).status===400,'Imports reject local application links.');
+ check((await put({action:'import-job',import:{kind:'jsonld',url:input.url,data:'{not JSON}'}},'import-owner')).status===400,'Malformed structured content produces a recovery error.');
+ const dateOnly=parseJobPosting({...structured['@graph'][0],validThrough:'2026-10-30'},'https://example.test/jobs/date-only');
+ check(dateOnly.deadline===null&&dateOnly.deadlineEvidence==='2026-10-30','A date without a timezone is preserved without inventing a deadline instant.');
+ const removable=(await (await put({action:'import-job',import:input},'import-remove')).json()).jobId;
+ check((await put({action:'remove-import',jobId:removable},'import-remove')).status===400,'Deleting an import and its history requires confirmation.');
+ check((await put({action:'remove-import',jobId:removable,confirmation:'DELETE'},'import-other')).status===404,'A guessed import ID cannot delete another account’s evidence.');
+ check((await put({action:'remove-import',jobId:removable,confirmation:'DELETE'},'import-remove')).ok&&(await getJob('import-owner',jobId,defaultProfile)).note==='Keep my import history','Removing one private copy preserves another account’s tracking and notes.');
+ const exported=await (await put({action:'export-account'},'import-owner')).json();
+ check(exported.importedJobs.length===2&&JSON.stringify(exported.importedJobs).includes('No prior experience required.'),'Exports include the user’s imported evidence.');
+ await put({action:'delete-account-data',confirmation:'DELETE'},'import-owner');
+ check(!(await database.prepare('SELECT id FROM imported_jobs WHERE user_id=?').bind('import-owner').first()),'Clearing a workspace removes its private imports.');
+}

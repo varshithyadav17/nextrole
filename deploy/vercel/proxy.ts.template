@@ -1,0 +1,21 @@
+import {serverConfig,sessionToken} from '../app/chatgpt-auth';
+const MAX_BODY=4400000;
+const respond=(error:string,status:number)=>Response.json({error},{status,headers:{'Cache-Control':'private, no-store'}});
+export async function proxy(request:Request,path:string){
+ const config=serverConfig();if(!config)return respond('NextRole is temporarily unavailable. Please try again later.',503);
+ const token=await sessionToken();if(!token)return respond('Please sign in to NextRole.',401);
+ if(!path.startsWith('/api/')||/[?#\\]/.test(path))return respond('Unknown endpoint.',404);
+ if(!['GET','HEAD'].includes(request.method)&&request.headers.get('origin')!==config.audience)return respond('Open NextRole before saving changes.',403);
+ const headers=new Headers({'x-nextrole-session':token,'origin':config.issuer,'accept':request.headers.get('accept')||'application/json'}),contentType=request.headers.get('content-type');if(contentType)headers.set('content-type',contentType);
+ try{
+  let body:Uint8Array|undefined;if(!['GET','HEAD'].includes(request.method)){
+   if(Number(request.headers.get('content-length'))>MAX_BODY)return respond('This upload is too large. Use a résumé up to 4 MiB.',413);
+   const reader=request.body?.getReader(),chunks:Uint8Array[]=[];let size=0;
+   if(reader)try{while(true){const part=await reader.read();if(part.done)break;size+=part.value.byteLength;if(size>MAX_BODY){await reader.cancel();return respond('This upload is too large. Use a résumé up to 4 MiB.',413);}chunks.push(part.value);}}finally{reader.releaseLock();}
+   body=new Uint8Array(size);let offset=0;for(const chunk of chunks){body.set(chunk,offset);offset+=chunk.length;}
+  }
+  const upstream=await fetch(config.issuer+path+new URL(request.url).search,{method:request.method,headers,body:body as BodyInit|undefined,redirect:'error',cache:'no-store',signal:AbortSignal.timeout(110000)});
+  const output=new Headers({'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'});for(const key of ['content-type','content-disposition','retry-after']){const value=upstream.headers.get(key);if(value)output.set(key,value);}
+  return new Response(upstream.body,{status:upstream.status,headers:output});
+ }catch{return respond('The workspace connection is temporarily unavailable. Your saved work is retained. Please retry.',503);}
+}

@@ -1,0 +1,19 @@
+{
+  "release": "Scout Companion 0.2.1 — in-product installation guide",
+  "parentCommit": "6824d2bfd46d45337cd1075de5152c7b07413d53",
+  "checks": {
+    "fullIsolatedApplicationSuite": {"passed": true, "assertions": 852},
+    "nativeWorkerEgress": {"passed": true, "assertions": 26},
+    "extensionBehavior": {"passed": true, "assertions": 58},
+    "shippedDistribution": {"passed": true, "assertions": 48},
+    "generatedFrontendSecurity": {"passed": true, "assertions": 19},
+    "typescript": {"passed": true},
+    "browserGuidePreview": {"passed": true, "scope": "Public setup route renders; Chrome/Edge selection; clipboard-unavailable fallback; expanded troubleshooting; correct download and pairing hrefs"}
+  },
+  "browserDownloadEvent": "The browser-tool download event timed out; final public HTTP delivery is checked separately. This is not evidence of native browser installation.",
+  "noActualEmployerSubmission": true,
+  "noStudentAIKeyUsed": true,
+  "noProviderActivation": true,
+  "pending": ["Real Chrome/Edge unpacked installation and native sidePanel lifecycle", "Live paired extension-to-native service transport", "Real supported employer ATS form flow", "Browser-store publication"],
+  "notice": "Builds, source commit, hosting deployment results and public download integrity are recorded in the external release receipt. Tests use isolated fixtures and do not modify student workspaces."
+}

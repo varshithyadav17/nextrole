@@ -1,0 +1,118 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1792158830748,
+      "tag": "0000_short_sheva_callister",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1792181062392,
+      "tag": "0001_lean_true_believers",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792199069210,
+      "tag": "0002_spotty_marten_broadcloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1792199326387,
+      "tag": "0003_rare_hawkeye",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1792222289119,
+      "tag": "0004_superb_zombie",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1792222979494,
+      "tag": "0005_fair_junta",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1792223203738,
+      "tag": "0006_stale_hiroim",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1792235313678,
+      "tag": "0007_smart_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1792279521135,
+      "tag": "0008_career_preparation",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1792290210574,
+      "tag": "0009_paged_catalogue",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1792290258547,
+      "tag": "0010_catalogue_indexes_and_revisions",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "6",
+      "when": 1792307353537,
+      "tag": "0011_application_journey_and_digests",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1792335766637,
+      "tag": "0012_milky_fabian_cortez",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1792706003948,
+      "tag": "0013_wide_supernaut",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "6",
+      "when": 1792746310441,
+      "tag": "0014_google_sign_in",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "6",
+      "when": 1792749705588,
+      "tag": "0015_admin_analytics",
+      "breakpoints": true
+    }
+  ]
+}

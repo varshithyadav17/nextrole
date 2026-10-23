@@ -1,0 +1,21 @@
+# Run node handoff/setup-local.mjs to generate local-only encryption and push keys.
+# Do not copy this file into production or replace an existing encryption root.
+NEXTROLE_OWNER_EMAIL=""
+KEYRING_ENCRYPTION_KEY=""
+VAPID_PUBLIC_KEY=""
+VAPID_PRIVATE_KEY=""
+VAPID_SUBJECT=""
+
+# Optional operator-owned nightly email. Keep disabled until sender/domain verification.
+NEXTROLE_MAIL_APPROVAL=""
+NEXTROLE_MAIL_API_KEY=""
+NEXTROLE_MAIL_FROM=""
+NEXTROLE_PUBLIC_URL=""
+NEXTROLE_MAIL_DAILY_BUDGET="50"
+
+# Optional Vercel frontend bridge. Keep empty for local Site development.
+NEXTROLE_BRIDGE_SECRET=""
+NEXTROLE_BRIDGE_ISSUER=""
+NEXTROLE_VERCEL_ORIGIN=""
+# Optional shared Google Jobs discovery. Keep off until the host configures permitted use and request caps.
+# SERPAPI_API_KEY=your-provider-key

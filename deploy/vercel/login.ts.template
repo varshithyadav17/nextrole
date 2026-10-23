@@ -1,0 +1,32 @@
+import {NextResponse} from 'next/server';
+import {cookies} from 'next/headers';
+import {serverConfig,SESSION_COOKIE} from '../app/chatgpt-auth';
+import {randomToken,sha256,proof,verifyProof,base64url,safeReturnPath,exchangeValue,verifySession,SESSION_SECONDS} from './bridge/session';
+import {boundedJSON} from './http-json';
+const LOGIN_COOKIE='__Host-nextrole-login';
+const options={httpOnly:true,secure:true,sameSite:'lax' as const,path:'/'};
+const security={'Cache-Control':'private, no-store','Referrer-Policy':'no-referrer','X-Content-Type-Options':'nosniff'};
+function failure(){return new Response('<!doctype html><html lang="en"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NextRole sign-in</title><body style="font:16px/1.8 system-ui;background:#f4f7ee;color:#304c36;padding:48px 24px;max-width:600px;margin:auto"><h1>Let’s try signing in again.</h1><p>The sign-in link expired or could not be verified. Your saved jobs and applications are safe.</p><a href="/signin-with-chatgpt">Sign in to NextRole</a> · <a href="/">Back to home</a></body></html>',{status:400,headers:{...security,'Content-Type':'text/html; charset=utf-8','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});}
+export async function signIn(request:Request){
+ const config=serverConfig();if(!config)return failure();
+ if(new URL(request.url).origin!==config.audience)return NextResponse.redirect(config.audience+'/signin-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(new URL(request.url).searchParams.get('return_to')||'/')),302);
+ const state=randomToken(),verifier=randomToken(),returnTo=safeReturnPath(new URL(request.url).searchParams.get('return_to')||'/');
+ const payload=base64url(new TextEncoder().encode(JSON.stringify({state,verifier,returnTo,expires:Date.now()+600000})));
+ const url=new URL(config.issuer+'/api/bridge/authorize');url.searchParams.set('redirect_uri',config.audience+'/callback');url.searchParams.set('state',state);url.searchParams.set('code_challenge',await sha256(verifier));url.searchParams.set('code_challenge_method','S256');
+ const response=NextResponse.redirect(url,302);response.cookies.set(LOGIN_COOKIE,payload+'.'+await proof(config,'login-v1',payload),{...options,maxAge:600});for(const [key,value] of Object.entries(security))response.headers.set(key,value);return response;
+}
+export async function callback(request:Request){
+ const jar=await cookies(),saved=jar.get(LOGIN_COOKIE)?.value,config=serverConfig();
+ try{
+  if(!config||!saved||saved.length>2000)throw new Error('Missing state.');const [payload,signature,...extra]=saved.split('.');if(extra.length||!await verifyProof(config,'login-v1',payload,signature))throw new Error('Invalid state.');
+  const state=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(payload.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)))),url=new URL(request.url),code=url.searchParams.get('code')||'';
+  if(state.expires<=Date.now()||state.expires>Date.now()+600000||state.state!==url.searchParams.get('state')||!/^\d{13}\.[A-Za-z0-9_-]{43}\.[A-Za-z0-9_-]{43}$/.test(code)||!/^[A-Za-z0-9_-]{43}$/.test(state.verifier))throw new Error('Invalid state.');
+  const redirectUri=config.audience+'/callback',body={code,verifier:state.verifier,redirectUri,proof:await proof(config,'exchange-v1',exchangeValue(code,state.verifier,redirectUri))};
+  const upstream=await fetch(config.issuer+'/api/bridge/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
+  if(!upstream.ok)throw new Error('Exchange failed.');const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');
+  const response=NextResponse.redirect(config.audience+safeReturnPath(state.returnTo),303);response.cookies.set(SESSION_COOKIE,result.session,{...options,maxAge:SESSION_SECONDS});response.cookies.set(LOGIN_COOKIE,'',{...options,maxAge:0});for(const [key,value] of Object.entries(security))response.headers.set(key,value);return response;
+ }catch{const response=failure();response.headers.append('Set-Cookie',LOGIN_COOKIE+'=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax');return response;}
+}
+export async function signOut(request:Request){
+ const config=serverConfig();if(!config)return failure();const response=NextResponse.redirect(config.audience+safeReturnPath(new URL(request.url).searchParams.get('return_to')||'/'),303);response.cookies.set(SESSION_COOKIE,'',{...options,maxAge:0});response.cookies.set(LOGIN_COOKIE,'',{...options,maxAge:0});response.cookies.set('__Host-nextrole-google','',{...options,maxAge:0});for(const [key,value] of Object.entries(security))response.headers.set(key,value);return response;
+}

@@ -1,0 +1,19 @@
+import {NextResponse} from 'next/server';
+import {serverConfig,getChatGPTUser} from '../app/chatgpt-auth';
+import {getWorkspaceRole} from '../app/auth-role';
+import {proxy} from './vercel-proxy';
+import * as google from './vercel-google';
+import * as legacy from './vercel-login';
+const noStore={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'};
+function canonical(request:Request){const config=serverConfig();if(!config)throw new Error('Backend configuration unavailable.');const incoming=new URL(request.url);return new Request(config.audience+incoming.pathname+incoming.search,request);}
+export async function googleStart(request:Request){return google.googleStart(canonical(request));}
+export async function googleCallback(request:Request){return google.googleCallback(canonical(request));}
+export async function googleLink(request:Request){return google.googleLink(canonical(request));}
+export async function authOptions(){const response=await google.authOptions(),data=await response.json() as Record<string,unknown>;return Response.json({...data,googleOnly:google.googleReady()&&process.env.NEXTROLE_GOOGLE_ONLY==='true'},{headers:noStore});}
+export async function signIn(request:Request){return google.googleReady()&&process.env.NEXTROLE_GOOGLE_ONLY==='true'?googleStart(request):legacy.signIn(canonical(request));}
+export async function callback(request:Request){return legacy.callback(canonical(request));}
+export async function signOut(request:Request){return legacy.signOut(canonical(request));}
+export async function dataRequest(request:Request,path:string){return proxy(canonical(request),path);}
+export async function currentSession(){const user=await getChatGPTUser();if(!user)return Response.json({user:null,role:null},{status:401,headers:noStore});return Response.json({user,role:await getWorkspaceRole(user)},{headers:noStore});}
+export async function health(){const configured=!!serverConfig();return Response.json({service:'NextRole authentication and API gateway',ready:configured,googleReady:google.googleReady(),storage:'Existing D1/R2 data service'}, {status:configured?200:503,headers:noStore});}
+export async function unsubscribe(request:Request){const config=serverConfig();if(!config)return new Response('Temporarily unavailable.',{status:503,headers:noStore});return NextResponse.redirect(config.issuer+'/api/digest/unsubscribe'+new URL(request.url).search,302);}

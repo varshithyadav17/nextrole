@@ -1,0 +1,109 @@
+{
+  "release": 15,
+  "status": "local review; not deployed",
+  "runtime": {
+    "node": "24.19.0",
+    "pnpm": "11.25.0"
+  },
+  "verification": [
+    {
+      "syntheticScale": {
+        "profiles": 1001,
+        "additionalListings": 500,
+        "alertPages": 21,
+        "profilesProcessed": 1004,
+        "workspaceReads": 100,
+        "readConcurrency": 10,
+        "p50Ms": 779,
+        "p95Ms": 948,
+        "largestWorkspaceBytes": 719668,
+        "elapsedMs": 41814,
+        "environment": "isolated Miniflare; not production capacity or browser proof"
+      }
+    },
+    {
+      "catalogueScale": {
+        "listings": 10000,
+        "coldMs": 1141,
+        "warmMs": 26,
+        "firstPageBytes": 31833,
+        "coldScanQueries": 41,
+        "maxRowsPerScan": 250,
+        "hydration": "SQLite integer primary key",
+        "productionCapacityProven": false
+      }
+    },
+    {
+      "passed": true,
+      "checks": 585,
+      "coverage": [
+        "profile persistence",
+        "manual Applied",
+        "source refresh",
+        "per-user isolation",
+        "archive and restore",
+        "application stages and notes",
+        "source failure recovery",
+        "closed job history",
+        "matching boundaries",
+        "reminder rules",
+        "authentication",
+        "URL navigation serialization",
+        "metadata-preserving recovery",
+        "reminder delivery windows",
+        "notification ownership",
+        "maintenance boundary",
+        "encrypted per-user keys",
+        "three-provider fallback",
+        "secret-safe CRUD and export",
+        "AI search source grounding",
+        "quota and refusal handling",
+        "owner-only MCP",
+        "account deletion",
+        "company and role filters"
+      ]
+    }
+  ],
+  "productionDependencyAudit": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "dependencies": 160,
+    "devDependencies": 0,
+    "optionalDependencies": 94,
+    "totalDependencies": 254
+  },
+  "browserQA": "not available; not performed",
+  "productionDataOrSubmissionsUsed": false,
+  "featureLint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "globalLint": {
+    "errors": 45,
+    "warnings": 20
+  },
+  "typecheck": "passed",
+  "productionBuild": "passed",
+  "localMigrationCLI": {
+    "applied": 11,
+    "repeat": "no pending migrations",
+    "productionTargeted": false
+  },
+  "concurrentCatalogueClear": {
+    "activeWriter": "clear waits with 409",
+    "expiredWriter": "clear succeeds; old INSERT rejected; no recreated snapshot",
+    "emptyWorkspace": "older waiting request rejected after clear"
+  },
+  "leaseRegression": [
+    "holder-defined expiry",
+    "shorter caller cannot steal live lease",
+    "legacy value recovery",
+    "stale holder cannot release successor"
+  ],
+  "buildWarnings": "Existing Vinext static route-classification limitation; no browser or deployment proof."
+}

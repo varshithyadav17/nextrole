@@ -1,0 +1,20 @@
+const MAX_BODY=4400000;
+export function renderOrigin(){try{const url=new URL(process.env.NEXTROLE_RENDER_ORIGIN||'');return url.protocol==='https:'&&!url.username&&!url.password&&url.pathname==='/'&&!url.search&&!url.hash?url.origin:null;}catch{return null;}}
+function appOrigin(){try{const url=new URL(process.env.NEXTROLE_APP_ORIGIN||'');return url.protocol==='https:'&&!url.username&&!url.password&&url.pathname==='/'&&!url.search&&!url.hash?url.origin:null;}catch{return null;}}
+const fail=(status:number)=>Response.json({error:'NextRole is temporarily unavailable. Please retry.'},{status,headers:{'Cache-Control':'private, no-store'}});
+/** Only generated, fixed routes call this proxy. No user-controlled upstream or forwarding of identity headers. */
+export async function renderProxy(request:Request,path:string){
+ const backend=renderOrigin(),app=appOrigin();if(!backend||!app)return fail(503);
+ if(!/^\/(?:api\/|auth\/|signin-with-chatgpt$|signout-with-chatgpt$|callback$)/.test(path)||/[?#\\]/.test(path))return fail(404);
+ if(!['GET','HEAD'].includes(request.method)&&request.headers.get('origin')!==app)return fail(403);
+ const cookie=(request.headers.get('cookie')||'').split(';').map(s=>s.trim()).filter(s=>/^__Host-nextrole-(?:session|google|login)=/.test(s)).join('; ');if(cookie.length>12288)return fail(400);
+ const headers=new Headers({cookie,accept:request.headers.get('accept')||'application/json'});for(const k of ['content-type','origin']){const value=request.headers.get(k);if(value)headers.set(k,value);}
+ try{
+  let body:Uint8Array|undefined;if(!['GET','HEAD'].includes(request.method)){if(Number(request.headers.get('content-length'))>MAX_BODY)return fail(413);const reader=request.body?.getReader(),chunks:Uint8Array[]=[];let length=0;if(reader)try{while(true){const chunk=await reader.read();if(chunk.done)break;length+=chunk.value.length;if(length>MAX_BODY){await reader.cancel();return fail(413);}chunks.push(chunk.value);}}finally{reader.releaseLock();}body=new Uint8Array(length);let offset=0;for(const chunk of chunks){body.set(chunk,offset);offset+=chunk.length;}}
+  const response=await fetch(backend+path+new URL(request.url).search,{method:request.method,headers,body:body as BodyInit|undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.timeout(110000)});
+  const output=new Headers({'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'});for(const key of ['content-type','content-disposition','retry-after','content-security-policy']){const value=response.headers.get(key);if(value)output.set(key,value);}
+  for(const cookie of response.headers.getSetCookie())if(/^__Host-nextrole-(?:session|google|login)=/.test(cookie)&&/;\s*Secure/i.test(cookie)&&/;\s*HttpOnly/i.test(cookie)&&!/;\s*Domain=/i.test(cookie)&&/;\s*Path=\/(?:;|$)/i.test(cookie))output.append('Set-Cookie',cookie);
+  const location=response.headers.get('location');if(location){const next=new URL(location,app);const storageOrigin=process.env.NEXTROLE_STORAGE_ORIGIN;if(next.protocol!=='https:'||!([app,'https://accounts.google.com',storageOrigin].includes(next.origin)))return fail(502);output.set('location',next.href);}
+  return new Response(response.body,{status:response.status,headers:output});
+ }catch{return fail(503);}
+}

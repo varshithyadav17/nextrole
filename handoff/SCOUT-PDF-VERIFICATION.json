@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-23",
+  "typecheck": "passed before final production build",
+  "fullRegression": {
+    "passed": true,
+    "checks": 957
+  },
+  "nativeWorkerAdapters": {
+    "passed": true,
+    "checks": 26
+  },
+  "vercelBridgeAndProxy": {
+    "passed": true,
+    "checks": 19
+  },
+  "pdfVisualReview": {
+    "passed": true,
+    "template": "nextrole-letter-v1",
+    "originalPreserved": true,
+    "examplePages": 1,
+    "format": "Letter",
+    "data": "synthetic only"
+  },
+  "providerTests": "intercepted OpenAI and Gemini requests; no real student keys or applications",
+  "syntheticScale": {
+    "profiles": 1001,
+    "additionalListings": 500,
+    "profilesProcessed": 1004,
+    "workspaceReads": 100,
+    "readConcurrency": 10,
+    "p50Ms": 899,
+    "p95Ms": 1149,
+    "productionCapacityProven": false
+  },
+  "catalogueScale": {
+    "listings": 10000,
+    "coldMs": 1103,
+    "warmMs": 26,
+    "firstPageBytes": 54164,
+    "productionCapacityProven": false
+  },
+  "browserQA": {
+    "verified": false,
+    "reason": "Managed preview supervisor reports running; cloud browser receives ERR_CONNECTION_REFUSED."
+  },
+  "publication": "Tracked separately by the exact source/deployment receipt."
+}

@@ -1,0 +1,153 @@
+{
+  "release": 17,
+  "status": "local review; not deployed",
+  "runtime": {
+    "node": "v24.19.0",
+    "pnpm": "11.25.0"
+  },
+  "verification": [
+    {
+      "syntheticScale": {
+        "profiles": 1001,
+        "additionalListings": 500,
+        "alertPages": 21,
+        "profilesProcessed": 1004,
+        "workspaceReads": 100,
+        "readConcurrency": 10,
+        "p50Ms": 892,
+        "p95Ms": 1108,
+        "largestWorkspaceBytes": 719901,
+        "elapsedMs": 43930,
+        "environment": "isolated Miniflare; not production capacity or browser proof"
+      }
+    },
+    {
+      "catalogueScale": {
+        "listings": 10000,
+        "coldMs": 1003,
+        "warmMs": 23,
+        "firstPageBytes": 31833,
+        "coldScanQueries": 41,
+        "maxRowsPerScan": 250,
+        "hydration": "SQLite integer primary key",
+        "productionCapacityProven": false
+      }
+    },
+    {
+      "passed": true,
+      "checks": 665,
+      "coverage": [
+        "profile persistence",
+        "manual Applied",
+        "source refresh",
+        "per-user isolation",
+        "archive and restore",
+        "application stages and notes",
+        "source failure recovery",
+        "closed job history",
+        "matching boundaries",
+        "reminder rules",
+        "authentication",
+        "URL navigation serialization",
+        "metadata-preserving recovery",
+        "reminder delivery windows",
+        "notification ownership",
+        "maintenance boundary",
+        "encrypted per-user keys",
+        "three-provider fallback",
+        "secret-safe CRUD and export",
+        "AI search source grounding",
+        "quota and refusal handling",
+        "owner-only MCP",
+        "account deletion",
+        "company and role filters"
+      ]
+    }
+  ],
+  "templateChecks": 21,
+  "actualAPILegacyEditPreservesPDF": true,
+  "legacyReferencePDFSHA256": "57cf468899650c385abec15da0d26c1aec5e039d31a3b6a63557b8ceb8c575da",
+  "typecheck": "passed",
+  "productionBuild": "passed",
+  "featureLint": {
+    "errors": 0,
+    "warnings": 0
+  },
+  "globalLint": {
+    "errors": 45,
+    "warnings": 20
+  },
+  "pdfQA": {
+    "template.pdf": {
+      "pages": 1,
+      "characters": 3069,
+      "allTextWithinSafePageArea": true,
+      "normalizedTextPreserved": true,
+      "linksVerified": true,
+      "bytes": 192642,
+      "minX": 36.0,
+      "maxX": 576.0,
+      "minTop": 24.21,
+      "maxBottom": 766.76
+    },
+    "template-tex.pdf": {
+      "pages": 1,
+      "characters": 2713,
+      "allTextWithinSafePageArea": true,
+      "normalizedTextPreserved": true,
+      "linksVerified": true,
+      "bytes": 115934,
+      "minX": 34.55,
+      "maxX": 577.93,
+      "minTop": 23.28,
+      "maxBottom": 767.54
+    },
+    "long.pdf": {
+      "pages": 3,
+      "characters": 12859,
+      "allTextWithinSafePageArea": true,
+      "normalizedTextPreserved": true,
+      "linksVerified": true,
+      "bytes": 194730,
+      "minX": 36.0,
+      "maxX": 576.0,
+      "minTop": 24.3,
+      "maxBottom": 768.2
+    },
+    "unicode.pdf": {
+      "pages": 1,
+      "characters": 3074,
+      "allTextWithinSafePageArea": true,
+      "normalizedTextPreserved": true,
+      "linksVerified": true,
+      "bytes": 198858,
+      "minX": 36.0,
+      "maxX": 576.0,
+      "minTop": 24.21,
+      "maxBottom": 766.76
+    }
+  },
+  "additionalPDFQA": {
+    "queryFragmentPercentURLPreservedAfterTeXCompilation": true,
+    "longPDFProjectLinksVerified": true
+  },
+  "visualQA": {
+    "nativeReference": true,
+    "compiledTeXReference": true,
+    "threeOverflowPages": true,
+    "supportedUnicode": true,
+    "syntheticDataOnly": true
+  },
+  "pdfReaderWarnings": 0,
+  "localTeXCompilation": {
+    "engine": "pdfTeX 1.40.25 (TeX Live 2022/Debian)",
+    "shellEscape": false,
+    "overfullBoxes": 0
+  },
+  "dependenciesSchemaMigrationsAndHostingIdentityPreserved": true,
+  "dependencyAudit": "not rerun; dependency graph unchanged, prior v16 report retained",
+  "liveSourceSmoke": "not rerun; discovery code unchanged, prior v16 observations retained",
+  "browserQA": "not performed; supported control-browser capability unavailable",
+  "externalResumeProcessorOrNewAIRequests": false,
+  "productionDeploymentOrEmailActivation": false
+}

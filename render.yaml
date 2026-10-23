@@ -1,0 +1,26 @@
+# Transitional stateless API/auth tier. Durable D1/R2 and existing maintenance stay in place.
+services:
+  - type: web
+    name: nextrole-backend
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: node scripts/prepare-render.mjs --out .deploy/render && cd .deploy/render && corepack pnpm install --frozen-lockfile && corepack pnpm run build
+    startCommand: cd .deploy/render && corepack pnpm run start --port $PORT
+    healthCheckPath: /healthz
+    autoDeployTrigger: "off"
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: NEXTROLE_APP_ORIGIN
+        value: https://nextrole-scout.vercel.app
+      - key: NEXTROLE_BACKEND_ORIGIN
+        value: https://nextrole-job-radar.ivorypine64.chatgpt.site
+      - key: NEXTROLE_BRIDGE_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: NEXTROLE_GOOGLE_ONLY
+        value: "false"

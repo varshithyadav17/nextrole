@@ -1,0 +1,37 @@
+{
+  "release": "Focused NextRole — 23 October 2026",
+  "sourceBase": "961a8b246d8f44dbb385a0cea1d862dbb7520f35",
+  "tests": {
+    "fullRegressionAndSyntheticScale": {"passed": true, "checks": 925},
+    "nativeWorkerEgress": {"passed": true, "checks": 26, "liveNetworkUsed": false},
+    "generatedVercelAuthAndProxy": {"passed": true, "checks": 19},
+    "retainedSchemaAndCheckpointUpgrade": {"passed": true, "checks": 12, "productionDataUsed": false},
+    "typescript": {"passed": true},
+    "nativeProductionBuild": {"passed": true},
+    "generatedNextProductionBuild": {"passed": true}
+  },
+  "syntheticScale": {
+    "environment": "isolated Miniflare D1/R2, intercepted upstreams; no student records or provider keys",
+    "profiles": 1001,
+    "additionalListings": 500,
+    "alertPages": 21,
+    "profilesProcessed": 1004,
+    "workspaceReads": 100,
+    "readConcurrency": 10,
+    "p50Ms": 870,
+    "p95Ms": 921,
+    "largestWorkspaceBytes": 1239233
+  },
+  "catalogueScale": {
+    "listings": 10000,
+    "coldMs": 1202,
+    "warmMs": 23,
+    "firstPageBytes": 54164,
+    "coldScanQueries": 41,
+    "maxRowsPerScan": 250
+  },
+  "productionCapacityProven": false,
+  "browserQA": {"verified": false, "reason": "Managed preview reports running; cloud browser receives ERR_CONNECTION_REFUSED."},
+  "vercelPublication": {"verified": false, "reason": "Retained team scope denied HTTP 403; authorization must be restored."},
+  "externalActions": {"studentAPIKeysUsed": false, "employerSubmissions": 0, "optInsChanged": false, "mailActivated": false}
+}

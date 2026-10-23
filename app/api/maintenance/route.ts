@@ -1,0 +1,8 @@
+import {drainDigests} from '../../../lib/digests';
+import {syncJobs} from '../../../lib/sync';
+import {db,one} from '../../../lib/store';
+import {ownerAccess} from '../../../lib/admin';
+// Owner-authorized maintenance. Public anonymous requests fail closed.
+export const dynamic='force-dynamic';
+export async function GET(){const access=await ownerAccess();if(!access.allowed)return Response.json({error:'Owner authorization is required.'},{status:access.status});const last=await one<{value:string}>('SELECT value FROM meta WHERE key=?','last_sync');const count=await one<{n:number}>('SELECT COUNT(*) as n FROM jobs WHERE active=1');return Response.json({ok:true,lastSync:last?.value||null,activeListings:count?.n||0},{headers:{'Cache-Control':'no-store'}});}
+export async function POST(request:Request){const access=await ownerAccess();if(!access.allowed)return Response.json({error:'Owner authorization is required.'},{status:access.status});if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return Response.json({error:'Use NextRole to change maintenance settings.'},{status:403});try{const body=await request.json().catch(()=>({})) as any;if(body.action==='email-digests')return Response.json(await drainDigests(),{headers:{'Cache-Control':'no-store'}});if(body.action==='schedule'){await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('schedule',JSON.stringify({enabled:body.enabled===true,times:['09:00','14:00','19:00'],timezone:'Asia/Kolkata'})).run();return Response.json({ok:true});}return Response.json(await syncJobs());}catch{return Response.json({error:'Refresh failed.'},{status:500});}}

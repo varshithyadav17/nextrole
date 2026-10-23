@@ -1,0 +1,125 @@
+{
+  "project": "NextRole",
+  "release": "integrated supplied-v17 with live-v14",
+  "live_parent_commit": "a84b0c5dedb32093e1f671366aff07f92fc64558",
+  "source_archive_sha256": "12e57d283906babe7986547384919191c7541509bdbfdfec6605bd7bd5da7fea",
+  "verification": [
+    {
+      "passed": true,
+      "checks": 26,
+      "scope": "Actual adapters in native Worker fetch with isolated outbound service; no production network or data"
+    },
+    {
+      "syntheticScale": {
+        "profiles": 1001,
+        "additionalListings": 500,
+        "alertPages": 21,
+        "profilesProcessed": 1004,
+        "workspaceReads": 100,
+        "readConcurrency": 10,
+        "p50Ms": 841,
+        "p95Ms": 1060,
+        "largestWorkspaceBytes": 720101,
+        "elapsedMs": 41632,
+        "environment": "isolated Miniflare; not production capacity or browser proof"
+      }
+    },
+    {
+      "jobicy": true,
+      "capturedAt": "2026-10-18T06:26:59.141Z",
+      "actualPublicJobs": 23,
+      "paginatedFixtureJobs": 101,
+      "liveAPIUsedDuringTests": false,
+      "note": "Public feed/status capture was fetched separately; all mutations above use isolated D1."
+    },
+    {
+      "catalogueScale": {
+        "listings": 10000,
+        "coldMs": 1057,
+        "warmMs": 23,
+        "firstPageBytes": 33340,
+        "coldScanQueries": 41,
+        "maxRowsPerScan": 250,
+        "hydration": "SQLite integer primary key",
+        "productionCapacityProven": false
+      }
+    },
+    {
+      "passed": true,
+      "checks": 717,
+      "coverage": [
+        "profile persistence",
+        "manual Applied",
+        "source refresh",
+        "per-user isolation",
+        "archive and restore",
+        "application stages and notes",
+        "source failure recovery",
+        "closed job history",
+        "matching boundaries",
+        "reminder rules",
+        "authentication",
+        "URL navigation serialization",
+        "metadata-preserving recovery",
+        "reminder delivery windows",
+        "notification ownership",
+        "maintenance boundary",
+        "encrypted per-user keys",
+        "three-provider fallback",
+        "secret-safe CRUD and export",
+        "AI search source grounding",
+        "quota and refusal handling",
+        "owner-only MCP",
+        "account deletion",
+        "company and role filters"
+      ]
+    }
+  ],
+  "typecheck": "passed",
+  "liveSchemaUpgrade": {
+    "passed": true,
+    "checks": 12,
+    "pendingMigrations": 4,
+    "productionDataUsed": false
+  },
+  "focusedJobicyChecks": 63,
+  "templateChecks": 21,
+  "overlappingSuitesNotSummed": true,
+  "featureLint": {
+    "files": 16,
+    "errors": 0,
+    "warnings": 0
+  },
+  "globalLint": {
+    "rerun": false,
+    "incomingBaselineErrors": 45,
+    "incomingBaselineWarnings": 20
+  },
+  "pdfQA": {
+    "syntheticDataOnly": true,
+    "nativePagesInspected": 5,
+    "compiledTeXPagesInspected": 1,
+    "readerWarnings": 0,
+    "overflowMarkersPreserved": 24,
+    "nativeReferenceBytes": 192642,
+    "compiledReferenceBytes": 115934,
+    "localTeXShellEscape": false
+  },
+  "originalEightSQLMigrationsUnchanged": true,
+  "legacyRendererUnchanged": true,
+  "diffCheck": "passed",
+  "productionBuild": "release packaging gate; see final deployment receipt",
+  "publication": "see final deployment receipt",
+  "browserQA": "unavailable; no supported control-browser capability",
+  "emailSendingActivated": false,
+  "autoApplyImplemented": false,
+  "productionCapacityProven": false,
+  "workerNativeEgress": {
+    "passed": true,
+    "checks": 26,
+    "realAdapters": true,
+    "redirectsRefused": true,
+    "productionDataUsed": false
+  },
+  "correctiveIntegrationParent": "4274629b7b101746e3a28e9b87e395e2f485f92f"
+}

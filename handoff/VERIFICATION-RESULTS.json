@@ -1,0 +1,139 @@
+{
+  "project": "NextRole",
+  "release": "Scout chat and Vercel",
+  "parentCommit": "e253cd85da1f3808779367764b2be4776fc3747f",
+  "verifiedAt": "2026-10-19T07:05:32.313983+00:00",
+  "verification": [
+    {
+      "log": "nextrole-release-tests.log",
+      "result": {
+        "passed": true,
+        "checks": 26,
+        "scope": "Actual adapters in native Worker fetch with isolated outbound service; no production network or data"
+      }
+    },
+    {
+      "log": "nextrole-release-tests.log",
+      "result": {
+        "syntheticScale": {
+          "profiles": 1001,
+          "additionalListings": 500,
+          "alertPages": 21,
+          "profilesProcessed": 1004,
+          "workspaceReads": 100,
+          "readConcurrency": 10,
+          "p50Ms": 1302,
+          "p95Ms": 1765,
+          "largestWorkspaceBytes": 720413,
+          "elapsedMs": 76035,
+          "environment": "isolated Miniflare; not production capacity or browser proof"
+        }
+      }
+    },
+    {
+      "log": "nextrole-release-tests.log",
+      "result": {
+        "jobicy": true,
+        "capturedAt": "2026-10-18T06:26:59.141Z",
+        "actualPublicJobs": 23,
+        "paginatedFixtureJobs": 101,
+        "liveAPIUsedDuringTests": false,
+        "note": "Public feed/status capture was fetched separately; all mutations above use isolated D1."
+      }
+    },
+    {
+      "log": "nextrole-release-tests.log",
+      "result": {
+        "catalogueScale": {
+          "listings": 10000,
+          "coldMs": 1466,
+          "warmMs": 38,
+          "firstPageBytes": 33464,
+          "coldScanQueries": 41,
+          "maxRowsPerScan": 250,
+          "hydration": "SQLite integer primary key",
+          "productionCapacityProven": false
+        }
+      }
+    },
+    {
+      "log": "nextrole-release-tests.log",
+      "result": {
+        "passed": true,
+        "checks": 847,
+        "coverage": [
+          "profile persistence",
+          "manual Applied",
+          "source refresh",
+          "per-user isolation",
+          "archive and restore",
+          "application stages and notes",
+          "source failure recovery",
+          "closed job history",
+          "matching boundaries",
+          "reminder rules",
+          "authentication",
+          "URL navigation serialization",
+          "metadata-preserving recovery",
+          "reminder delivery windows",
+          "notification ownership",
+          "maintenance boundary",
+          "encrypted per-user keys",
+          "three-provider fallback",
+          "secret-safe CRUD and export",
+          "AI search source grounding",
+          "quota and refusal handling",
+          "owner-only MCP",
+          "account deletion",
+          "company and role filters"
+        ]
+      }
+    },
+    {
+      "log": "nextrole-bridge-http-tests.log",
+      "result": {
+        "passed": true,
+        "checks": 142,
+        "scope": "Scout, uploads, companion and preparation workflows"
+      }
+    },
+    {
+      "log": "nextrole-vercel-final-tests.log",
+      "result": {
+        "passed": true,
+        "checks": 19,
+        "scope": "Generated Vercel authentication, callback, private proxy and upload boundaries"
+      }
+    },
+    {
+      "log": "nextrole-upgrade-tests.log",
+      "result": {
+        "passed": true,
+        "checks": 12,
+        "upgrade": "live v14 schema and checkpoint to Scout source with retained v17 compatibility",
+        "pendingMigrations": 5,
+        "productionDataUsed": false
+      }
+    }
+  ],
+  "typecheck": {
+    "passed": true
+  },
+  "focusedLint": {
+    "passed": true,
+    "files": 20,
+    "globalLintClaimed": false
+  },
+  "browserEndToEndVerified": false,
+  "productionCapacityProven": false,
+  "mailSenderConfigured": false,
+  "frozenLockfilePolicy": {
+    "passed": true,
+    "pnpm": "11.25.0",
+    "workspacePolicyIncluded": true
+  },
+  "vercelHandlerChecks": {
+    "passed": true,
+    "checks": 19
+  }
+}

@@ -1,0 +1,35 @@
+export type JobStatus = 'interested' | 'applied' | 'dismissed';
+export type Profile = {
+  name: string; roles: string[]; locations: string[]; modes: string[];
+  skills: string[]; experience: number; graduationYear: string; degree: string;
+  jobTypes: string[]; alerts: boolean; reminders: boolean; completed: boolean;
+  cgpa?: number | null; cgpaScale?: 4 | 10; percentage?: number | null;
+  availableFrom?: string; availableMonths?: number | null;
+};
+export type Job = {
+  id: string; key: string; sourceId: string; company: string; title: string;
+  location: string; mode: string; jobType: string; description: string;
+  url: string; sourceUrl: string; publishedAt: string | null; deadline: string | null;
+  firstSeen: string; lastChecked: string; active: boolean;
+  minExperience: number | null; experienceEvidence: string | null; skills: string[];
+  canonicalUrl?: string;
+  sourceCategory?: 'employer'|'job-board';sourceLabel?:string;sourceSeniority?:string;
+  availability?:'open'|'closed'|'unknown';availabilityCheckedAt?:string;contentCheckedAt?:string;
+  countryCodes?: string[];
+  evidenceComplete?: boolean;
+  evidenceVersion?: number;
+  deadlineEvidence?: string;
+  provenance?: {kind:'ats-api'|'job-board-api'|'job-search-api'|'user-import';url:string;capturedAt:string;parserVersion:number};
+  applyOptions?:{label:string;url:string}[];
+  compensation?: {minimum:number|null;maximum:number|null;currency:string|null;period:string|null;evidence:string};
+  experienceRequirements?: import('./experience').ExperienceRequirements;
+  eligibility?: import('./eligibility').EligibilityRequirements;
+  change?: {at:string;fields:string[];previous:{deadline?:string|null;title?:string;url?:string};summary:string};
+};
+export type RequirementCheck={key:string;label:string;status:'met'|'conflict'|'review'|'unstated';requirement:string;profile:string;evidence?:string};
+export type Match = { score: number; relevant: boolean; uncertain: boolean; reasons: string[]; cautions: string[];checks?:RequirementCheck[] };
+export type JobView = Job & { match: Match; status: JobStatus | null; stage: string | null; note: string; statusAt: string | null; remindAt: string | null };
+export type Source = { id: string; company: string; provider: 'greenhouse' | 'ashby' | 'lever' | 'jobicy'; token: string; careerUrl: string;category?:'employer'|'job-board';scope?:string };
+export type Notice = { id: string; title: string; body: string; jobKey: string | null; jobId?:string|null;createdAt: string; readAt: string | null; type: string };
+export type FitAnalysis = {kind:'basic'|'ai';summary:string;strengths:{point:string;evidence:string}[];checks:string[];sourceUrl:string;cached:boolean;provider?:string;model?:string;slot?:number;notice?:string;attempts?:{slot:number;provider:string;status:string}[]};
+export const defaultProfile: Profile = {name:'',roles:['Software engineer','Data analyst'],locations:['India'],modes:['On-site','Hybrid','Remote'],skills:[],experience:0,graduationYear:'',degree:'',cgpa:null,cgpaScale:10,percentage:null,availableFrom:'',availableMonths:null,jobTypes:['Full-time','Internship'],alerts:true,reminders:true,completed:false};

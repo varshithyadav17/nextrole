@@ -1,0 +1,41 @@
+/** Exercise the actual generated Next.js handlers without starting a browser or preview server. */
+import assert from 'node:assert/strict';
+import {registerHooks} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import path from 'node:path';
+const out=process.argv[2];if(!out)throw new Error('Pass the generated Vercel source directory.');
+let jar=new Map(),checks=0,upstreamCalls=0,upstreamRequest=null;
+const check=(value,message)=>{assert.ok(value,message);checks++;};
+globalThis.__nextroleCookieJar={get:name=>jar.has(name)?{value:jar.get(name)}:undefined};
+registerHooks({resolve(specifier,context,next){if(specifier==='next/headers')return {url:'nextrole-vercel-test:cookies',shortCircuit:true};if(specifier==='next/server')return next('next/server.js',context);if(specifier==='next/navigation')return next('next/navigation.js',context);try{return next(specifier,context);}catch(error){if(specifier.startsWith('.')&&!/\.(?:ts|mjs|js|json)$/.test(specifier))return next(specifier+'.ts',context);throw error;}},load(url,context,next){if(url==='nextrole-vercel-test:cookies')return {format:'module',source:'export async function cookies(){return globalThis.__nextroleCookieJar;} export async function headers(){return new Headers({"oai-authenticated-user-id":"forged","oai-authenticated-user-email":"forged@example.test","oai-sites-authorization":"forged-bypass"});}',shortCircuit:true};return next(url,context);}});
+process.env.NEXTROLE_BRIDGE_SECRET='4b'.repeat(32);process.env.NEXTROLE_BACKEND_ORIGIN='https://backend.example.test';process.env.NEXTROLE_APP_ORIGIN='https://nextrole.example.test';
+const load=relative=>import(pathToFileURL(path.join(out,relative)).href),{getChatGPTUser,serverConfig,SESSION_COOKIE}=await load('app/chatgpt-auth.ts'),{issueSession,verifyProof,exchangeValue}=await load('lib/bridge/session.ts'),{proxy}=await load('lib/vercel-proxy.ts'),{signIn,callback,signOut}=await load('lib/vercel-login.ts'),config=serverConfig(),user={userId:'vercel-fixture',email:'fixture@example.test',fullName:'Fixture',displayName:'Fixture'},token=await issueSession(config,user),originalFetch=globalThis.fetch;
+try{
+ check(!await getChatGPTUser(),'Vercel ignores forged native identity and Site bypass headers.');
+ check((await proxy(new Request(config.audience+'/api/scout'),'/api/scout')).status===401,'Private proxy routes reject a browser without a valid application session.');
+ jar.set(SESSION_COOKIE,token);check((await getChatGPTUser()).userId===user.userId,'The generated frontend verifies and reads the original student identity.');
+ jar.set(SESSION_COOKIE,token+'tampered');check(!await getChatGPTUser(),'Cookie presence alone never establishes identity.');jar.set(SESSION_COOKIE,token);
+ globalThis.fetch=async(url,init)=>{upstreamCalls++;upstreamRequest={url:String(url),init};return new Response('private response',{headers:{'Content-Type':'text/plain','Set-Cookie':'malicious=1','Location':'https://evil.test','Cache-Control':'public'}});};
+ const post=origin=>new Request(config.audience+'/api/scout',{method:'POST',headers:{...(origin?{Origin:origin}:{}),'Content-Type':'application/json'},body:'{}'});
+ check((await proxy(post('https://evil.test'),'/api/scout')).status===403&&(await proxy(post(null),'/api/scout')).status===403&&upstreamCalls===0,'Cross-origin and originless cookie-authenticated writes stop before backend access.');
+ const response=await proxy(new Request(config.audience+'/api/scout?jobId=fixture',{headers:{'OAI-Sites-Authorization':'forged','oai-authenticated-user-id':'forged','Cookie':'untrusted=1','Authorization':'Bearer forged'}}),'/api/scout');
+ const forwarded=upstreamRequest.init.headers;check(response.ok&&upstreamRequest.url===config.issuer+'/api/scout?jobId=fixture'&&forwarded.get('x-nextrole-session')===token&&!forwarded.has('Cookie')&&!forwarded.has('Authorization')&&!forwarded.has('OAI-Sites-Authorization')&&!forwarded.has('oai-authenticated-user-id'),'The proxy forwards only its verified signed session to the fixed backend origin.');
+ check(!response.headers.has('Set-Cookie')&&!response.headers.has('Location')&&response.headers.get('Cache-Control')==='private, no-store','Backend responses cannot set frontend cookies, redirect users or enter a shared cache.');
+ check((await proxy(post(config.audience),'/api/scout')).ok&&forwarded.get('origin')===config.issuer,'A verified same-origin mutation reaches the existing authorized backend.');
+ check((await proxy(post(config.audience),'/api/../evil?url=x')).status===404,'Proxy route targets cannot contain an injected query or alternate origin.');
+ const large=new Request(config.audience+'/api/resumes',{method:'POST',headers:{Origin:config.audience,'Content-Length':'4400001'},body:'too big'});check((await proxy(large,'/api/resumes')).status===413,'Oversized upload requests return an actionable limit before backend work.');
+ globalThis.fetch=async()=>{throw new Error('Connection failed');};check((await proxy(new Request(config.audience+'/api/scout'),'/api/scout')).status===503,'Backend outages return a safe retry response and never pretend that a save succeeded.');
+ check((await callback(new Request(config.audience+'/callback?code=forged&state=forged'))).status===400,'A callback without matching signed browser state is rejected.');
+ const login=await signIn(new Request(config.audience+'/signin-with-chatgpt?return_to='+encodeURIComponent('/?tab=applications'))),location=new URL(login.headers.get('location')),cookie=login.cookies.get('__Host-nextrole-login');
+ const aliasLogin=await signIn(new Request('https://deployment-alias.vercel.app/signin-with-chatgpt?return_to='+encodeURIComponent('/?tab=applications')));check(aliasLogin.status===302&&aliasLogin.headers.get('Location').startsWith(config.audience+'/signin-with-chatgpt?')&&!aliasLogin.cookies.get('__Host-nextrole-login'),'A deployment alias sends sign-in to the canonical origin before creating a browser-state cookie.');
+ check(location.origin===config.issuer&&location.pathname==='/api/bridge/authorize'&&location.searchParams.get('code_challenge_method')==='S256'&&login.headers.get('Set-Cookie').includes('HttpOnly')&&login.headers.get('Set-Cookie').includes('Secure'),'Sign-in uses top-level native authentication, PKCE and a Secure HttpOnly browser-state cookie.');
+ jar.set('__Host-nextrole-login',cookie.value);let requests=0;
+ globalThis.fetch=async(url,init)=>{requests++;const b=JSON.parse(init.body);check(await verifyProof(config,'exchange-v1',exchangeValue(b.code,b.verifier,b.redirectUri),b.proof),'The callback proves its server identity without any Site bypass token.');return Response.json({session:token});};
+ const code=(Date.now()+120000)+'.'+'a'.repeat(43)+'.'+'b'.repeat(43),goodUrl=config.audience+'/callback?code='+code+'&state='+location.searchParams.get('state');
+ const invalid=await callback(new Request(goodUrl.replace(/state=.*/, 'state=forged')));check(invalid.status===400&&requests===0,'Mismatched browser state never attempts a server exchange.');
+ const complete=await callback(new Request(goodUrl));check(complete.status===303&&complete.headers.get('Location')===config.audience+'/?tab=applications'&&complete.cookies.get(SESSION_COOKIE)?.value===token,'A verified callback stores the bounded application session and restores the requested workspace route.');
+ globalThis.fetch=async()=>Response.json({session:'forged'});check((await callback(new Request(goodUrl))).status===400,'The callback independently verifies the returned session signature.');
+ const logout=await signOut(new Request(config.audience+'/signout-with-chatgpt?return_to=//evil.test'));check(logout.status===303&&logout.headers.get('Location')===config.audience+'/'&&logout.cookies.get(SESSION_COOKIE)?.value==='','Logout clears both app cookies and rejects an external return destination.');
+ const {verifyVercelGoogle}=await import('./verify-vercel-google.mjs');await verifyVercelGoogle({load,jar,check,config,user,token,issueSession,SESSION_COOKIE});
+ console.log(JSON.stringify({passed:true,checks,scope:'Generated Vercel authentication, Google OIDC, callback, private proxy and upload boundaries'}));
+}finally{globalThis.fetch=originalFetch;delete process.env.NEXTROLE_BRIDGE_SECRET;}

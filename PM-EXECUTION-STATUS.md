@@ -1,0 +1,19 @@
+# Current execution status
+
+The focused release adds Today next actions, simpler navigation, evidence-based eligibility and availability checks, explicit application-link intent, meaningful source-change notices, noninterruptive feedback and host application-quality aggregates. See `handoff/FOCUSED-RELEASE.md` for the current scope, migration and external gates. The table below also documents retained capabilities; deployment does not by itself validate real-world effectiveness.
+
+The Scout chat/Vercel release expands the integrated NextRole application. The handoff ZIP's deployment receipt is authoritative for the exact published commit and native version. Product status must be assessed separately from deployment success.
+
+| Area | Implemented | Remaining practical limit |
+| --- | --- | --- |
+| Discovery | Shared public ATS/Jobicy ingestion; strict experience/batch matching; 21 configured employer boards plus Jobicy; private pasted and structured job imports | Coverage is the configured registry, not every platform. LinkedIn/Unstop global access is not configured. |
+| Career data | Confirmed facts, projects/repository/demo URLs, optional role-specific private PDF/DOCX/TXT files and reviewed extraction | No local OCR; scanned PDFs need optional consented original-PDF AI reading. File and text quotas apply. |
+| Scout | Original-PDF attachments/previews, separate PDF sharing consent, reviewed attachment-based tailoring, PDF and LaTeX .txt exports; roomy, responsive raccoon chat, growing composer, soft field focus, explained score cards, per-job or pasted-JD factual résumé building, private draft management, consented personal-key conversation, reviewed corrections and exact-span résumé import | No employer ATS integration or guaranteed ATS score. Personal provider quotas still apply. |
+| Browser applications | Scout Companion 0.2 side panel, reviewed link/paste imports, local drafts, explicit workspace scope, canonical duplicate/status lookup, confirmed manual tracking; off-by-default scoped queue, exact saved PDF, explicit queue, daily cap, employer allowlist, one in-flight job, pause/revoke, conservative form planning and observed confirmation | Unpacked beta; browser must stay open. Real browser/employer workflows are unverified. Unknown controls, declarations and CAPTCHA stop it. |
+| Application history | Immutable submitted PDF/JD/answer snapshots, role/date, independent milestones, user analytics and exports | Receipt is a candidate-browser observation or user confirmation, not an employer-signed attestation. |
+| Preparation | Official Amazon/Microsoft guides, a source-labelled Paytm candidate report, original practice and role/stage selection | Curated coverage is limited. No universal live PYQ retrieval engine. Missing exact company questions remain explicitly unknown. |
+| Nightly newsletter | Opt-in account email, preview, full-match CSV, bounded idempotent sender, unsubscribe and aggregate host readiness/backlog | Verified sender/domain and provider key are absent; no actual email delivery claimed. |
+| Hosting | Conventional Next.js frontend on Vercel with PKCE/one-time-code login bridge to the retained Site backend; stable student identities and owner role | This is a hybrid deployment. Browser/device login and campus production capacity still need live validation. |
+| Host PM view | Existing feedback/help/monthly surveys and feature metrics, plus private-storage, companion and email aggregates | Hosting billing, CPU, D1/R2 quotas and production capacity require provider monitoring. |
+
+Testing uses isolated synthetic identities, local D1/R2 and intercepted provider requests. No actual employer application or student-key maintenance was performed. Follow handoff/VERIFICATION.md and CAMPUS-PILOT.md before widening distribution.
