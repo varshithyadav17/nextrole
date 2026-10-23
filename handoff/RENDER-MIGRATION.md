@@ -16,7 +16,7 @@ The default generator still targets the current backend. Do not switch the produ
 | --- | --- |
 | Render | `NEXTROLE_APP_ORIGIN=https://nextrole-scout.vercel.app` |
 | Render | `NEXTROLE_BACKEND_ORIGIN=https://nextrole-job-radar.ivorypine64.chatgpt.site` |
-| Render, secret | Existing `NEXTROLE_BRIDGE_SECRET`; preserve its current value to retain sessions. Never generate a replacement for this cutover. |
+| Render, secret | `NEXTROLE_BRIDGE_SECRET`: either securely copy the existing value, or provision an independent random 32-byte hex key shared only with the data service's `NEXTROLE_RENDER_BRIDGE_SECRET`. Never replace the existing data-service/Vercel key to configure Render. |
 | Render | `GOOGLE_CLIENT_ID`; secret `GOOGLE_CLIENT_SECRET` from the owner's Google Cloud OAuth web client |
 | Render | `NEXTROLE_GOOGLE_ONLY=false` until account linking and recovery are verified |
 | Vercel in Render mode | `NEXTROLE_APP_ORIGIN`, `NEXTROLE_RENDER_ORIGIN` (exact healthy HTTPS service origin), `NEXTROLE_STORAGE_ORIGIN` (the existing Site origin; legacy login redirect allowlist) |
@@ -27,9 +27,9 @@ Google callback remains `https://nextrole-scout.vercel.app/auth/google/callback`
 ## Cutover order
 
 1. Publish the reviewed source to a new NextRole repository. Do not reuse or overwrite an unrelated repository. Deploy `render.yaml` from that repository with automatic deploys off initially.
-2. Enter the existing bridge secret and Google credentials securely in Render. Register the exact Google callback and configure the consent screen. No credentials belong in Git or screenshots.
+2. Configure the bridge secret and Google credentials securely in Render. If the existing key is write-only, add a separate random 32-byte hex credential as `NEXTROLE_RENDER_BRIDGE_SECRET` on the data service and `NEXTROLE_BRIDGE_SECRET` on Render. The data service verifies proofs/sessions against these two explicit credentials, preserving the current key and login. Register the exact Google callback and configure the consent screen. No credentials belong in Git or screenshots.
 3. Check `/healthz`. Confirm both backend readiness and Google readiness. On a free Render instance, cold starts can delay login; observe this before choosing a campus hosting plan.
-4. Build the Vercel frontend with `--render-backend`. Verify sign-in, Google cancellation, callback expiry, logout, private API access, PDF uploads, owner-only admin and source refresh/digest maintenance. Preserve existing account IDs.
+4. Build the Vercel frontend with `--render-backend`. Verify sign-in, Google cancellation, callback expiry, logout, private API access, PDF uploads, owner-only admin and source refresh/digest maintenance. Preserve existing account IDs. When Render uses an independent credential, existing browser sessions must sign in again at cutover; the account ID, jobs and history stay unchanged. The original Vercel build remains a compatible rollback because its key was retained.
 5. Existing users must explicitly link Google from their signed-in workspace. Never merge by matching email. The current owner's linked Google identity restores its existing canonical ID and host capability. A new unlinked Google account does not become admin by matching the owner email.
 6. Only after successful linking/recovery checks, set `NEXTROLE_GOOGLE_ONLY=true` on Render. The sign-in UI then shows Google only. Remove unused signing/OAuth secrets from Vercel after a successful cutover; never remove the data service's active secrets or bindings.
 7. Observe auth failures, latency, source health and delivery backlog. Roll back to the previous Vercel build if needed. Existing database records and applications stay in place.

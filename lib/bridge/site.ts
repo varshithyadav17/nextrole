@@ -3,6 +3,16 @@ import {db} from '../store';
 import {PublicError} from '../errors';
 import {bridgeConfig,sha256,randomToken,verifyProof,exchangeValue,issueSession,type BridgeConfig,type BridgeUser} from './session';
 export function siteBridgeConfig(){return bridgeConfig(env.NEXTROLE_BRIDGE_SECRET,env.NEXTROLE_BRIDGE_ISSUER,env.NEXTROLE_VERCEL_ORIGIN);}
+/** Two explicitly provisioned server credentials; never derive one from a Site bypass token. */
+export function siteBridgeConfigs(){
+ const primary=siteBridgeConfig(),render=bridgeConfig(env.NEXTROLE_RENDER_BRIDGE_SECRET,env.NEXTROLE_BRIDGE_ISSUER,env.NEXTROLE_VERCEL_ORIGIN);
+ return [primary,render].filter((value,index,all):value is BridgeConfig=>!!value&&all.findIndex(candidate=>candidate?.secret===value.secret)===index);
+}
+export async function siteBridgeProofConfig(purpose:'exchange-v1'|'google-identity-v1',value:unknown,signature:unknown){
+ if(typeof value!=='string'||value.length>9000||typeof signature!=='string'||signature.length!==43)return null;
+ for(const config of siteBridgeConfigs())if(await verifyProof(config,purpose,value,signature))return config;
+ return null;
+}
 export function authorizationParams(config:BridgeConfig,url:URL){
  const redirectUri=url.searchParams.get('redirect_uri')||'',challenge=url.searchParams.get('code_challenge')||'',state=url.searchParams.get('state')||'';
  if(redirectUri!==config.audience+'/callback'||url.searchParams.get('code_challenge_method')!=='S256'||!/^[A-Za-z0-9_-]{43}$/.test(challenge)||!/^[A-Za-z0-9_-]{43}$/.test(state))throw new PublicError('This sign-in request is invalid. Start again from NextRole.',400);

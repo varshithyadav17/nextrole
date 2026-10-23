@@ -1,6 +1,6 @@
 export async function verifyBridge({database,check}){
  const {bridgeConfig,sha256,randomToken,proof,verifySession,issueSession,safeReturnPath,exchangeValue}=await import('../lib/bridge/session.ts');
- const {authorizationParams,issueAuthorization,consumeAuthorization,clearAuthorizations}=await import('../lib/bridge/site.ts');
+ const {authorizationParams,issueAuthorization,consumeAuthorization,clearAuthorizations,siteBridgeConfigs,siteBridgeProofConfig}=await import('../lib/bridge/site.ts');
  const config=bridgeConfig('7a'.repeat(32),'https://backend.example.test','https://nextrole.example.test'),user={userId:'bridge-fixture',email:'bridge@example.test',displayName:'Fixture',fullName:'Bridge Fixture'},now=Date.now();
  const rejects=async f=>{try{await f();return false;}catch{return true;}};
  check(!bridgeConfig('short',config.issuer,config.audience)&&!bridgeConfig(config.secret,'http://backend.test',config.audience)&&!bridgeConfig(config.secret,config.issuer,config.audience+'/path'),'The bridge requires a full independent secret and exact HTTPS origins.');
@@ -26,7 +26,7 @@ export async function verifyBridge({database,check}){
  for(let i=0;i<10;i++)await issueAuthorization(config,user,params,now);check(await rejects(()=>issueAuthorization(config,user,params,now)),'Unused sign-in codes have a bounded per-user storage quota.');
  await issueAuthorization(config,user,params,now+120001);check((await database.prepare('SELECT COUNT(*) as n FROM meta WHERE key>=? AND key<?').bind(prefix,prefix+'~').first()).n===1,'A new sign-in removes this user’s expired code records before applying its quota.');
  await clearAuthorizations(user.userId);
- const {GET:authorize}=await import('../app/api/bridge/authorize/route.ts'),{POST:exchangePOST}=await import('../app/api/bridge/token/route.ts'),env=globalThis.__nextroleTestEnv,previous={secret:env.NEXTROLE_BRIDGE_SECRET,issuer:env.NEXTROLE_BRIDGE_ISSUER,audience:env.NEXTROLE_VERCEL_ORIGIN,user:globalThis.__nextroleTestUser};
+ const {GET:authorize}=await import('../app/api/bridge/authorize/route.ts'),{POST:exchangePOST}=await import('../app/api/bridge/token/route.ts'),env=globalThis.__nextroleTestEnv,previous={secret:env.NEXTROLE_BRIDGE_SECRET,render:env.NEXTROLE_RENDER_BRIDGE_SECRET,issuer:env.NEXTROLE_BRIDGE_ISSUER,audience:env.NEXTROLE_VERCEL_ORIGIN,user:globalThis.__nextroleTestUser};
  try{
   env.NEXTROLE_BRIDGE_SECRET=config.secret;env.NEXTROLE_BRIDGE_ISSUER=config.issuer;env.NEXTROLE_VERCEL_ORIGIN=config.audience;
   globalThis.__nextroleTestUser=null;const anonymous=await authorize(new Request(url));check(anonymous.status===302&&anonymous.headers.get('Location').startsWith('/signin-with-chatgpt?return_to='),'Anonymous authorization enters the native top-level Site sign-in flow.');
@@ -35,5 +35,19 @@ export async function verifyBridge({database,check}){
   const code=destination.searchParams.get('code'),body=await exchange(code,verifier),post=origin=>new Request(config.issuer+'/api/bridge/token',{method:'POST',headers:{'Content-Type':'application/json',...(origin?{Origin:origin}:{})},body:JSON.stringify(body)});
   check((await exchangePOST(post('https://evil.test'))).status===403,'The public exchange endpoint rejects an unrelated browser Origin.');
   const exchanged=await exchangePOST(post(null)),result=await exchanged.json();check(exchanged.ok&&(await verifySession(config,result.session)).userId===user.userId,'The deployed token route performs the bounded signed one-time exchange.');
- }finally{env.NEXTROLE_BRIDGE_SECRET=previous.secret;env.NEXTROLE_BRIDGE_ISSUER=previous.issuer;env.NEXTROLE_VERCEL_ORIGIN=previous.audience;globalThis.__nextroleTestUser=previous.user;await clearAuthorizations(user.userId);}
+  const render={...config,secret:'9c'.repeat(32)};env.NEXTROLE_RENDER_BRIDGE_SECRET=render.secret;
+  check(siteBridgeConfigs().length===2,'Render can use a separate provisioned server credential without rotating the live Vercel key.');
+  const renderCode=await issueAuthorization(config,user,params),renderValue=exchangeValue(renderCode,verifier,params.redirectUri),renderProof=await proof(render,'exchange-v1',renderValue);
+  check((await siteBridgeProofConfig('exchange-v1',renderValue,renderProof))?.secret===render.secret&&(await siteBridgeProofConfig('exchange-v1',renderValue,await proof(config,'exchange-v1',renderValue)))?.secret===config.secret,'The verified HMAC selects only the provisioned credential; both clients keep the same canonical user and audience.');
+  check(!await siteBridgeProofConfig('google-identity-v1',renderValue,renderProof)&&!await siteBridgeProofConfig('exchange-v1',renderValue,'forged')&&!await siteBridgeProofConfig('exchange-v1','x'.repeat(9001),renderProof),'Wrong-purpose, forged and oversized bridge proofs fail closed.');
+  const renderBody={code:renderCode,verifier,redirectUri:params.redirectUri,proof:renderProof},renderPost=()=>new Request(config.issuer+'/api/bridge/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(renderBody)});
+  const renderResponse=await exchangePOST(renderPost()),renderSession=await renderResponse.json();check(renderResponse.ok&&(await verifySession(render,renderSession.session))?.userId===user.userId&&!await verifySession(config,renderSession.session),'The actual token route issues a Render session with the new key and preserves the existing workspace ID.');
+  check((await exchangePOST(renderPost())).status===401,'A Render exchange remains single-use across both trusted clients.');
+  const {POST:googlePOST}=await import('../app/api/bridge/google/route.ts'),identity={subject:'render-bridge-fixture',email:'render-fixture@example.test',fullName:'Render Bridge Fixture'},payload=btoa(JSON.stringify({identity,mode:'login',previousSession:null,issuedAt:Date.now(),requestId:randomToken()})).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+  const googleBody={payload,signature:await proof(render,'google-identity-v1',payload)},googleResponse=await googlePOST(new Request(config.issuer+'/api/bridge/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(googleBody)})),googleResult=await googleResponse.json();
+  check(googleResponse.ok&&(await verifySession(render,googleResult.session))?.userId.startsWith('google:'),'The actual Google exchange accepts the separately provisioned Render client after proof verification.');
+  await database.prepare('DELETE FROM google_accounts WHERE user_data LIKE ?').bind('%Render Bridge Fixture%').run();
+  env.NEXTROLE_RENDER_BRIDGE_SECRET=undefined;check(siteBridgeConfigs().length===1&&!await siteBridgeProofConfig('exchange-v1',renderValue,renderProof),'Removing the optional Render credential disables that client while preserving the original credential.');
+  env.NEXTROLE_RENDER_BRIDGE_SECRET=config.secret;check(siteBridgeConfigs().length===1,'Duplicate server credentials are checked only once.');
+ }finally{env.NEXTROLE_BRIDGE_SECRET=previous.secret;env.NEXTROLE_RENDER_BRIDGE_SECRET=previous.render;env.NEXTROLE_BRIDGE_ISSUER=previous.issuer;env.NEXTROLE_VERCEL_ORIGIN=previous.audience;globalThis.__nextroleTestUser=previous.user;await clearAuthorizations(user.userId);}
 }

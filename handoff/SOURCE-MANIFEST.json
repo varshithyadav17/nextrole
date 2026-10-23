@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
   "release": "Dedicated admin analytics, measured active time, PDF reports and prepared Render/Google migration",
-  "generatedAt": "2026-10-23T10:30:20.337Z",
-  "parentCommit": "b87f8e75bb2805805a302b37fe2acda6d79a8402",
+  "generatedAt": "2026-10-23T11:19:49.217Z",
+  "parentCommit": "436215744c90551889ca6ab2ece43d10e84be21e",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -177,13 +177,13 @@
     },
     {
       "path": "app/api/bridge/google/route.ts",
-      "bytes": 952,
-      "sha256": "c78d33666ae34acb5e9bc3e0e7f5de76493852426f0f39770b9033368dbc17a5"
+      "bytes": 1214,
+      "sha256": "cb5adc90f60d1e39ecdba110bfbce90594943e6370f8013d348616002b183e5f"
     },
     {
       "path": "app/api/bridge/token/route.ts",
-      "bytes": 900,
-      "sha256": "ae07bf4c7df8ec08939ff95585ff7dcce7d115bd44340a3c176d6f77047d9c76"
+      "bytes": 1421,
+      "sha256": "a08962882b33b4c713a4308905a5f4e273944798066551480ca7190975d5554b"
     },
     {
       "path": "app/api/catalogue/route.ts",
@@ -292,8 +292,8 @@
     },
     {
       "path": "app/chatgpt-auth.ts",
-      "bytes": 3155,
-      "sha256": "914efd75f9c70d61604c9337ddceaf87322a4f33aa40a98c29c40c67cf6d28c4"
+      "bytes": 3223,
+      "sha256": "46e8e1343db472820a62bbb6966048705077560fdc43c13bdf3c451d685d8f90"
     },
     {
       "path": "app/community.tsx",
@@ -557,8 +557,8 @@
     },
     {
       "path": "cloudflare-env.d.ts",
-      "bytes": 584,
-      "sha256": "2cc5e45d84b0a588bb2564f2e9d628212a9cc92f0b812d75302b300f789ec513"
+      "bytes": 628,
+      "sha256": "d3fff71f7487ea24f038bf0f189d774cfd9579c04f98d1ec608b5c6681048406"
     },
     {
       "path": "companion/README.md",
@@ -1362,8 +1362,8 @@
     },
     {
       "path": "handoff/RENDER-MIGRATION.md",
-      "bytes": 5206,
-      "sha256": "43589c976b4154c96617053684906487c9a70d1ef67e279266aa99cbece71399"
+      "bytes": 5862,
+      "sha256": "f1847320e813420aaf54ed7ca1eb4eb863c4851478d5a598061e2879fcd49a30"
     },
     {
       "path": "handoff/RESUME-TEMPLATE.md",
@@ -1582,8 +1582,8 @@
     },
     {
       "path": "lib/bridge/site.ts",
-      "bytes": 3762,
-      "sha256": "7eb88df9c92b99a4243dc9400c9e4d2607cc0a616f3acf7852fa54d007e0d23b"
+      "bytes": 4551,
+      "sha256": "14c395ca14e996d0b4d9e25a32f9d0e6e39d2a4d99f332c33e2ed4571f1bf399"
     },
     {
       "path": "lib/career.ts",
@@ -2137,8 +2137,8 @@
     },
     {
       "path": "scripts/verify-admin-analytics.mjs",
-      "bytes": 6530,
-      "sha256": "ca46fdd2671877165b85b48e82de4f35fcb8284d8633694a11de84e672aba5db"
+      "bytes": 6361,
+      "sha256": "2c6fb8891e8abb151e59ec53f42f828c682cc379740a0e3ff5aeb8faef18254c"
     },
     {
       "path": "scripts/verify-app.mjs",
@@ -2147,8 +2147,8 @@
     },
     {
       "path": "scripts/verify-bridge.mjs",
-      "bytes": 7943,
-      "sha256": "9d79d42ac40ad909f256456226af3f7bb2d3847a75030b920d1e6278b1d905cf"
+      "bytes": 11272,
+      "sha256": "ed4dc785a7c9d21aea236a9ff737a8cfc22368dd34e59072ae8b5b914bea42a6"
     },
     {
       "path": "scripts/verify-catalogue.mjs",

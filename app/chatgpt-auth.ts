@@ -1,6 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import {siteBridgeConfig} from '../lib/bridge/site';
+import {siteBridgeConfig,siteBridgeConfigs} from '../lib/bridge/site';
 import {verifySession} from '../lib/bridge/session';
 
 export type ChatGPTUser = {
@@ -22,8 +22,9 @@ const CALLBACK_PATH = "/callback";
 
 export async function getChatGPTUser(): Promise<ChatGPTUser | null> {
   const native=await getNativeChatGPTUser();if(native)return native;
-  const config=siteBridgeConfig();if(!config)return null;
-  return verifySession(config,(await headers()).get('x-nextrole-session'));
+  const token=(await headers()).get('x-nextrole-session');
+  for(const config of siteBridgeConfigs()){const user=await verifySession(config,token);if(user)return user;}
+  return null;
 }
 
 export async function getNativeChatGPTUser(): Promise<ChatGPTUser | null> {

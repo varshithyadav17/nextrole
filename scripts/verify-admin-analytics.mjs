@@ -1,4 +1,3 @@
-import {writeFile,mkdir} from 'node:fs/promises';
 import {PDFDocument} from 'pdf-lib';
 export async function verifyAdminAnalytics({database,put,check}){
  const community=await import('../app/api/community/route.ts'),host=await import('../app/api/host/route.ts'),pdf=await import('../app/api/host/report/route.ts');
@@ -44,6 +43,5 @@ export async function verifyAdminAnalytics({database,put,check}){
  check(response.ok&&response.headers.get('Content-Type')==='application/pdf'&&response.headers.get('Content-Disposition').includes('SYNTHETIC-DEMO'),'The authenticated report is a direct PDF download with a synthetic filename.');
  const bytes=new Uint8Array(await response.arrayBuffer()),document=await PDFDocument.load(bytes);
  check(document.getPageCount()>=7&&document.getTitle().includes('SYNTHETIC DEMO'),'The full report includes all sections, appendices and a synthetic title.');
- await mkdir('output/pdf',{recursive:true});await writeFile('output/pdf/NextRole_Synthetic_Demo_Analytics.pdf',bytes);
  user('analytics-owner',true);check((await pdf.GET(new Request('https://nextrole.test/api/host/report?section=unknown'))).status===400,'Report sections are bounded to supported values.');
 }
