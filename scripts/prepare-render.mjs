@@ -10,11 +10,13 @@ if(managed){for(const directory of [path.dirname(out),out]){const info=await lst
 await mkdir(out,{recursive:true});const previous=await readdir(out);
 if(previous.length){
  if(!managed)throw new Error('Output must be empty.');
+ const cacheNames=['node_modules','.next'];
+ for(const name of previous.filter(name=>cacheNames.includes(name))){const info=await lstat(path.join(out,name));if(!info.isDirectory()||info.isSymbolicLink())throw new Error('Render cache entries must be real directories.');}
  const marker=path.join(out,'RENDER-SOURCE-MANIFEST.json'),info=await lstat(marker).catch(()=>null);
- if(!info?.isFile())throw new Error('Refusing to replace unrecognized Render output.');
- const manifest=JSON.parse(await readFile(marker,'utf8'));
- if(manifest.schema!==1||manifest.source!=='NextRole canonical source')throw new Error('Refusing to replace unrecognized Render output.');
- for(const name of previous)if(!['node_modules','.next'].includes(name))await rm(path.join(out,name),{recursive:true,force:true});
+ // Render may restore only dependency/compiler directories, without generated source.
+ if(!info){if(previous.some(name=>!cacheNames.includes(name)))throw new Error('Refusing to replace unrecognized Render output: '+previous.join(', '));}
+ else{if(!info.isFile())throw new Error('Refusing to replace unrecognized Render output.');const manifest=JSON.parse(await readFile(marker,'utf8'));if(manifest.schema!==1||manifest.source!=='NextRole canonical source')throw new Error('Refusing to replace unrecognized Render output.');}
+ for(const name of previous)if(!cacheNames.includes(name))await rm(path.join(out,name),{recursive:true,force:true});
 }
 for(const dir of ['app','lib/bridge'])await mkdir(path.join(out,dir),{recursive:true});
 for(const file of ['package.json','pnpm-lock.yaml','pnpm-workspace.yaml','tsconfig.json'])await cp(path.join(root,file),path.join(out,file));

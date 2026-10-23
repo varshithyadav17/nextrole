@@ -27,11 +27,15 @@ try{
  check(!await exists(path.join(out,'app/api/removed'))&&!await exists(path.join(out,'old-config.txt')),'Cached routes and old generated files cannot survive a source change.');
  check(await readFile(path.join(out,'node_modules/cache-probe'),'utf8')==='dependency cache'&&await readFile(path.join(out,'.next/cache/probe'),'utf8')==='compiler cache','Dependency and compiler caches are retained for the subsequent install/build.');
  check(await exists(path.join(out,'app/api/example/route.ts')),'Current source routes are regenerated.');
+ const partial=await fixture('partial'),partialOut=path.join(partial,'.deploy/render');await mkdir(path.join(partialOut,'node_modules'),{recursive:true});await mkdir(path.join(partialOut,'.next/cache'),{recursive:true});await writeFile(path.join(partialOut,'node_modules/probe'),'partial dependency cache');
+ result=generate(partial,partialOut);check(result.status===0&&await readFile(path.join(partialOut,'node_modules/probe'),'utf8')==='partial dependency cache'&&await exists(path.join(partialOut,'app/api/example/route.ts')),'A cache-only restore regenerates source without requiring a missing source marker.');
  const outside=path.join(temporary,'outside');await mkdir(outside);await writeFile(path.join(outside,'keep.txt'),'keep');
  result=generate(directory,outside);check(result.status!==0&&await readFile(path.join(outside,'keep.txt'),'utf8')==='keep','An arbitrary nonempty output directory is never cleaned.');
  const unknown=await fixture('unknown'),unknownOut=path.join(unknown,'.deploy/render');await mkdir(unknownOut,{recursive:true});await writeFile(path.join(unknownOut,'keep.txt'),'keep');
  result=generate(unknown,unknownOut);check(result.status!==0&&await readFile(path.join(unknownOut,'keep.txt'),'utf8')==='keep','Unmarked content in the fixed build directory is protected.');
  const linked=await fixture('linked');await symlink(outside,path.join(linked,'.deploy'),'dir');
  result=generate(linked,path.join(linked,'.deploy/render'));check(result.status!==0&&await readFile(path.join(outside,'keep.txt'),'utf8')==='keep','A symlinked managed parent cannot redirect cleanup.');
+ const cacheLink=await fixture('linked-cache'),cacheOut=path.join(cacheLink,'.deploy/render');await mkdir(cacheOut,{recursive:true});await symlink(outside,path.join(cacheOut,'node_modules'),'dir');
+ result=generate(cacheLink,cacheOut);check(result.status!==0&&await readFile(path.join(outside,'keep.txt'),'utf8')==='keep','A symlink cannot pose as a restored dependency cache.');
  console.log(JSON.stringify({passed:true,checks,scope:'Fresh and cached Render builds, stale route removal, preserved caches and cleanup boundaries'}));
 }finally{await rm(temporary,{recursive:true,force:true});}

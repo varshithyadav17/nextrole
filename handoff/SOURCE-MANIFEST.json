@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
   "release": "Dedicated admin analytics, measured active time, PDF reports and prepared Render/Google migration",
-  "generatedAt": "2026-10-23T12:26:46.093Z",
-  "parentCommit": "c0fe071f6b40fdf0e82222c476ca46a2d6d7bbdc",
+  "generatedAt": "2026-10-23T12:31:33.237Z",
+  "parentCommit": "f6bb89bf9b9014dd767dae1c89c4af5a90e593e3",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -1362,8 +1362,8 @@
     },
     {
       "path": "handoff/RENDER-MIGRATION.md",
-      "bytes": 6241,
-      "sha256": "3e37caa7e3957eb27b2636c19889fdda40ce55c27a92a13ee4a0ae5847c0b5ae"
+      "bytes": 6366,
+      "sha256": "b621d168512e9ef50c5dbd8436d19410020a9b374772566a962685fa0652890d"
     },
     {
       "path": "handoff/RESUME-TEMPLATE.md",
@@ -2097,8 +2097,8 @@
     },
     {
       "path": "scripts/prepare-render.mjs",
-      "bytes": 5499,
-      "sha256": "f0ff9c63fd645bc3b236a628f25a0aeabef9c411b439a58049f685af35f8d73c"
+      "bytes": 5996,
+      "sha256": "4ddc1fb3e956377623ec03aa2e4c6371c9eb58acc86a067fc351ea8b46ec44ee"
     },
     {
       "path": "scripts/prepare-vercel-deployment.mjs",
@@ -2252,8 +2252,8 @@
     },
     {
       "path": "scripts/verify-render-preparation.mjs",
-      "bytes": 3993,
-      "sha256": "a459146d30a89622b06811c43cbba37bddeda55d1f765e59e3947829a00aef35"
+      "bytes": 4989,
+      "sha256": "a3c67aa4c220623f100d0e3dc79d7ded37765332df9d6247b06bbd8000cb503c"
     },
     {
       "path": "scripts/verify-render.mjs",
