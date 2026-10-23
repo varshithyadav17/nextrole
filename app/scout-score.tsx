@@ -1,4 +1,5 @@
 "use client";
+import {useEffect,useState} from 'react';
 import {Check,ChevronRight,FileText,Download,Sparkles} from 'lucide-react';
 import type {ResumeCheck} from '../lib/resume-check';
 export function ScoutScore({check,onImprove}:{check:ResumeCheck;onImprove:()=>void}){
@@ -13,6 +14,16 @@ export function ScoutScore({check,onImprove}:{check:ResumeCheck;onImprove:()=>vo
   <small className="scout-score-limit">Internal JD match, not an employer ATS score.</small>
  </section>;
 }
-export function ScoutResume({kitId,onReview,onEdit}:{kitId:string;onReview?:()=>void;onEdit?:()=>void}){
- return <section className="scout-resume-card"><span className="scout-document-icon"><FileText size={24}/></span><div><span className="scout-card-eyebrow">SAVED RÉSUMÉ DRAFT</span><h3>Ready for your review</h3><p>Your NextRole template. Your reviewed facts.</p></div><div className="scout-downloads"><a className="button primary" href={'/api/preparation?kitId='+encodeURIComponent(kitId)+'&format=pdf'}><Download size={15}/>Download PDF</a>{onEdit&&<button className="button secondary" onClick={onEdit}>Edit details</button>}{onReview&&<button className="button secondary" onClick={onReview}>Review details</button>}<a className="scout-latex-link" href={'/api/preparation?kitId='+encodeURIComponent(kitId)+'&format=txt'}>LaTeX code .txt</a><a className="scout-latex-link" href={'/api/preparation?kitId='+encodeURIComponent(kitId)+'&format=tex'}>.tex</a></div></section>;
+export function ScoutResume({kitId,onReview,onEdit,onFit}:{kitId:string;onReview?:()=>void;onEdit?:()=>void;onFit?:()=>void}){
+ const [layout,setLayout]=useState<{pages:number;omitted:string[]}|null>(null),[error,setError]=useState(''),[preview,setPreview]=useState(false),[revision,setRevision]=useState(0);
+ useEffect(()=>{let active=true;setLayout(null);setError('');fetch('/api/preparation?kitId='+encodeURIComponent(kitId)+'&layout=1',{cache:'no-store'}).then(async r=>{const value=await r.json() as {pages?:number;omitted?:unknown;error?:string};if(!r.ok||!Number.isInteger(value.pages)||!value.pages||value.pages<1)throw new Error(value.error||'Could not check the page count.');if(active)setLayout({pages:value.pages,omitted:Array.isArray(value.omitted)?value.omitted.filter((s):s is string=>typeof s==='string'):[]});}).catch(e=>{if(active)setError(e.message);});return()=>{active=false;};},[kitId,revision]);
+ useEffect(()=>{const changed=(event:Event)=>{if((event as CustomEvent<{kitId?:string}>).detail?.kitId===kitId)setRevision(r=>r+1);};window.addEventListener('nextrole-preparation-changed',changed);return()=>window.removeEventListener('nextrole-preparation-changed',changed);},[kitId]);
+ const ready=layout?.pages===1,url='/api/preparation?kitId='+encodeURIComponent(kitId);
+ return <section className="scout-resume-card"><span className="scout-document-icon"><FileText size={24}/></span><div><span className="scout-card-eyebrow">YOUR RÉSUMÉ DRAFT</span><h3>{layout?ready?'One page. Your template.':layout.pages+' pages — let’s shorten it':'Checking the page count…'}</h3><p>{layout?'Review the draft before you apply.':'Verifying the actual PDF layout.'}</p></div>
+ {error&&<p className="scout-layout-error" role="status">{error}<button className="text-button" onClick={()=>setRevision(r=>r+1)}>Try again</button></p>}
+ {layout&&!ready&&<div className="scout-page-warning"><p>Keep readable type. Scout can select fewer relevant facts for a new one-page copy.</p>{onFit?<button className="button primary" onClick={onFit}>Make a one-page copy</button>:<small>Use the latest draft in this chat, or build a fresh version.</small>}</div>}
+ <div className="scout-downloads">{ready?<><a className="button primary" href={url+'&format=pdf'}><Download size={15}/>Download PDF</a><button className="button secondary" aria-expanded={preview} onClick={()=>setPreview(!preview)}>{preview?'Hide preview':'Preview PDF'}</button><a className="scout-latex-link" href={url+'&format=txt'}>LaTeX .txt</a><a className="scout-latex-link" href={url+'&format=tex'}>.tex</a></>:<button className="button primary" disabled><Download size={15}/>Download PDF</button>}{onEdit&&<button className="button secondary" onClick={onEdit}>Edit details</button>}{onReview&&<button className="button secondary" onClick={onReview}>Review details</button>}</div>
+ {!!layout?.omitted?.length&&<details className="scout-selection-details"><summary>{layout.omitted.length} facts kept outside this draft</summary><p>These were left out to keep this version on one page. Your profile and earlier drafts are unchanged.</p><ul>{layout.omitted.map((title,i)=><li key={i}>{title}</li>)}</ul></details>}
+ {preview&&ready&&<iframe className="scout-resume-preview" title="Your one-page résumé PDF preview" src={url+'&format=pdf&preview=1'} loading="lazy"/>}
+ </section>;
 }

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./focus.css";
+import "./trail.css";
 import {ScoutMotionProvider} from './scout-motion';
 
 export const metadata: Metadata = {

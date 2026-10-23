@@ -1,12 +1,12 @@
 import {z} from 'zod';
 import {db,one,getJob,getProfile} from './store';
-import {careerState,prepareApplication,prepareDescription,getKit,saveCareer,prepareUploadedResume} from './preparation';
+import {careerState,prepareApplication,prepareDescription,getKit,saveCareer,prepareUploadedResume,onePagePreparation} from './preparation';
 import {resumeDocument,type CareerProfile,careerFactSchema,careerSchema} from './career';
 import {resumeFile,resumeList} from './resume-files';
 import {resumeCheck,uploadedResumeCheck,type ResumeCheck} from './resume-check';
 import {applyResumeEdits,supportedRewrite,type ResumeEdit} from './resume-edits';
 import {routeAI} from './ai-router';
-import {scoutIntent} from './scout-intent';
+import {scoutIntent} from './scout-intent';import {requireOnePage} from './resume-one-page';
 import {scoutConversation,pastedScoutJD,redactScout,SCOUT_MESSAGE_LIMIT} from './scout-conversation';
 import {profileFromResume} from './resume-profile';
 import {readScoutPDF} from './scout-pdf';
@@ -22,7 +22,7 @@ const redact=redactScout;
 function normalized(text:string){return text.toLowerCase().replace(/\s+/g,' ').trim();}
 async function context(userId:string,jobId:string|null){const profile=await getProfile(userId),job=jobId?await getJob(userId,jobId,profile):null;if(jobId&&!job)throw new PublicError('This opening is unavailable.',404);const key=job?.key||'scout:general';const row=await one<{data:string;revision:string}>('SELECT data,revision FROM scout_threads WHERE user_id=? AND job_key=?',userId,key);return {job,key,thread:row?{...JSON.parse(row.data),revision:row.revision} as ScoutThread:empty()};}
 export async function scoutState(userId:string,jobId:string|null){const {job,thread}=await context(userId,jobId),career=await careerState(userId),ai=await one<{n:number}>('SELECT COUNT(*) as n FROM api_slots WHERE user_id=? AND enabled=1',userId);return {thread,job:job?{id:job.id,title:job.title,company:job.company}:null,careerReady:!!career.revision&&career.profile.contactVerified&&career.profile.facts.some(f=>f.verified),aiReady:!!ai?.n,pdfAIReady:!!(await one<{n:number}>("SELECT COUNT(*) as n FROM api_slots WHERE user_id=? AND enabled=1 AND provider IN ('openai','gemini')",userId))?.n,files:await resumeList(userId)};}
-const inputSchema=z.object({action:z.enum(['message','build','score','apply-edit','import-resume','accept-import','set-jd','clear','attach','detach','read-pdf','review-resume']),jobId:z.string().min(1).max(200).nullable(),expectedRevision:z.string().uuid().nullable(),message:z.string().trim().max(SCOUT_MESSAGE_LIMIT).default(''),customJD:z.string().trim().max(15000).optional(),resumeId:z.string().uuid().nullable().default(null),aiConsent:z.boolean().default(false),pdfConsent:z.boolean().default(false),pdfRevision:z.string().uuid().optional(),reviewedProfile:careerSchema.optional(),proposalId:z.string().uuid().optional(),confirm:z.boolean().default(false),factIds:z.array(z.string().uuid()).max(30).optional(),contacts:z.object({name:z.string().trim().min(1).max(100),email:z.union([z.literal(''),z.string().email().max(254)]),phone:z.string().max(40)}).optional()});
+const inputSchema=z.object({action:z.enum(['message','build','score','apply-edit','import-resume','accept-import','set-jd','clear','attach','detach','read-pdf','review-resume','one-page']),jobId:z.string().min(1).max(200).nullable(),expectedRevision:z.string().uuid().nullable(),message:z.string().trim().max(SCOUT_MESSAGE_LIMIT).default(''),customJD:z.string().trim().max(15000).optional(),resumeId:z.string().uuid().nullable().default(null),aiConsent:z.boolean().default(false),pdfConsent:z.boolean().default(false),pdfRevision:z.string().uuid().optional(),reviewedProfile:careerSchema.optional(),proposalId:z.string().uuid().optional(),confirm:z.boolean().default(false),factIds:z.array(z.string().uuid()).max(30).optional(),contacts:z.object({name:z.string().trim().min(1).max(100),email:z.union([z.literal(''),z.string().email().max(254)]),phone:z.string().max(40)}).optional()});
 export async function scoutAction(userId:string,input:unknown){
  const value=inputSchema.parse(input);if(/(?:sk-(?:proj-)?|gsk_|AIza|nr_companion_)[A-Za-z0-9_-]{12,}/.test(value.message+' '+(value.customJD||'')))throw new PublicError('Do not paste API keys or companion tokens into chat. Use AI Connections or the companion pairing field.');const {job,key,thread}=await context(userId,value.jobId);
  if(thread.revision!==value.expectedRevision)throw new PublicError('Scout changed in another tab. Reload the conversation before continuing.',409);
@@ -34,7 +34,7 @@ export async function scoutAction(userId:string,input:unknown){
  if(attaching){if(!value.resumeId)throw new PublicError('Choose a PDF first.');thread.resumeId=value.resumeId;delete thread.careerDraft;}if(value.action==='detach'){thread.resumeId=null;delete thread.careerDraft;}
  const description=job?.description||thread.customJD||'';
  const assistant:ScoutMessage={id:crypto.randomUUID(),role:'assistant',text:'',createdAt:new Date().toISOString(),mode:'guided'};
- const userText=value.message||(({'build':'Build a résumé for this job.','score':'Check my résumé against this JD.','import-resume':'Extract career facts for me to review.','accept-import':'Save the facts I reviewed.','apply-edit':'Apply this reviewed correction.','read-pdf':'Read my original PDF.','attach':'','detach':'Remove this attachment from the conversation.'} as Record<string,string>)[value.action]||'');
+ const userText=value.message||(({'one-page':'Make a one-page copy of my résumé.','build':'Build a résumé for this job.','score':'Check my résumé against this JD.','import-resume':'Extract career facts for me to review.','accept-import':'Save the facts I reviewed.','apply-edit':'Apply this reviewed correction.','read-pdf':'Read my original PDF.','attach':'','detach':'Remove this attachment from the conversation.'} as Record<string,string>)[value.action]||'');
  const selectedId=value.action==='detach'?null:value.resumeId||thread.resumeId;
  const career=await careerState(userId);let upload=selectedId?await resumeFile(userId,selectedId):null;
  if(selectedId&&!upload)throw new PublicError('The selected résumé was removed. Choose another file.',404);
@@ -42,6 +42,7 @@ export async function scoutAction(userId:string,input:unknown){
  if(userText||attaching)thread.messages.push({id:crypto.randomUUID(),role:'user',text:userText,createdAt:assistant.createdAt,...(attaching&&upload?{attachment:{id:upload.id,name:upload.name,bytes:upload.bytes}}:{})});
  let kit=thread.kitId?await getKit(userId,thread.kitId):null;
  if(kit&&(job?kit.jobKey!==job.key:kit.jobSnapshot.description!==thread.customJD))kit=null;
+ if(value.action==='one-page'&&!kit)value.action='build';
  const checkContext=()=>digest(JSON.stringify({description,resume:upload?{id:upload.id,revision:upload.revision}:null,kit:kit?.revision||null,career:career.revision}));
  if(value.action==='attach'){
   assistant.text=description?'Got your PDF. Want me to check its JD fit or tailor a résumé?':'Got your PDF. Open a job or add its JD, and we can check the fit together.';
@@ -56,7 +57,7 @@ export async function scoutAction(userId:string,input:unknown){
   if(description)assistant.check=uploadedResumeCheck(upload.text,description);
  }else if(value.action==='set-jd'){
   if(job)throw new PublicError('This conversation already uses the saved job description.');if(!value.customJD||value.customJD.length<80)throw new PublicError('Paste at least 80 characters from the actual JD.');if(thread.customJD!==value.customJD){thread.customJD=value.customJD;thread.kitId=null;delete thread.careerDraft;}assistant.text='JD added. Let’s check your résumé or tailor a version for this role.';
- }else if(value.action==='build'){
+ }else if(value.action==='one-page'){ if(!kit)throw new PublicError('Build or select a résumé draft first.');kit=await onePagePreparation(userId,kit);thread.kitId=kit.id;assistant.kitId=kit.id;assistant.check=kit.compatibility;assistant.text='Your one-page copy is ready in your template. Review the selected facts below; your earlier version is retained.'; }else if(value.action==='build'){
   if(!job&&!description)assistant.text='Open a job or add its actual JD from the attachment menu. I will use that description and your confirmed Career facts to prepare the NextRole résumé template.';
   else if(upload){
    if(upload.text.trim().length<40)assistant.text='This PDF needs a closer read. Use “Read PDF with AI” in Résumé & JD, then I can tailor it.';
@@ -81,7 +82,7 @@ export async function scoutAction(userId:string,input:unknown){
   if(!original||proposal.source!=='user-confirmed'&&(!original.includes(proposal.quote)||!supportedRewrite(original,proposal.text)))throw new PublicError('The correction no longer passes its source checks.');
   const previous=kit.revision;if((kit.resumeEdits?.length||0)>=30)throw new PublicError('This preparation has 30 reviewed edits. Update your Career facts and build a fresh version for further changes.');kit.resumeEdits=[...(kit.resumeEdits||[]),{factId:proposal.factId,detailIndex:proposal.detailIndex,text:proposal.text,quote:proposal.quote,source:proposal.source}];
   kit.resume=applyResumeEdits(resumeDocument(kit.profileSnapshot,kit.selectedFactIds,kit.resume.template||'legacy'),kit.resumeEdits);kit.compatibility=resumeCheck(kit.resume,kit.jobSnapshot.description);kit.revision=crypto.randomUUID();kit.updatedAt=assistant.createdAt;
-  const updated=await db().prepare("UPDATE application_kits SET data=?,updated_at=? WHERE user_id=? AND id=? AND json_extract(data,'$.revision')=?").bind(JSON.stringify(kit),kit.updatedAt,userId,kit.id,previous).run();if(!updated.meta.changes)throw new PublicError('The résumé changed. Reload it before saving.',409);
+  if(kit.pagePolicy==='one-page')await requireOnePage(kit.resume,kit.createdAt);const updated=await db().prepare("UPDATE application_kits SET data=?,updated_at=? WHERE user_id=? AND id=? AND json_extract(data,'$.revision')=?").bind(JSON.stringify(kit),kit.updatedAt,userId,kit.id,previous).run();if(!updated.meta.changes)throw new PublicError('The résumé changed. Reload it before saving.',409);
   assistant.text='Your reviewed correction is saved in this preparation. Existing submitted copies and your master Career facts are unchanged.';assistant.kitId=kit.id;assistant.check=kit.compatibility;
  }else if(value.action==='import-resume'){
   if(!upload)throw new PublicError('Choose an uploaded résumé first.');if(!value.aiConsent)throw new PublicError('Allow your personal AI connection to read redacted résumé text before extracting facts.');

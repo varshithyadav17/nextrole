@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
   "release": "Dedicated admin analytics, measured active time, PDF reports and prepared Render/Google migration",
-  "generatedAt": "2026-10-23T12:43:34.672Z",
-  "parentCommit": "ca78d28d9f48314bac2fd488efb93796b18c028a",
+  "generatedAt": "2026-10-23T17:32:44.293Z",
+  "parentCommit": "4b5365140f4d0876fcd8578e64c6d64dfdf083f5",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11437,
-      "sha256": "33fc40aca45f139cd11992d5ff375bf42f29563bdd0bf45df7b420d75b6ed1e0"
+      "bytes": 11884,
+      "sha256": "4787216ac9786fdfe709484227bb1b121bf49d0bf07368bb2f72e5c2ef6decb9"
     },
     {
       "path": "RELEASE-14.md",
@@ -237,8 +237,8 @@
     },
     {
       "path": "app/api/preparation/route.ts",
-      "bytes": 5694,
-      "sha256": "e3003910deea0e00001deebf02a2775e5cc5dc43f3cf9da270dfc861fba19f9c"
+      "bytes": 6113,
+      "sha256": "0d271076ccf5d36b2635b5d015dbd4a8a96d51b7e2397556767baa34273a821d"
     },
     {
       "path": "app/api/resumes/route.ts",
@@ -247,8 +247,8 @@
     },
     {
       "path": "app/api/scout/route.ts",
-      "bytes": 2214,
-      "sha256": "00a191a8451aa61393294003ad59b11acd9750ae2fbddcf1773f8063680e81dc"
+      "bytes": 2239,
+      "sha256": "d52d68ac5b6130712319c5d8f0e176eb896c6cc6848fb1f2ec77569333659f69"
     },
     {
       "path": "app/api/sources/route.ts",
@@ -312,13 +312,23 @@
     },
     {
       "path": "app/dashboard.tsx",
-      "bytes": 78489,
-      "sha256": "6d3116a37adfeeec256d2bfb0d2cf51145711355db5591ec1bd9a07ecf2bfa56"
+      "bytes": 77416,
+      "sha256": "3f42266fa32bed83789482fc48bd5afae2a17199cdca3f4b1304a7fc5ef23b55"
     },
     {
       "path": "app/demo/admin/page.tsx",
       "bytes": 220,
       "sha256": "286518b7ed7dbfe7803feb8aa7ebda49ab085a823606767caab2bc2653306e51"
+    },
+    {
+      "path": "app/design-preview/page.tsx",
+      "bytes": 291,
+      "sha256": "c0860887b95dc071436ed0bff001931e48583aa00feaeb1c0e1668c37a839f61"
+    },
+    {
+      "path": "app/design-preview/preview.tsx",
+      "bytes": 7429,
+      "sha256": "7f0e4de13d736816caba046cf946d849a6bd3f2620e5e6fa3fdccc5a4c04f504"
     },
     {
       "path": "app/discovery-manager.tsx",
@@ -378,7 +388,7 @@
     {
       "path": "app/host-dashboard.tsx",
       "bytes": 31731,
-      "sha256": "fbd88fb7510f80dc73383dd0aea1537261f5aeb5f49a8dfede373941d5b6dd4b"
+      "sha256": "c4a68f4eb5e90d6240cde4c0a0ced60835aaccd6c916e36609051bd7a117a710"
     },
     {
       "path": "app/job-import.tsx",
@@ -392,18 +402,18 @@
     },
     {
       "path": "app/landing.tsx",
-      "bytes": 3918,
-      "sha256": "e20e77e40e4eccb447f6c1b45a473a27075d154362a89277c411c9f8e141666b"
+      "bytes": 4291,
+      "sha256": "63e716d6aa70518826e63c0cac35a3b119dac3ed3dbda2e75d7b302b052f20e4"
     },
     {
       "path": "app/layout.tsx",
-      "bytes": 664,
-      "sha256": "f0cff4f362956c3a75776aa7b42ab768c7538ff7ad476928581ec6afa731bf84"
+      "bytes": 686,
+      "sha256": "d10022cc6a83207de65717251232794e11ea648f1b832ddc99012ad4156bfcbb"
     },
     {
       "path": "app/login/page.tsx",
-      "bytes": 2406,
-      "sha256": "9770139640e00b5aaa4362adffc0b4210dee7b87e50161404f64e8c5ac1c3534"
+      "bytes": 2502,
+      "sha256": "4eb49c15cbb52cac979ad3935aa7384f7943d14c08fe90092b500c75d92e590a"
     },
     {
       "path": "app/mcp/route.ts",
@@ -442,8 +452,8 @@
     },
     {
       "path": "app/scout-chat.tsx",
-      "bytes": 23983,
-      "sha256": "6f4137c46fa09fc5b5685c1c1b6bc0522dcbd007fdadcf00b6f792079a740892"
+      "bytes": 24183,
+      "sha256": "696223e4fa24b41f8bcac2540786dfdce76e490bbee20f6d92c25e1ec2748c45"
     },
     {
       "path": "app/scout-drafts.tsx",
@@ -472,8 +482,8 @@
     },
     {
       "path": "app/scout-score.tsx",
-      "bytes": 3295,
-      "sha256": "d5236d7195c7ec75bf50c55087dcf93ced73c518c830347875d6c064123dff26"
+      "bytes": 5706,
+      "sha256": "926b715f4decf3b2445f3168f3ba67f0c994e80d2113f93d6e8520805fdfabf2"
     },
     {
       "path": "app/scout.tsx",
@@ -519,6 +529,16 @@
       "path": "app/today.tsx",
       "bytes": 5865,
       "sha256": "4239c325147908669ce7afb117e6adb1d9c958b6b396ddc3d8e8e0b08681f744"
+    },
+    {
+      "path": "app/trail-scout.tsx",
+      "bytes": 2556,
+      "sha256": "56d06fbda93fa0552d3087e71ed6c5bfbd6aafb32556f095638ea5a56b6d9d6e"
+    },
+    {
+      "path": "app/trail.css",
+      "bytes": 30669,
+      "sha256": "d77e6f09c24b2d42378babc29e30bd3560be00f2598b5f43614ac94a4111091c"
     },
     {
       "path": "app/use-active-time.ts",
@@ -1041,6 +1061,21 @@
       "sha256": "4e1035498c976b0bbe70c592678ec1ae5c30a8d7af781869f80a31745990c72d"
     },
     {
+      "path": "design-qa.md",
+      "bytes": 3854,
+      "sha256": "3f8c8f0080fb021bd5349af7280b8ecb3b830932279c2aa978eb22b83171e76d"
+    },
+    {
+      "path": "docs/design/trail-refined-jobs.webp",
+      "bytes": 985060,
+      "sha256": "3686318efcc6beb5347bb4ebc9d06114f8104ea728672c8947b0ef8cc438ea96"
+    },
+    {
+      "path": "docs/design/trail-selected-board.webp",
+      "bytes": 1075250,
+      "sha256": "f3811d3bee1c924defb16b6981c160b0f4fc7742be3cef57f0880e20ce061983"
+    },
+    {
       "path": "docs/images/admin-report-features-demo.png",
       "bytes": 70772,
       "sha256": "af83f73bd26aacdfc2dd262fecd96cf7d08a8c4e27a936fa630a38b03d9022c1"
@@ -1401,6 +1436,11 @@
       "sha256": "fd7313920b81dc7f3d6c379c881e7db217368c4d3757da8ef3f56f6cde7803f0"
     },
     {
+      "path": "handoff/TRAIL-REDESIGN.md",
+      "bytes": 6027,
+      "sha256": "313dcb477f020dd8060ad019a8fc91f61c2219d76dd9a85a773dcf0583def329"
+    },
+    {
       "path": "handoff/V13-SOURCE-MANIFEST.json",
       "bytes": 33261,
       "sha256": "321f2eaeef9c26faa26f6933382a4598964b1064ce423e5a2635ee66542a4998"
@@ -1507,8 +1547,8 @@
     },
     {
       "path": "lib/activity.ts",
-      "bytes": 1498,
-      "sha256": "1a70bf778eceda2f0c30dae155d825aa35b4c2bd94d796b6e8fe8119966eacf2"
+      "bytes": 1506,
+      "sha256": "9d94939b82af73632c25dcde22397ace519f5402645906ab2ef1b111cae63dd1"
     },
     {
       "path": "lib/admin-analytics.ts",
@@ -1612,8 +1652,8 @@
     },
     {
       "path": "lib/community-types.ts",
-      "bytes": 2452,
-      "sha256": "9967dfceeab34d792ddc1657814ab19a093b1d9a0c3e3075031138ec6d50bee7"
+      "bytes": 2519,
+      "sha256": "3421593ae686f1c9aa50bde2af871d62b3c3e744764a042054c0c7182bcee503"
     },
     {
       "path": "lib/companion-channel.json",
@@ -1797,8 +1837,8 @@
     },
     {
       "path": "lib/navigation.ts",
-      "bytes": 2653,
-      "sha256": "dd94b80e601a9b0a45838748daa4330775c6b808fd8734378d37b80c5e6b1c6e"
+      "bytes": 2671,
+      "sha256": "3404b0821923fffaf43d33fb0c9b4305ea858fbf01b6e51d388950783a66fd9f"
     },
     {
       "path": "lib/pdf-worker-url.ts",
@@ -1807,8 +1847,8 @@
     },
     {
       "path": "lib/preparation.ts",
-      "bytes": 13843,
-      "sha256": "905cf897c765432c5d9f06f1c6bde4cac024eed959ab0dd60a973b9533e4f4b0"
+      "bytes": 15654,
+      "sha256": "8c86d885e043aa1987f8bc05d415eb58781fb746f503aaf6359833adfb614092"
     },
     {
       "path": "lib/product.ts",
@@ -1856,6 +1896,11 @@
       "sha256": "5a78444846349d40984a47ec7f979b60945d38df016c7f21a85ac3642fddace2"
     },
     {
+      "path": "lib/resume-one-page.ts",
+      "bytes": 2760,
+      "sha256": "c11900a7128cd6716deec104fe961337f4dadc73968993c71d5d51f5465d2052"
+    },
+    {
       "path": "lib/resume-pdf-legacy.ts",
       "bytes": 4097,
       "sha256": "fd36047ada8c514638cec27a80bdeec581da26f598da520d50d4bae22880838d"
@@ -1882,8 +1927,8 @@
     },
     {
       "path": "lib/scout-chat.ts",
-      "bytes": 24698,
-      "sha256": "9525e2ef63187a61f12dc7941f827a6cb9d0f82b29f2f3de4d92f52f8b15df9e"
+      "bytes": 25322,
+      "sha256": "4c1fecb26611dba39ff271bfde4867b9d398fd89919db870c87f4380d6a18c6a"
     },
     {
       "path": "lib/scout-conversation.ts",
@@ -1892,8 +1937,8 @@
     },
     {
       "path": "lib/scout-intent.ts",
-      "bytes": 779,
-      "sha256": "c6e9909233e2d7d7c34453b2ebc9b0ce9aefbe1bb5774180a4c34ddf065bd791"
+      "bytes": 932,
+      "sha256": "1a476567698cb0a55b804ca3a65883e51f3aa8338f93fa9ee9562fcfce10f5a5"
     },
     {
       "path": "lib/scout-pdf.ts",
@@ -1989,6 +2034,21 @@
       "path": "postcss.config.mjs",
       "bytes": 94,
       "sha256": "dfac7ac2d86d326a0e5adb024e7943c181393ed17a5fcb8f0315b24c7da6ddde"
+    },
+    {
+      "path": "public/art/trail/header-landscape.webp",
+      "bytes": 61604,
+      "sha256": "37bc55bc3f812b2bd3cf321cd126a7a0790c03a5a47962e671cf99b38c1de185"
+    },
+    {
+      "path": "public/art/trail/scout-formal.webp",
+      "bytes": 37616,
+      "sha256": "561be5c8cd8f4adc69db8ee66ac1534dabe23743971b267eed08b67977e1da99"
+    },
+    {
+      "path": "public/art/trail/scout-running.webp",
+      "bytes": 9768,
+      "sha256": "11c84be2c4eb1e7dd76cf96ee5a51465d2811dfc2084410433f7fda35e941da4"
     },
     {
       "path": "public/downloads/Scout-Companion-Setup.txt",
@@ -2107,8 +2167,8 @@
     },
     {
       "path": "scripts/prepare-vercel-deployment.mjs",
-      "bytes": 1807,
-      "sha256": "1193e040d621a44d30a85013fe67d9c08161742c24a1bb4d8febc89be9cf5576"
+      "bytes": 1823,
+      "sha256": "78730c40adfb4ca459811501d4ba75b17847659e121e2b0851ce7fd3f7e210f1"
     },
     {
       "path": "scripts/prepare-vercel.mjs",
@@ -2241,6 +2301,11 @@
       "sha256": "b46525fa1d240e56e14a81d3a306dc8d4adfd065e3e32e8656e95e939204ae06"
     },
     {
+      "path": "scripts/verify-one-page.mjs",
+      "bytes": 3838,
+      "sha256": "b790a145356ac4323ee6696d009200479b0b4b3939588700bacedd1d6fa190b2"
+    },
+    {
       "path": "scripts/verify-preparation.mjs",
       "bytes": 11759,
       "sha256": "30f5f6222a0842711dcc105d80a6dc4259012ae7cccb258aed72b76b2cfc1dc7"
@@ -2287,8 +2352,8 @@
     },
     {
       "path": "scripts/verify-scout.mjs",
-      "bytes": 33805,
-      "sha256": "492191a7e62ff5074dbb189223b39f4d471d736a17c3da17ca3fea633c640086"
+      "bytes": 34840,
+      "sha256": "5e9176e1e4bc1207fde4ab3da9c805cbead395070cd62d9bedc284e8a44fb705"
     },
     {
       "path": "scripts/verify-title-experience.mjs",
