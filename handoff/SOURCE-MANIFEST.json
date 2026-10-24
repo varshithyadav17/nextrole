@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
   "release": "Scout storefront framing and street blending with compact UI preserved",
-  "generatedAt": "2026-10-24T15:11:39.389Z",
-  "parentCommit": "ec96ee8a9dc63fc5a1054e5f2b2176a2915a03d9",
+  "generatedAt": "2026-10-24T16:20:03.622Z",
+  "parentCommit": "51493dbdd8145f3a0847575e698533a7a0f8880e",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -412,8 +412,8 @@
     },
     {
       "path": "app/landing.tsx",
-      "bytes": 3970,
-      "sha256": "a4bc105fb83a59d76300baabb83c6fd759b1d05cf5b64aab7c106a474dd72e44"
+      "bytes": 3918,
+      "sha256": "e20e77e40e4eccb447f6c1b45a473a27075d154362a89277c411c9f8e141666b"
     },
     {
       "path": "app/layout.tsx",
