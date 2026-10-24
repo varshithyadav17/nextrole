@@ -63,7 +63,7 @@
 .app-shell .scout-chat-launcher .scout-chat-avatar{width:32px;height:32px;min-width:32px}
 .app-shell .scout-dock:not(.is-full-page){right:20px;bottom:22px}
 /* Feather the existing raster street into the canvas, independently of Scout.
-   The fixed 80 px top crop below keeps the NEXT JOB fascia inside the frame. */
+   The desktop panorama spans the header; its 80 px overscan retains the NEXT JOB fascia. */
 .app-shell .scout-jobs-hero .scout-city-street{
  -webkit-mask-image:linear-gradient(to right,transparent,#000 20%),linear-gradient(to bottom,transparent,#000 12px,#000 calc(100% - 32px),transparent);
  mask-image:linear-gradient(to right,transparent,#000 20%),linear-gradient(to bottom,transparent,#000 12px,#000 calc(100% - 32px),transparent);
@@ -73,8 +73,9 @@
 @media(min-width:761px){
  .app-shell .scout-jobs-hero{--scout-city-height:clamp(250px,34vh,320px);height:var(--scout-city-height)}
  .app-shell .scout-jobs-copy{padding-top:56px;padding-left:15px}
- .app-shell .scout-jobs-hero>.scout-city-scene{height:100%;width:min(72%,calc(var(--scout-city-height) * 2 + 160px));max-width:none;right:-24px}
- .app-shell .scout-jobs-hero .scout-city-walker{width:208px;bottom:8px}
+ .app-shell .scout-jobs-hero>.scout-city-scene{height:100%;width:72%;max-width:none;right:-24px}
+ .app-shell .scout-jobs-hero .scout-city-street{position:absolute;bottom:0;height:calc(100% + 80px);object-fit:fill}
+ .app-shell .scout-jobs-hero .scout-city-walker{width:208px;left:32%;bottom:8px}
  .app-shell .scout-page-heading,.app-shell .scout-page-heading--saved{min-height:248px;padding:56px 15px 24px}
  .app-shell .scout-page-heading .trail-heading-marker{margin-bottom:23px}
  .app-shell .scout-page-heading--saved>.scout-moment{width:350px;right:50px;bottom:-58px}
