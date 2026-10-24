@@ -62,10 +62,18 @@
 .app-shell .scout-chat-launcher>span:nth-child(2){font-size:14px}
 .app-shell .scout-chat-launcher .scout-chat-avatar{width:32px;height:32px;min-width:32px}
 .app-shell .scout-dock:not(.is-full-page){right:20px;bottom:22px}
+/* Feather the existing raster street into the canvas, independently of Scout.
+   The fixed 80 px top crop below keeps the NEXT JOB fascia inside the frame. */
+.app-shell .scout-jobs-hero .scout-city-street{
+ -webkit-mask-image:linear-gradient(to right,transparent,#000 20%),linear-gradient(to bottom,transparent,#000 12px,#000 calc(100% - 32px),transparent);
+ mask-image:linear-gradient(to right,transparent,#000 20%),linear-gradient(to bottom,transparent,#000 12px,#000 calc(100% - 32px),transparent);
+ -webkit-mask-composite:source-in;
+ mask-composite:intersect;
+}
 @media(min-width:761px){
- .app-shell .scout-jobs-hero{height:clamp(250px,34vh,320px)}
+ .app-shell .scout-jobs-hero{--scout-city-height:clamp(250px,34vh,320px);height:var(--scout-city-height)}
  .app-shell .scout-jobs-copy{padding-top:56px;padding-left:15px}
- .app-shell .scout-jobs-hero>.scout-city-scene{height:100%;right:-24px}
+ .app-shell .scout-jobs-hero>.scout-city-scene{height:100%;width:min(72%,calc(var(--scout-city-height) * 2 + 160px));max-width:none;right:-24px}
  .app-shell .scout-jobs-hero .scout-city-walker{width:208px;bottom:8px}
  .app-shell .scout-page-heading,.app-shell .scout-page-heading--saved{min-height:248px;padding:56px 15px 24px}
  .app-shell .scout-page-heading .trail-heading-marker{margin-bottom:23px}
@@ -84,13 +92,13 @@
  .app-shell .main-content{padding-left:18px;padding-right:18px}
  .app-shell .scout-jobs-hero h1{font-size:38px}
  .app-shell .scout-jobs-hero>.scout-city-scene{right:-18px}
- .app-shell .scout-jobs-hero .scout-city-walker{width:172px}
+ .app-shell .scout-jobs-hero .scout-city-walker{width:172px;left:28%}
  .app-shell .scout-page-heading h1{font-size:40px;white-space:normal}
  .app-shell .scout-page-heading>.scout-moment:not(.scout-moment--saved){width:175px;right:10px}
  .app-shell .scout-page-heading--saved>.scout-moment{width:270px;right:0;bottom:-25px}
 }
 @media(min-width:761px) and (max-height:800px){
- .app-shell .scout-jobs-hero{height:230px}
+ .app-shell .scout-jobs-hero{--scout-city-height:230px}
  .app-shell .scout-jobs-copy{padding-top:45px}
  .app-shell .scout-page-heading,.app-shell .scout-page-heading--saved{min-height:224px;padding-top:45px}
  .app-shell .scout-page-heading--saved>.scout-moment{width:min(325px,30vw);bottom:-58px}
@@ -100,6 +108,7 @@
  .app-shell .workspace{margin-left:0;width:100%}
  .app-shell .main-content{padding-left:16px;padding-right:16px}
  .app-shell .scout-jobs-hero{min-height:360px}
+ .app-shell .scout-jobs-hero .scout-city-walker{left:26%}
  .app-shell .scout-jobs-hero h1{font-size:36px;white-space:normal}
  .app-shell .scout-page-heading h1,.app-shell .scout-page-heading--saved h1{font-size:36px;line-height:1.12;letter-spacing:-1px}
  .app-shell .scout-page-heading .scout-heading-copy>p{font-size:13px}

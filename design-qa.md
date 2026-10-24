@@ -1,5 +1,23 @@
-# NextRole compact sizing review
+# NextRole hero framing and blend correction
 final result: passed
+
+24 October 2026 (Asia/Kolkata). Scope: keep the NEXT JOB storefront sign visible and blend the city street into the page, preserving v38's approved compact UI sizing and all functional behavior.
+
+The owner-provided screenshot showed the sign cropped above a short header and a hard pavement edge. It was inspected locally and is not copied to the public repository. docs/review/compact/laptop.jpg supplies a synthetic v38 before view. docs/review/hero/comparison.jpg places that view together with the actual corrected browser capture at the same 1363 × 936 outer viewport and 1280 × 720 iframe (DPR 1). The corrected mobile capture is hero/mobile.jpg. The desktop capture was verified locally and is excluded from repository source after automatic publication review rejected its public upload; this does not block the application correction. The source illustration is unchanged at public/art/scout-pages/city-street.webp, RGBA 1280 × 640.
+
+- [P1 fixed] Full-width cover scaling cropped away the storefront fascia when the header shrank to 230 px. The street container width is now capped relative to its height (620 × 230 px at the reviewed laptop size), limiting the vertical crop while retaining the full sign. Desktop and mobile were visually checked for the complete NEXT JOB lettering.
+- [P2 fixed] Pavement ended at a visible horizontal edge. Two presentation masks feather only the existing street raster along the left, top and bottom, leaving the interactive Scout separate and opaque. Browser readback confirmed the intersect composition and the actual captures show a soft canvas transition.
+- [P2 fixed] On narrow screens Scout's head occupied the sign area. The mobile and medium-width horizontal anchors move Scout to the left of the frontage without changing the approved character size, art or animation.
+
+Required surfaces: fonts and type hierarchy are unchanged (14 px laptop navigation, 46.08 px laptop main heading); spacing and controls retain v38 dimensions; colors and focus tokens are unchanged; the original image is reframed rather than replaced, stretched or given a text overlay; no app copy was changed. Laptop document client and scroll width remain equal at 1265 px. Mobile and full desktop views show the complete sign and softened edge. This scoped correction does not claim pixel-identical generated art, real-device keyboard testing or full-product certification.
+
+The Scout greeting button was clicked in the browser and returned You’ve got this. Application-origin console error checks were empty. TypeScript and the native production build passed. No student data, auth, backend, sharing, provider or maintenance setting changed. The Vercel copy remains unchanged pending its existing team-access issue.
+
+The compact sizing review below is retained as historical evidence for the preceding revision; its UI dimensions remain in effect.
+
+---
+
+# NextRole compact sizing review
 
 24 October 2026, Asia/Kolkata. Scope: restore the earlier compact UI sizes while keeping the approved Scout composition and artwork. This supersedes the v37 density judgment, which the owner rejected as enlarged. This is not a pixel-identical clone claim.
 

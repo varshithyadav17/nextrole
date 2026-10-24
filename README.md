@@ -1,5 +1,7 @@
 # NextRole
 
+> **Hero framing update:** the NEXT JOB storefront stays visible on shorter screens, and the street fades smoothly into the canvas. [Review and evidence](design-qa.md).
+
 > **Compact sizing update:** restored the earlier UI scale while retaining the Scout city design and animations. [Sizing notes](handoff/COMPACT-SIZING.md) · [Browser review](design-qa.md).
 
 **A calmer job search. A measurable product.**

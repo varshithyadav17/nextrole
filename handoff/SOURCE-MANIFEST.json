@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
-  "release": "Compact Scout interface sizing with browser-reviewed laptop and mobile spacing",
-  "generatedAt": "2026-10-24T11:09:53.560Z",
-  "parentCommit": "f97fbfc63c766885043baab9ebeb5fcd4dff7800",
+  "release": "Scout storefront framing and street blending with compact UI preserved",
+  "generatedAt": "2026-10-24T12:57:34.362Z",
+  "parentCommit": "b8fbc3f0dc77ae52f2d2a1093fe9bbf55f59b558",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 12117,
-      "sha256": "875ed5a12337cb0d8e9f722e892b6aaf2fe86f57bc9abc38e328ad4b7e6de4c5"
+      "bytes": 12287,
+      "sha256": "ccfbd735313c3f7fef15f84ffa885e6b4cba6e97f7307678b4a6864c43e2f98e"
     },
     {
       "path": "RELEASE-14.md",
@@ -307,8 +307,8 @@
     },
     {
       "path": "app/compact-layout.css",
-      "bytes": 8586,
-      "sha256": "81c84c4ea9c5f0f940094f7ff84aff0795fa2996fad769dcc4faf7fe2abf35fa"
+      "bytes": 9352,
+      "sha256": "ced8fffcc732cef932d238f983f39599a7d11e98051ad1e55e7adc61cef9f51e"
     },
     {
       "path": "app/company-browser.tsx",
@@ -1077,8 +1077,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 5361,
-      "sha256": "9bfc90ff7d2d580d6c3c0a279e89ff5056f6a405278fe31cb694d17e4c75721d"
+      "bytes": 8296,
+      "sha256": "44aa9af09d3fe7e911d7fd358ea4f2e055d877b1053397c5018e18ef9102b8d9"
     },
     {
       "path": "docs/design/scout-city-jobs-target.webp",
@@ -1174,6 +1174,21 @@
       "path": "docs/review/help-final.jpg",
       "bytes": 87945,
       "sha256": "95c19f2fbbdf75ec855a7e5e81ca54632b0b8a0eea0908823bcc3e16f0cdcbe3"
+    },
+    {
+      "path": "docs/review/hero/comparison.jpg",
+      "bytes": 308912,
+      "sha256": "394d822e0364aee7d54a74818c545101cc2652e3e219ab0096c89dc5f95c1457"
+    },
+    {
+      "path": "docs/review/hero/laptop.jpg",
+      "bytes": 123036,
+      "sha256": "06d9610e98d6c34a5df90093a1a83b2273809ff7e985fdbc5b78054950236c05"
+    },
+    {
+      "path": "docs/review/hero/mobile.jpg",
+      "bytes": 60154,
+      "sha256": "d1ad02db61ce69acd26e3b0775625530646e7769e58c241266cd8c55abd56d63"
     },
     {
       "path": "docs/review/job-detail-final.jpg",
@@ -1514,6 +1529,11 @@
       "path": "handoff/FOCUSED-VERIFICATION.json",
       "bytes": 1551,
       "sha256": "3aea7c039317e85933e71fc421a60b0c2e3ec00dd45230c91892b74c3ff4bb6d"
+    },
+    {
+      "path": "handoff/HERO-FRAMING.md",
+      "bytes": 593,
+      "sha256": "bbcf032bc3eed79ec5830c61dfdcb5fde03f04b78a9303ac263294a7f6cb1fda"
     },
     {
       "path": "handoff/INCOMING-V17-DEPLOYMENT.md",
@@ -2427,8 +2447,8 @@
     },
     {
       "path": "scripts/update-source-manifest.mjs",
-      "bytes": 1255,
-      "sha256": "ae1aeb708e0738ab3af5cfbee73a9f5143578aca80290eb57648c5f7d076fb71"
+      "bytes": 1247,
+      "sha256": "1eef6a96d70bc48954bfa59b1ba2943778e3869c3ebb45f9951cc3296220132a"
     },
     {
       "path": "scripts/verify-admin-analytics.mjs",
