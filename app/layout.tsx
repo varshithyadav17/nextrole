@@ -4,6 +4,7 @@ import "./focus.css";
 import "./trail.css";
 import "./scout-pages.css";
 import "./design-fidelity.css";
+import "./compact-layout.css";
 import {ScoutMotionProvider} from './scout-motion';
 
 export const metadata: Metadata = {

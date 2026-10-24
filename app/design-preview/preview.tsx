@@ -16,7 +16,7 @@ export default function DesignPreview(){
  const [ready,setReady]=useState(false),[viewport,setViewport]=useState(0);
  useEffect(()=>{
   const requestedWidth=Number(new URLSearchParams(location.search).get('viewport'));
-  if([390,768].includes(requestedWidth)){setViewport(requestedWidth);return;}
+  if([390,768,1280].includes(requestedWidth)){setViewport(requestedWidth);return;}
   const push=history.pushState.bind(history),replace=history.replaceState.bind(history);
   const previewURL=(url:string|URL|null|undefined)=>{if(!url)return url;const target=new URL(url,location.href);if(target.origin===location.origin&&target.pathname==='/')target.pathname='/design-preview';return target.href;};
   history.pushState=(data,unused,url)=>push(data,unused,previewURL(url));
@@ -76,6 +76,6 @@ export default function DesignPreview(){
   setReady(true);
   return()=>{window.fetch=original;history.pushState=push;history.replaceState=replace;};
  },[]);
- if(viewport)return <main style={{minHeight:'100vh',background:'#eef1ee',padding:'34px 12px',display:'grid',justifyItems:'center',gap:16}}><p style={{font:'13px Arial',color:'#415346'}}>Local responsive check · {viewport} px · Synthetic data</p><iframe title="NextRole responsive preview" src="/design-preview" width={viewport} height={844} style={{boxSizing:'content-box',border:'1px solid #d9dfda',background:'#fff',maxWidth:'100%'}}/></main>;
+ if(viewport)return <main style={{minHeight:'100vh',background:'#eef1ee',padding:'34px 12px',display:'grid',justifyItems:'center',gap:16}}><p style={{font:'13px Arial',color:'#415346'}}>Local responsive check · {viewport} px · Synthetic data</p><iframe title="NextRole responsive preview" src="/design-preview" width={viewport} height={viewport===1280?720:844} style={{boxSizing:'content-box',border:'1px solid #d9dfda',background:'#fff',maxWidth:'100%'}}/></main>;
  return <><div className="design-preview-banner">LOCAL DESIGN PREVIEW · SYNTHETIC DATA · NO REAL ACCOUNT</div>{ready&&<Dashboard user={user}/>}</>;
 }

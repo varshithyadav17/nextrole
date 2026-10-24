@@ -1,5 +1,7 @@
 # NextRole
 
+> **Compact sizing update:** restored the earlier UI scale while retaining the Scout city design and animations. [Sizing notes](handoff/COMPACT-SIZING.md) · [Browser review](design-qa.md).
+
 **A calmer job search. A measurable product.**
 
 NextRole helps students and early-career candidates discover relevant openings, prepare a truthful résumé with ScoutX, and keep their applications moving. Its separate admin workspace closes the product loop: understand adoption, diagnose drop-offs, listen to students and decide what to improve.

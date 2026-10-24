@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
-  "release": "Browser-reviewed Scout frontend fidelity, accessible menus and responsive layouts",
-  "generatedAt": "2026-10-24T00:02:25.522Z",
-  "parentCommit": "fbad5420d2b9d14f39aedb7c129f46cda71f83ae",
+  "release": "Compact Scout interface sizing with browser-reviewed laptop and mobile spacing",
+  "generatedAt": "2026-10-24T11:09:53.560Z",
+  "parentCommit": "f97fbfc63c766885043baab9ebeb5fcd4dff7800",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11926,
-      "sha256": "6f065305724d4b3b56bd0ff32e9d9e83ce5c443ba1645785923d3080d2084e4a"
+      "bytes": 12117,
+      "sha256": "875ed5a12337cb0d8e9f722e892b6aaf2fe86f57bc9abc38e328ad4b7e6de4c5"
     },
     {
       "path": "RELEASE-14.md",
@@ -306,6 +306,11 @@
       "sha256": "f9972be1f08b73f62265b10b94e47e7d6b895b3f1cf9cef98dabca4303d9f253"
     },
     {
+      "path": "app/compact-layout.css",
+      "bytes": 8586,
+      "sha256": "81c84c4ea9c5f0f940094f7ff84aff0795fa2996fad769dcc4faf7fe2abf35fa"
+    },
+    {
       "path": "app/company-browser.tsx",
       "bytes": 3757,
       "sha256": "2b501b66f483b805daf13efeacb8267b31dd21830d98b36f07ceb703e13d2e96"
@@ -332,8 +337,8 @@
     },
     {
       "path": "app/design-preview/preview.tsx",
-      "bytes": 10019,
-      "sha256": "36f980330312001c8adf65c208ed0ad8c7675dcc430bbd98411bf378a00beb87"
+      "bytes": 10044,
+      "sha256": "405a88171ca42bb72837b56660f33b14bb2bb28e73c1c53c0d6e6a57562762fe"
     },
     {
       "path": "app/discovery-manager.tsx",
@@ -412,8 +417,8 @@
     },
     {
       "path": "app/layout.tsx",
-      "bytes": 746,
-      "sha256": "b9b092a574b37a2be3740965cf192671e136139261762fc289991bcb518ca960"
+      "bytes": 777,
+      "sha256": "6f8625aaa3ff2c825d7550cd5ebc68e79ce43b62aa4537d14bea615ac7347345"
     },
     {
       "path": "app/login/page.tsx",
@@ -1072,8 +1077,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 8540,
-      "sha256": "4d9551dc137bad899c0437bb2605c536fee15f23566ce9aa3af86c950f29bd8c"
+      "bytes": 5361,
+      "sha256": "9bfc90ff7d2d580d6c3c0a279e89ff5056f6a405278fe31cb694d17e4c75721d"
     },
     {
       "path": "docs/design/scout-city-jobs-target.webp",
@@ -1134,6 +1139,36 @@
       "path": "docs/review/chat-final.jpg",
       "bytes": 95656,
       "sha256": "d4e5ac2dc91c8e814a081300ff84d0874c9c87f4311a1a0f24ba51d497ddf7d6"
+    },
+    {
+      "path": "docs/review/compact/comparison.jpg",
+      "bytes": 352692,
+      "sha256": "4a4110169da2ae923612322a89ac93e10244bfb75ee1b4f022195c81180cc3ec"
+    },
+    {
+      "path": "docs/review/compact/jobs.jpg",
+      "bytes": 136746,
+      "sha256": "577f71889e080f36c24b1d2b6a8344bf6993486c477961918b7b33c82028c7c8"
+    },
+    {
+      "path": "docs/review/compact/laptop.jpg",
+      "bytes": 129929,
+      "sha256": "c7c8fe7ea29edc333573290375a9019bb241900183ebe7de41fa575a245ac08a"
+    },
+    {
+      "path": "docs/review/compact/mobile.jpg",
+      "bytes": 61431,
+      "sha256": "f380019642fc850d3ed451890dae6d8097d7f7f2f388188e9832051bfb20fa8b"
+    },
+    {
+      "path": "docs/review/compact/rows.jpg",
+      "bytes": 148708,
+      "sha256": "ad53d520d472af3d7c2b968a65ddb15874bd9cb902cf108780c03349f898ad3e"
+    },
+    {
+      "path": "docs/review/compact/saved.jpg",
+      "bytes": 100353,
+      "sha256": "b8d128530abed7742cdca08a43db33f5ab1562080d6848d8db8dd2b63e61e8a5"
     },
     {
       "path": "docs/review/help-final.jpg",
@@ -1409,6 +1444,11 @@
       "path": "handoff/ADMIN-ANALYTICS.md",
       "bytes": 6258,
       "sha256": "b44ccfc2a5d05162f18a4ea0c2e2defdc369c7777c97a67bead5a543714d28e0"
+    },
+    {
+      "path": "handoff/COMPACT-SIZING.md",
+      "bytes": 789,
+      "sha256": "43fb5e936b37a3d65094a0df6c2e4478ab68846c6fa870d96d887de54b8f5e38"
     },
     {
       "path": "handoff/CONTINUE-PROMPT.md",
@@ -2387,8 +2427,8 @@
     },
     {
       "path": "scripts/update-source-manifest.mjs",
-      "bytes": 1258,
-      "sha256": "8313084dc5903d686be8f5665c1867fbed72b09489fb7848797ee744b72cd33d"
+      "bytes": 1255,
+      "sha256": "ae1aeb708e0738ab3af5cfbee73a9f5143578aca80290eb57648c5f7d076fb71"
     },
     {
       "path": "scripts/verify-admin-analytics.mjs",
