@@ -4,6 +4,7 @@ import {createContext,useContext,useEffect,useState} from 'react';
 import {Pause,Play} from 'lucide-react';
 
 const MotionContext=createContext({enabled:false,reduced:false,toggle:()=>{}});
+export function useScoutMotion(){return useContext(MotionContext);}
 
 export function ScoutMotionProvider({children}:{children:React.ReactNode}){
  const [enabled,setEnabled]=useState(false),[reduced,setReduced]=useState(false),[visible,setVisible]=useState(true);

@@ -1,0 +1,268 @@
+/* Approved NextRole composition. Keep artwork separate from functional UI. */
+:root{--ink:#090f20;--muted:#5a6d8d;--canvas:#fffff8;--white:#fff;--line:#e6e8e9;--green:#ed4b10;--lime:#fff0e4;--trail-orange:#ed4b10;--trail-orange-hover:#d63e09;--trail-teal:#00869b}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--canvas);color:var(--ink)}
+.app-shell{background:var(--canvas);color:var(--ink)}
+.app-shell .sidebar{width:232px;padding:35px 16px 0;background:#fffffa;border-right:1px solid #ebede7}
+.app-shell .sidebar-heading{padding:0 23px}
+.app-shell .brand{gap:12px;color:#080e1d;font-size:29px;font-weight:750;letter-spacing:-1.4px}
+.app-shell .brand-dot{color:#abd19b}
+.app-shell .brand-icon{width:36px;height:36px;min-width:36px;background:#d9ecc7;border-radius:9px}
+.app-shell .sidebar-scroll{display:flex;flex-direction:column;flex:1;min-height:0;padding-top:43px;padding-bottom:12px;margin-top:0;margin-right:0;padding-right:0;scrollbar-gutter:auto}
+.app-shell .sidebar-scroll>nav{flex-shrink:0}
+.app-shell .nav-item{gap:18px;min-height:53px;margin-bottom:10px;padding:12px 20px;color:#111a31;font-size:17px;font-weight:400;border-radius:7px}
+.app-shell .nav-item>span:not(.nav-count){white-space:nowrap}
+.app-shell .nav-item svg{stroke-width:1.8}
+.app-shell .nav-item.active{color:#ee4b10;background:#fff0e6;font-weight:400;box-shadow:none;position:relative}
+.app-shell .nav-item.active:before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;background:#ff5a20;border-radius:2px}
+.app-shell .nav-item.active svg{stroke-width:2}
+.app-shell .nav-item:hover{background:#fff4e9;transform:none;color:#c53e12}
+.app-shell .nav-count{display:none}
+.app-shell .sidebar-utilities{margin-top:auto;padding-top:60px;flex-shrink:0}
+.app-shell .sidebar-bottom{display:block;flex-shrink:0;padding:15px 10px 32px;border-top:0;background:transparent;margin-top:0}
+.app-shell .account-menu-trigger--sidebar{display:grid;grid-template-columns:55px minmax(0,1fr) 16px;align-items:center;gap:12px;width:100%;min-height:58px;border:0;border-radius:10px;background:transparent;padding:0;text-align:left;box-shadow:none}
+.app-shell .account-menu-trigger--sidebar:hover{background:#f5f6ed}
+.account-menu-trigger--sidebar .account-menu-avatar{height:55px;width:55px;min-width:55px;border:0;background:#004d48;color:white;font-size:19px;font-weight:500}
+.account-trigger-identity{min-width:0;display:flex;flex-direction:column;gap:4px;color:#10182e}
+.account-trigger-identity strong{font-size:17px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.25}
+.account-trigger-identity small{font-size:15px;line-height:1.3;color:#17213b}
+.account-menu-trigger--sidebar>svg{color:#17213b}
+.account-dropdown{z-index:120}
+body>div:has(>.account-dropdown){z-index:120!important}
+.app-shell .workspace{margin-left:232px;width:calc(100% - 232px)}
+.app-shell .topbar{display:none}
+.app-shell .main-content{padding:0 22px 70px 17px;max-width:1650px;width:100%;margin:0 auto}
+.app-shell .app-footer{display:none}
+.app-shell .notification-panel{position:fixed;top:22px;right:24px;z-index:70;max-height:calc(100dvh - 44px)}
+.app-shell .main-content>div>.workspace-subnav{margin:18px 22px 0}
+.app-shell .trail-heading-marker{width:46px;height:7px;margin-bottom:23px;border-radius:4px;background:#ff5b22}
+.app-shell .scout-jobs-hero{display:block;position:relative;min-height:0;height:346px;margin:0;padding:0;isolation:isolate;overflow:visible}
+.app-shell .scout-jobs-copy{position:relative;z-index:2;padding:73px 0 0 22px;max-width:790px;pointer-events:none}
+.app-shell .scout-jobs-copy button{pointer-events:auto}
+.app-shell .trail-greeting{color:#0c1225;font-size:22px;line-height:1.25;margin:0 0 13px}
+.app-shell .scout-jobs-hero h1{color:#070c1a;font-family:Georgia,'Times New Roman',serif;font-weight:700;font-size:64px;line-height:1.08;letter-spacing:-2.2px;max-width:none;margin:0 0 14px;white-space:nowrap;text-wrap:initial}
+.app-shell .scout-jobs-hero .trail-profile-link{font-size:23px;line-height:1.4;color:#11172a;gap:7px;max-width:690px;align-items:center}
+.app-shell .scout-jobs-hero>.scout-city-scene{position:absolute;right:-22px;top:0;width:69%;max-width:840px;height:340px;aspect-ratio:auto;margin:0;overflow:hidden;z-index:0}
+.app-shell .scout-jobs-hero .scout-city-street{object-fit:cover;object-position:right bottom;width:100%;height:100%}
+.app-shell .scout-jobs-hero .scout-city-walker{left:40%;bottom:8px;width:208px;aspect-ratio:1}
+.app-shell .scout-page-heading{position:relative;display:flex;align-items:flex-start;min-height:300px;height:auto;margin:0;padding:73px 22px 28px;isolation:isolate;overflow:hidden}
+.app-shell .scout-heading-copy{position:relative;z-index:1;max-width:calc(100% - 270px);padding:0}
+.app-shell .scout-page-heading .trail-heading-marker{margin-bottom:27px}
+.app-shell .scout-page-heading h1{font:700 clamp(48px,4.45vw,64px)/1.12 Georgia,'Times New Roman',serif;letter-spacing:-1.9px;color:#070c1a;margin:0;max-width:100%;text-wrap:balance}
+.app-shell .scout-page-heading .scout-heading-copy>p{color:#11172a;font-size:21px;line-height:1.45;margin:13px 0 0;max-width:760px}
+.app-shell .scout-page-heading>.scout-moment{position:absolute;right:64px;bottom:7px;max-width:none;width:263px;aspect-ratio:1;z-index:0}
+.app-shell .scout-page-heading--saved{min-height:321px;padding-bottom:29px}
+.app-shell .scout-page-heading--saved h1{font-size:84px;letter-spacing:-2.9px;line-height:1.04;white-space:nowrap}
+.app-shell .scout-page-heading--saved .scout-heading-copy{max-width:calc(100% - 345px)}
+.app-shell .scout-page-heading--saved>.scout-moment{width:410px;aspect-ratio:1.2;bottom:-78px;right:60px}
+.app-shell .scout-page-heading--saved .scout-heading-copy>p{font-size:24px;margin-top:13px}
+.app-shell .scout-heading-actions{margin-top:17px}
+.app-shell .filter-bar{margin:0 0 32px;gap:11px;position:relative;z-index:3}
+.app-shell .search-input{min-height:60px;background:white;border:1px solid #dfe3e8;border-radius:7px;padding:0 23px;gap:17px;box-shadow:none}
+.app-shell .search-input>svg{color:#0d1429}
+.app-shell .search-input input{font-size:18px;line-height:1.4;padding:17px 0;color:#19233e}
+.app-shell .search-input input::placeholder{color:#647898;opacity:1}
+.app-shell .search-input:focus-within{border-color:#e67e51;box-shadow:0 0 0 3px #ff5b2212}
+.app-shell .trail-filter-toggle{min-width:152px;min-height:60px;font-size:18px;gap:15px;padding:15px 24px;border-radius:7px;background:#fff;border:1px solid #dfe3e8;color:#0b1226}
+@media(min-width:761px){.app-shell .job-section[data-list=interested] .trail-filter-toggle{min-width:188px}}
+.app-shell .trail-filter-fields{padding:15px 0 0;gap:16px}
+.app-shell .trail-filter-fields label{font-size:13px;color:#526584}
+.app-shell .trail-filter-fields select{font-size:15px;min-height:48px;border-color:#dfe3e8;border-radius:7px;color:#19233e}
+.app-shell .fidelity-results-heading{margin:0 0 15px;gap:16px;min-height:39px;align-items:center}
+.app-shell .job-section[data-list=interested]>.fidelity-results-heading{display:none}
+.app-shell .fidelity-results-heading h2{font:700 39px/1.15 Georgia,'Times New Roman',serif;letter-spacing:-1px;color:#080e1f;min-width:0;margin:0}
+.fidelity-result-controls{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.app-shell .refresh-button{min-height:38px;font-size:12px;color:#526780;padding:8px 10px;border:0;background:transparent}
+.fidelity-view-menu{position:relative}
+.fidelity-view-menu>summary{display:grid;place-items:center;list-style:none;width:35px;height:38px;cursor:pointer;border-radius:7px;color:#17213b}
+.fidelity-view-menu>summary::-webkit-details-marker{display:none}
+.fidelity-view-menu>summary:hover,.fidelity-view-menu[open]>summary{background:#f1f3ee}
+.fidelity-view-menu>div{position:absolute;z-index:12;right:0;top:43px;min-width:220px;padding:6px;border:1px solid #e1e5e8;border-radius:9px;background:#fffef9;box-shadow:0 12px 32px #13233e14}
+.fidelity-view-menu button{display:flex;justify-content:space-between;align-items:center;gap:15px;text-align:left;width:100%;padding:12px;font-size:14px;min-height:43px;border-radius:6px;color:#18223a}
+.fidelity-view-menu button:hover{background:#fff1e7}
+.fidelity-view-menu button[aria-pressed=true]{color:#d44311;font-weight:600}
+.fidelity-view-menu>div>span{display:block;font-size:11px;line-height:1.7;color:#64738a;padding:10px 12px 7px;border-top:1px solid #e6e8e8;margin-top:4px}
+.app-shell .eligibility-scope{font-size:13px;line-height:1.5;margin:0 0 16px;padding:10px 14px;background:#fff2db;color:#7d4d12}
+.app-shell .results-caption{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.app-shell .job-grid{border:1px solid #e1e4e8;border-radius:8px;background:#fff;overflow:visible;gap:0}
+.app-shell .job-card{min-height:127px;grid-template-columns:minmax(264px,max-content) minmax(0,1fr) auto;grid-template-areas:'identity facts actions' 'identity meta actions' 'identity fit actions';column-gap:23px;row-gap:4px;padding:21px 24px;background:transparent;border:0;border-radius:0;align-content:center}
+.app-shell .job-card+.job-card{border-top:1px solid #e6e8ec}
+.app-shell .job-card:first-child{border-radius:8px 8px 0 0}
+.app-shell .job-card:last-child{border-radius:0 0 8px 8px}
+.app-shell .job-card:hover{background:#fffdfa;box-shadow:none;transform:none}
+.app-shell .trail-job-identity{gap:24px;align-items:flex-start;max-width:350px}
+.app-shell .company-logo{width:70px;height:70px;min-width:70px;border-radius:8px;font-size:29px;font-weight:650;letter-spacing:-1px}
+.app-shell .trail-job-identity .job-title{font-family:Arial,Helvetica,sans-serif;font-size:19px;font-weight:700;line-height:1.35;letter-spacing:-.45px;color:#0b1122;margin:2px 0 6px;overflow-wrap:normal}
+.app-shell .trail-company-name{font-size:16px;line-height:1.45;color:#607697}
+.app-shell .trail-job-type{display:none}
+.app-shell .trail-job-facts{gap:8px 17px;padding:0;align-items:center}
+.app-shell .trail-job-facts .job-location,.job-arrangement{font-size:15px;line-height:1.5;color:#4d6386;display:flex;align-items:center;gap:8px;margin:0;min-height:0}
+.app-shell .trail-job-facts .job-location svg,.job-arrangement svg{color:#111a31;stroke-width:2}
+.app-shell .job-tags{gap:9px}
+.app-shell .tag{padding:5px 13px;border-radius:7px;background:#fff4e6;font-size:14px;line-height:1.35;color:#976017;font-weight:400}
+.app-shell .tag.batch-tag{background:#e8faec;color:#008a7b}
+.app-shell .tag.experience-tag{background:#e4f7fd;color:#0086a5}
+.app-shell .tag.closed-tag{background:#fceaea;color:#a3403a}
+.app-shell .job-card .match-line{margin:0;padding:0;align-items:flex-start}
+.app-shell .job-card .match-line p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;color:#617797;font-size:15.5px;font-weight:400;line-height:1.45;letter-spacing:0}
+.app-shell .job-card .match-line.review p{color:#8b591e}
+.app-shell .job-card .match-line.neutral p{color:#6b7183}
+.app-shell .job-card .match-line small{font-size:12px;line-height:1.5;color:#8b591e;margin-top:3px}
+.app-shell .job-card .card-meta{min-height:0;gap:10px;margin:0;color:#687a94;font-size:11px;line-height:1.4}
+.app-shell .job-card .card-meta:empty{display:none}
+.app-shell .job-card .card-meta .job-deadline{display:flex;align-items:center;gap:6px;font-size:12px;color:#c8472b}
+.app-shell .trail-job-actions{gap:12px;align-self:start;align-items:center;padding-top:1px}
+.app-shell .trail-job-actions .save-button{width:34px;min-width:34px;min-height:48px;padding:4px;color:#00869b;background:none}
+.app-shell .trail-job-actions .save-button svg{width:25px;height:28px;stroke-width:2}
+.app-shell .trail-job-actions .save-button.saved{background:none}
+.app-shell .trail-job-actions .apply-button{min-width:154px;min-height:52px;padding:13px 22px;border-radius:7px;font-size:18px;font-weight:700;line-height:1.3;background:#ed4b10;border-color:#ed4b10;color:white;gap:0}
+.app-shell .trail-job-actions .apply-button>svg{display:none}
+.app-shell .trail-job-actions .apply-button:hover{background:#d63e09;border-color:#d63e09;box-shadow:none;transform:none}
+.app-shell .job-actions-menu>summary{width:25px;min-height:48px;color:#0c1735}
+.app-shell .job-actions-menu>div{font-size:14px;background:#fff;border-color:#e2e6eb;box-shadow:0 10px 30px #11213a16}
+.app-shell .job-actions-menu button{font-size:13px;min-height:44px;color:#17213c}
+.app-shell .trail-application-stage{color:#07878f;font-size:12px}
+.app-shell .empty-state{margin-top:12px;padding:48px 28px;background:white;border:1px solid #e1e5e9;border-radius:8px}
+.app-shell .empty-state h2{font:700 31px/1.2 Georgia,serif;color:#11182c;letter-spacing:-.6px}
+.app-shell .empty-state p{font-size:15px;line-height:1.7;color:#607494;max-width:480px;margin:16px auto 24px}
+.app-shell .settings-card,.app-shell .profile-form,.app-shell .career-panel,.app-shell .source-card{background:white;border:1px solid #e0e5e9;border-radius:9px;box-shadow:none}
+.app-shell .settings-card h2,.app-shell .settings-card h3,.app-shell .form-section-title h2,.app-shell .analytics-chart h2{font-family:Georgia,serif;font-weight:700;color:#131a30}
+.app-shell .field-label,.app-shell .choice{color:#314767;font-size:14px}
+.app-shell .field-label input,.app-shell .field-label textarea,.app-shell .field-label select{min-height:49px;font-size:16px;color:#17253f;border:1px solid #dce3e9;border-radius:7px;background:white;line-height:1.6;padding:12px 14px}
+.app-shell .field-label input:focus,.app-shell .field-label textarea:focus,.app-shell .field-label select:focus{border-color:#e88259;background:#fff;box-shadow:0 0 0 3px #ff632013;outline:none}
+.app-shell .settings-tabs{margin:0 0 24px;background:#fff;border:1px solid #e0e5e9;border-radius:8px;padding:5px;gap:6px}
+.app-shell .settings-tabs button{min-height:46px;font-size:14px;padding:11px 17px;color:#4d6487;border-radius:6px}
+.app-shell .settings-tabs button.active{color:#d94b16;background:#fff0e6;border-color:#ffe0ca}
+.app-shell .advanced-settings{margin-bottom:24px;border-color:#e1e6eb;border-radius:8px;background:#fff}
+.app-shell .advanced-settings>summary{font-size:14px;color:#4c6384;min-height:48px}
+.app-shell .analytics-chart h2{font-size:26px}
+.app-shell .analytics-bar{color:#526889;font-size:14px;margin-top:21px}
+.app-shell .analytics-bar strong{color:#111a30;font-size:14px}
+.app-shell .analytics-bar meter{display:block;width:100%;height:9px;appearance:none;-webkit-appearance:none;background:#e9edf1;border:0;border-radius:5px;overflow:hidden;margin-top:9px}
+.app-shell .analytics-bar meter::-webkit-meter-bar{height:9px;border:0;background:#e9edf1;border-radius:5px;box-shadow:none}
+.app-shell .analytics-bar meter::-webkit-meter-optimum-value{background:#168c9b;border-radius:5px;box-shadow:none}
+.app-shell .analytics-bar meter::-moz-meter-bar{background:#168c9b;border-radius:5px;box-shadow:none}
+.app-shell .report-notes{font-size:13px;color:#637492}
+.app-shell .scout-dock:not(.is-full-page){right:22px;bottom:36px}
+.app-shell .scout-chat-launcher{min-height:64px;padding:12px 18px 12px 16px;border:1px solid #d4e1d1;border-radius:40px;background:#fffff9;color:#0b1125;gap:13px;box-shadow:0 5px 20px #28493a06}
+.app-shell .scout-chat-launcher>span:nth-child(2){font-size:17px;font-weight:500;line-height:1.3}
+.app-shell .scout-chat-launcher small{display:none}
+.app-shell .scout-chat-launcher .scout-chat-avatar{width:37px;height:37px;min-width:37px;background:#e0edd3}
+.app-shell .scout-chat-launcher>svg{color:#0e172d}
+.app-shell .scout-detail-moment{max-width:150px;width:150px}
+.app-shell .detail-header h1{color:#0c1428;font-weight:700;font-size:38px}
+.app-shell .job-page-nav{padding-top:29px}
+.app-shell .job-page-content{padding-top:28px}
+.app-shell .form-error{font-size:14px;line-height:1.7;color:#a13d27;border:1px solid #f1d7cb;background:#fff8f1;border-radius:8px;padding:13px 16px}
+@media(min-width:1251px){
+ .app-shell{--fidelity-unit:min(.0672495vw,1.08px);--fidelity-sidebar:calc(241 * var(--fidelity-unit))}
+ .app-shell .sidebar{width:var(--fidelity-sidebar)}
+ .app-shell .workspace{margin-left:var(--fidelity-sidebar);width:calc(100% - var(--fidelity-sidebar))}
+ .app-shell .main-content{padding-left:calc(17 * var(--fidelity-unit));padding-right:calc(22 * var(--fidelity-unit))}
+ .app-shell .sidebar-scroll{padding-top:calc(43 * var(--fidelity-unit))}
+ .app-shell .nav-item{padding:calc(12 * var(--fidelity-unit)) calc(23 * var(--fidelity-unit));gap:calc(23 * var(--fidelity-unit));min-height:calc(54 * var(--fidelity-unit));margin-bottom:calc(9 * var(--fidelity-unit));font-size:calc(19 * var(--fidelity-unit))}
+ .app-shell .nav-item>svg{width:calc(27 * var(--fidelity-unit));height:calc(27 * var(--fidelity-unit))}
+ .app-shell .scout-jobs-hero{height:calc(358 * var(--fidelity-unit))}
+ .app-shell .scout-jobs-copy{padding-top:calc(77 * var(--fidelity-unit));padding-left:calc(23 * var(--fidelity-unit))}
+ .app-shell .trail-heading-marker{margin-bottom:calc(24 * var(--fidelity-unit))}
+ .app-shell .trail-greeting{font-size:calc(24 * var(--fidelity-unit));margin-bottom:calc(13 * var(--fidelity-unit))}
+ .app-shell .scout-jobs-hero h1{font-size:calc(72 * var(--fidelity-unit));letter-spacing:calc(-2.2 * var(--fidelity-unit));margin-bottom:calc(14 * var(--fidelity-unit))}
+ .app-shell .scout-jobs-hero .trail-profile-link{font-size:calc(27 * var(--fidelity-unit))}
+ .app-shell .scout-jobs-hero>.scout-city-scene{right:calc(-22 * var(--fidelity-unit));height:calc(354 * var(--fidelity-unit));width:72%;max-width:calc(940 * var(--fidelity-unit))}
+ .app-shell .scout-jobs-hero .scout-city-walker{width:calc(228 * var(--fidelity-unit));left:39%;bottom:calc(10 * var(--fidelity-unit))}
+ .app-shell .scout-page-heading--saved{min-height:calc(332 * var(--fidelity-unit));padding-top:calc(77 * var(--fidelity-unit));padding-left:calc(23 * var(--fidelity-unit))}
+ .app-shell .scout-page-heading--saved h1{font-size:calc(94 * var(--fidelity-unit))}
+ .app-shell .scout-page-heading--saved .scout-heading-copy>p{font-size:calc(27 * var(--fidelity-unit))}
+ .app-shell .scout-page-heading--saved>.scout-moment{width:calc(430 * var(--fidelity-unit));right:calc(82 * var(--fidelity-unit));bottom:calc(-75 * var(--fidelity-unit))}
+ .app-shell .search-input,.app-shell .trail-filter-toggle{min-height:calc(62 * var(--fidelity-unit))}
+ .app-shell .search-input input{padding:calc(15 * var(--fidelity-unit)) 0;line-height:1.3;font-size:calc(20 * var(--fidelity-unit))}
+ .app-shell .trail-filter-toggle{min-width:calc(174 * var(--fidelity-unit));padding:calc(14 * var(--fidelity-unit)) calc(24 * var(--fidelity-unit))}
+ .app-shell .fidelity-results-heading{margin-bottom:8px}
+ .app-shell .job-section[data-list=interested] .filter-bar{margin-bottom:calc(30 * var(--fidelity-unit))}
+ .app-shell .job-card{min-height:calc(132 * var(--fidelity-unit));grid-template-columns:minmax(calc(288 * var(--fidelity-unit)),max-content) minmax(0,1fr) auto;padding:calc(24 * var(--fidelity-unit)) calc(26 * var(--fidelity-unit));column-gap:calc(24 * var(--fidelity-unit))}
+ .app-shell .company-logo{width:calc(74 * var(--fidelity-unit));height:calc(74 * var(--fidelity-unit));min-width:calc(74 * var(--fidelity-unit));font-size:calc(40 * var(--fidelity-unit))}
+ .app-shell .trail-job-identity{gap:calc(28 * var(--fidelity-unit));max-width:calc(380 * var(--fidelity-unit))}
+ .app-shell .trail-job-identity .job-title{font-size:calc(22 * var(--fidelity-unit));letter-spacing:-.6px;line-height:1.25}
+ .app-shell .trail-company-name{font-size:calc(18 * var(--fidelity-unit))}
+ .app-shell .job-card .match-line p{font-size:calc(18 * var(--fidelity-unit));line-height:1.35}
+ .app-shell .trail-job-actions .apply-button{min-width:calc(174 * var(--fidelity-unit));min-height:calc(58 * var(--fidelity-unit));padding:calc(13 * var(--fidelity-unit)) calc(22 * var(--fidelity-unit));font-size:calc(20 * var(--fidelity-unit));font-weight:500}
+ .app-shell .trail-job-actions{gap:calc(13 * var(--fidelity-unit))}
+}
+@media(max-width:1250px){
+ .app-shell .sidebar{width:214px;padding-left:12px;padding-right:12px}.app-shell .workspace{margin-left:214px;width:calc(100% - 214px)}
+ .app-shell .sidebar-heading{padding-left:16px;padding-right:16px}.app-shell .nav-item{padding-left:18px;padding-right:14px;gap:14px;font-size:16px}
+ .app-shell .scout-jobs-hero h1{font-size:53px;letter-spacing:-1.8px}.app-shell .scout-jobs-hero{height:326px}
+ .app-shell .scout-jobs-hero>.scout-city-scene{height:320px;width:72%}.app-shell .scout-jobs-hero .scout-city-walker{width:188px;left:42%}
+ .app-shell .trail-greeting,.app-shell .scout-jobs-hero .trail-profile-link{font-size:20px}
+ .app-shell .scout-page-heading{min-height:284px}.app-shell .scout-page-heading h1{font-size:54px}.app-shell .scout-page-heading>.scout-moment{width:230px;right:24px}
+ .app-shell .scout-page-heading--saved{min-height:310px}.app-shell .scout-page-heading--saved h1{font-size:65px;letter-spacing:-2px}
+ .app-shell .scout-page-heading--saved>.scout-moment{width:340px;right:20px;bottom:-22px}.app-shell .scout-page-heading--saved .scout-heading-copy>p{font-size:20px}
+ .app-shell .scout-heading-copy{max-width:calc(100% - 225px)}.app-shell .scout-page-heading--saved .scout-heading-copy{max-width:calc(100% - 285px)}
+ .app-shell .job-card{grid-template-columns:minmax(210px,.9fr) minmax(0,1.1fr);grid-template-areas:'identity actions' 'facts facts' 'meta meta' 'fit fit';gap:11px 20px;padding:22px}
+ .app-shell .trail-job-facts{padding-left:94px}.app-shell .job-card .match-line,.app-shell .job-card .card-meta{margin-left:94px}
+ .app-shell .company-logo{width:68px;height:68px;min-width:68px}.app-shell .fidelity-results-heading h2{font-size:35px}
+}
+@media(max-width:1000px){
+ .app-shell .scout-jobs-hero{height:312px}.app-shell .scout-jobs-copy{padding-left:12px;padding-top:62px}
+ .app-shell .scout-jobs-hero h1{font-size:47px;letter-spacing:-1.5px}.app-shell .scout-jobs-hero .trail-profile-link{font-size:18px;max-width:510px}
+ .app-shell .scout-jobs-hero>.scout-city-scene{height:306px;opacity:.85}.app-shell .scout-jobs-hero .scout-city-walker{width:172px;left:45%}
+ .app-shell .scout-page-heading{padding-left:12px;padding-top:62px;min-height:270px}.app-shell .scout-page-heading h1{font-size:47px}
+ .app-shell .scout-page-heading>.scout-moment{width:205px;right:8px}.app-shell .scout-page-heading--saved{min-height:290px}
+ .app-shell .scout-page-heading--saved h1{font-size:56px;white-space:normal}.app-shell .scout-page-heading--saved>.scout-moment{width:280px;right:5px;bottom:-12px}
+ .app-shell .scout-page-heading--saved .scout-heading-copy{max-width:calc(100% - 220px)}.app-shell .scout-page-heading .scout-heading-copy>p{font-size:18px}
+ .app-shell .account-menu-trigger--sidebar{grid-template-columns:44px minmax(0,1fr) 13px;gap:9px}.account-menu-trigger--sidebar .account-menu-avatar{height:44px;width:44px;min-width:44px;font-size:16px}
+ .account-trigger-identity strong{font-size:15px}.account-trigger-identity small{font-size:13px}
+ .app-shell .trail-filter-toggle{min-width:130px;font-size:16px;padding:13px 18px;gap:10px}
+}
+@media(max-width:760px){
+ .app-shell .sidebar{width:260px;padding-top:25px;z-index:90}.app-shell .sidebar-heading{padding-left:13px}.app-shell .sidebar-scroll{padding-top:33px}
+ .app-shell .sidebar-utilities{padding-top:35px}.app-shell .sidebar-bottom{padding-bottom:23px}.app-shell .nav-item{min-height:49px;font-size:16px;padding-left:18px;margin-bottom:6px}
+ .app-shell .workspace{margin-left:0;width:100%}.app-shell .topbar{display:flex;height:58px;min-height:58px;padding:0 16px;border-color:#e9ece7;background:#fffffa}
+ .app-shell .breadcrumb{gap:8px;font-size:12px}.app-shell .breadcrumb>span,.app-shell .breadcrumb>svg{display:none}
+ .app-shell .topbar-actions{gap:12px}.app-shell .topbar .live-pill{display:none}.app-shell .main-content{padding:0 16px 90px}
+ .app-shell .scout-jobs-hero{height:auto;min-height:390px;display:flex;flex-direction:column;overflow:hidden;margin:0 -2px 12px;padding:0 2px}
+ .app-shell .scout-jobs-copy{width:100%;padding:32px 7px 0;max-width:none}.app-shell .trail-heading-marker{width:37px;height:5px;margin-bottom:16px}
+ .app-shell .trail-greeting{font-size:16px;margin-bottom:10px}.app-shell .scout-jobs-hero h1{font-size:43px;line-height:1.1;white-space:normal;text-wrap:balance;letter-spacing:-1.6px;margin-bottom:13px;max-width:620px}
+ .app-shell .scout-jobs-hero .trail-profile-link{font-size:16px;max-width:100%;gap:5px}
+ .app-shell .scout-jobs-hero>.scout-city-scene{position:relative;right:auto;top:auto;width:100%;max-width:550px;height:180px;opacity:1;align-self:center;margin:8px -4px 0}
+ .app-shell .scout-jobs-hero .scout-city-street{object-fit:cover;object-position:right bottom}.app-shell .scout-jobs-hero .scout-city-walker{width:133px;left:43%;bottom:0}
+ .app-shell .scout-page-heading{min-height:210px;padding:34px 7px 22px;align-items:flex-start}.app-shell .scout-page-heading .trail-heading-marker{margin-bottom:23px}
+ .app-shell .scout-page-heading h1{font-size:42px;letter-spacing:-1.1px}.app-shell .scout-heading-copy{max-width:calc(100% - 125px)}
+ .app-shell .scout-page-heading>.scout-moment{width:155px;right:0;bottom:15px}.app-shell .scout-page-heading .scout-heading-copy>p{font-size:15px;line-height:1.5;margin-top:13px}
+ .app-shell .scout-page-heading--saved{min-height:235px}.app-shell .scout-page-heading--saved h1{font-size:49px;letter-spacing:-1.8px;line-height:1.05;white-space:normal}
+ .app-shell .scout-page-heading--saved .scout-heading-copy{max-width:calc(100% - 130px)}.app-shell .scout-page-heading--saved .scout-heading-copy>p{font-size:16px}
+ .app-shell .scout-page-heading--saved>.scout-moment{width:205px;right:-15px;bottom:-13px}
+ .app-shell .scout-page-heading--saved .scout-heading-copy>p{max-width:175px}
+ .app-shell .scout-heading-actions .button{font-size:12px;min-height:38px}.app-shell .filter-bar{gap:9px;margin-bottom:25px}
+ .app-shell .search-input{padding:0 13px;gap:10px;min-height:52px}.app-shell .search-input input{padding:14px 0;font-size:15px}.app-shell .search-input>svg{width:19px;height:19px}
+ .app-shell .trail-filter-toggle{min-width:52px;min-height:52px;width:auto;padding:11px 14px;font-size:14px;gap:7px}
+ .app-shell .trail-filter-toggle>span:first-of-type{display:none}.app-shell .trail-filter-toggle>svg:last-child:not(:first-child){display:none}
+ .app-shell .trail-filter-fields{gap:13px}.app-shell .trail-filter-fields label{min-width:calc(50% - 7px)}
+ .app-shell .fidelity-results-heading{gap:10px;margin-bottom:15px;align-items:center;flex-wrap:nowrap}.app-shell .fidelity-results-heading h2{font-size:31px;line-height:1.2;letter-spacing:-.7px}
+ .app-shell .refresh-button{width:34px;padding:8px;min-height:37px}.app-shell .refresh-button>span{display:none}.fidelity-result-controls{gap:2px}.fidelity-view-menu>summary{width:30px}
+ .app-shell .job-card{display:grid;grid-template-columns:1fr;grid-template-areas:'identity' 'facts' 'meta' 'fit' 'actions';gap:12px;padding:20px;min-height:0}
+ .app-shell .trail-job-identity{gap:17px;max-width:none}.app-shell .company-logo{width:56px;height:56px;min-width:56px;font-size:23px}
+ .app-shell .trail-job-identity .job-title{font-size:19px;line-height:1.35;margin:0 0 5px}.app-shell .trail-company-name{font-size:15px}
+ .app-shell .trail-job-facts{padding-left:0;gap:9px 14px}.app-shell .trail-job-facts .job-location,.job-arrangement{font-size:14px;gap:6px}.app-shell .tag{font-size:12px;padding:5px 10px}
+ .app-shell .job-card .match-line,.app-shell .job-card .card-meta{margin-left:0}.app-shell .job-card .match-line p{font-size:15px;line-height:1.5}
+ .app-shell .trail-job-actions{width:100%;flex-direction:row;justify-content:flex-end;gap:10px;padding-top:4px;align-items:center}
+ .app-shell .trail-job-actions .save-button{min-width:37px;min-height:46px}.app-shell .trail-job-actions .apply-button{flex:1;min-width:0;min-height:46px;font-size:17px;padding:12px 17px}
+ .app-shell .job-actions-menu>summary{width:30px}.app-shell .job-actions-menu>div{right:0;left:auto}
+ .app-shell .settings-tabs{gap:3px;padding:4px}.app-shell .settings-tabs button{font-size:12px;min-height:43px;padding:10px 11px}
+ .app-shell .scout-dock:not(.is-full-page){right:12px;bottom:17px}.app-shell .scout-chat-launcher{min-height:54px;padding:10px 14px;gap:9px}
+ .app-shell .scout-chat-launcher>span:nth-child(2){font-size:15px}.app-shell .scout-chat-launcher .scout-chat-avatar{width:32px;height:32px;min-width:32px}
+ .app-shell .notification-panel{top:64px;left:12px;right:12px;max-height:calc(100dvh - 80px)}
+ .app-shell .detail-header h1{font-size:30px}.app-shell .scout-detail-moment{width:90px;max-width:90px}
+}
+@media(max-width:390px){
+ .app-shell .scout-jobs-hero h1{font-size:39px}.app-shell .scout-page-heading h1{font-size:36px}
+ .app-shell .scout-page-heading--saved h1{font-size:43px}.app-shell .scout-page-heading--saved .scout-heading-copy{max-width:calc(100% - 105px)}
+ .app-shell .scout-page-heading--saved>.scout-moment{width:174px;right:-11px;bottom:0}
+ .app-shell .scout-heading-copy{max-width:calc(100% - 110px)}.app-shell .scout-page-heading>.scout-moment:not(.scout-moment--saved){width:132px;right:-5px}
+ .app-shell .fidelity-results-heading h2{font-size:28px}.app-shell .trail-filter-fields label{min-width:100%}
+}
+@media print{
+ .app-shell .sidebar,.app-shell .topbar,.app-shell .fidelity-result-controls,.app-shell .filter-bar,.app-shell .scout-dock{display:none!important}
+ .app-shell .workspace{margin:0;width:100%}.app-shell .main-content{padding:0}.app-shell .scout-page-heading{display:block;min-height:0;padding:0;margin-bottom:25px;overflow:visible}
+ .app-shell .scout-heading-copy{max-width:none}.app-shell .scout-page-heading h1{font-size:32px}.app-shell .scout-jobs-hero{height:auto;min-height:0;margin-bottom:25px}
+ .app-shell .scout-jobs-copy{padding:0}.app-shell .scout-jobs-hero h1{font-size:32px;white-space:normal}.app-shell .scout-page-heading>.scout-moment{display:none!important}
+}

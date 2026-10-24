@@ -4,9 +4,9 @@
 
 NextRole helps students and early-career candidates discover relevant openings, prepare a truthful résumé with ScoutX, and keep their applications moving. Its separate admin workspace closes the product loop: understand adoption, diagnose drop-offs, listen to students and decide what to improve.
 
-[Open NextRole](https://nextrole-scout.vercel.app) · [Explore the synthetic admin demo](https://nextrole-scout.vercel.app/demo/admin) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
+[Open NextRole](https://nextrole-job-radar.ivorypine64.chatgpt.site) · [Explore the synthetic admin demo](https://nextrole-job-radar.ivorypine64.chatgpt.site/demo/admin) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
 
-> **Scout city revision:** the approved NEXT JOB city scene and page-specific Scout actions build on the ivory/orange/teal Trail design. The running mascot loader and sidebar ScoutX entry have been removed; the floating assistant and full-page conversation remain. [Design targets and release notes](handoff/SCOUT-CITY.md) document the changes. [Browser design QA](design-qa.md) remains blocked by preview infrastructure; deployment receipts establish release status separately.
+> **Browser-reviewed frontend:** Jobs, Saved and page-specific Scout actions now follow the approved design composition. Desktop/mobile review fixed menu layering, wrapping, row spacing and focus behavior. [Design QA and evidence](design-qa.md) document the scoped pass, synthetic fixtures and remaining real-device/provider checks. [Release notes](handoff/FIDELITY-REVIEW.md) separate native publication from the unresolved Vercel team authorization.
 
 > **Portfolio data disclosure:** the public admin demonstration and report images below use synthetic, illustrative data. The example 973 profiles are not a real campus adoption claim. Live admin analytics use actual recorded activity and are owner-only.
 

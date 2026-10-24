@@ -1,8 +1,8 @@
 {
   "project": "NextRole",
-  "release": "Approved Scout city, NEXT JOB sign and page-specific actions; running loader removed",
-  "generatedAt": "2026-10-23T19:06:25.348Z",
-  "parentCommit": "88344ae029b59b210d6fff77b07c79a9aa016773",
+  "release": "Browser-reviewed Scout frontend fidelity, accessible menus and responsive layouts",
+  "generatedAt": "2026-10-24T00:02:25.522Z",
+  "parentCommit": "fbad5420d2b9d14f39aedb7c129f46cda71f83ae",
   "notice": "Complete source snapshot excluding this manifest. Deployment receipts identify the exact pushed commit. Portfolio metrics are labelled synthetic. No production credentials or student records.",
   "source_files": [
     {
@@ -77,8 +77,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 11917,
-      "sha256": "c21d6f145f080412129ca3325921149cf6a1f13d231fb77a175f4b49cde01304"
+      "bytes": 11926,
+      "sha256": "6f065305724d4b3b56bd0ff32e9d9e83ce5c443ba1645785923d3080d2084e4a"
     },
     {
       "path": "RELEASE-14.md",
@@ -132,8 +132,8 @@
     },
     {
       "path": "app/account-menu.tsx",
-      "bytes": 3686,
-      "sha256": "36d35676658a557ba6ab9b2334a27a07934d4f5bf4c78e7ff8676ba4b0f8a4f5"
+      "bytes": 4645,
+      "sha256": "484ea49af68c086bcd8f0feb12a34fbaeeadcfb7ee359ad41c2d4a2073f39e67"
     },
     {
       "path": "app/account/page.tsx",
@@ -312,13 +312,18 @@
     },
     {
       "path": "app/dashboard.tsx",
-      "bytes": 77805,
-      "sha256": "7ca68abf7ddac64d413b7e49a118c150e238d978ba2849e48d58fbc55f0b100e"
+      "bytes": 77869,
+      "sha256": "a2566e79b38d7ed60ab68cc3257b008221db4af61b4a49c4b0460d8ed9b8ffcc"
     },
     {
       "path": "app/demo/admin/page.tsx",
       "bytes": 220,
       "sha256": "286518b7ed7dbfe7803feb8aa7ebda49ab085a823606767caab2bc2653306e51"
+    },
+    {
+      "path": "app/design-fidelity.css",
+      "bytes": 29966,
+      "sha256": "c659eefcfcf8ec66cf899a2ed94c69b2af1403fb828604206435b85110e1981c"
     },
     {
       "path": "app/design-preview/page.tsx",
@@ -327,8 +332,8 @@
     },
     {
       "path": "app/design-preview/preview.tsx",
-      "bytes": 7429,
-      "sha256": "7f0e4de13d736816caba046cf946d849a6bd3f2620e5e6fa3fdccc5a4c04f504"
+      "bytes": 10019,
+      "sha256": "36f980330312001c8adf65c208ed0ad8c7675dcc430bbd98411bf378a00beb87"
     },
     {
       "path": "app/discovery-manager.tsx",
@@ -407,8 +412,8 @@
     },
     {
       "path": "app/layout.tsx",
-      "bytes": 714,
-      "sha256": "80db0e40d5bbbe7fd53b4372ce2b64b90e13eddb6b10d77972ab42aebfcab704"
+      "bytes": 746,
+      "sha256": "b9b092a574b37a2be3740965cf192671e136139261762fc289991bcb518ca960"
     },
     {
       "path": "app/login/page.tsx",
@@ -452,8 +457,8 @@
     },
     {
       "path": "app/scout-chat.tsx",
-      "bytes": 24181,
-      "sha256": "8e76e3d3f370bf35e2af267d0103bac349cad9e007ac18267d392671260004ed"
+      "bytes": 24188,
+      "sha256": "633ef39787dea86f27e24be1ac5512b9a417f816f4f14657f2d411840a810ede"
     },
     {
       "path": "app/scout-drafts.tsx",
@@ -467,8 +472,8 @@
     },
     {
       "path": "app/scout-motion.tsx",
-      "bytes": 1889,
-      "sha256": "364f4a1498e7cdd17d450f33cb9bb34b386553cc06899023a50e9b0a4dcaab81"
+      "bytes": 1957,
+      "sha256": "8ba5d28ca56ee91b35a3810508791a6cef0e0d7099a3e1a2dc29aef960e6e87b"
     },
     {
       "path": "app/scout-pages.css",
@@ -537,8 +542,8 @@
     },
     {
       "path": "app/trail-scout.tsx",
-      "bytes": 4259,
-      "sha256": "357dd2bf86db7b2e600f3fa887e0955dbf67751e0722580659b5bc52d7fa92fe"
+      "bytes": 4247,
+      "sha256": "237bd9423378e827900ac4fae936ae75beef9fd9f92dc8b134bbf486617bbab9"
     },
     {
       "path": "app/trail.css",
@@ -1067,8 +1072,8 @@
     },
     {
       "path": "design-qa.md",
-      "bytes": 4640,
-      "sha256": "1780521126e63a67d4d3b7269e9a2335d723e4c8fa82390b0d8fb3e43246c81d"
+      "bytes": 8540,
+      "sha256": "4d9551dc137bad899c0437bb2605c536fee15f23566ce9aa3af86c950f29bd8c"
     },
     {
       "path": "docs/design/scout-city-jobs-target.webp",
@@ -1109,6 +1114,106 @@
       "path": "docs/images/admin-report-retention-demo.png",
       "bytes": 102100,
       "sha256": "35cf1507257760d77bc79fcfbb44b245467511697cca0277559865ab964bb694"
+    },
+    {
+      "path": "docs/review/README.md",
+      "bytes": 713,
+      "sha256": "6d7c557ea3746ed044acb11c381ed4cda3b0b618cf605a00d1e60138e6a4ec50"
+    },
+    {
+      "path": "docs/review/applications-final.jpg",
+      "bytes": 80925,
+      "sha256": "cd254d98f1a5c1ba38aa81b59759897e8f8da557f1d94d5087dcd0533eaee33d"
+    },
+    {
+      "path": "docs/review/archive-final.jpg",
+      "bytes": 70610,
+      "sha256": "e987c6f975d8e443697546f45446a4a5d50e420da1cf550d70ac990c86f7fc25"
+    },
+    {
+      "path": "docs/review/chat-final.jpg",
+      "bytes": 95656,
+      "sha256": "d4e5ac2dc91c8e814a081300ff84d0874c9c87f4311a1a0f24ba51d497ddf7d6"
+    },
+    {
+      "path": "docs/review/help-final.jpg",
+      "bytes": 87945,
+      "sha256": "95c19f2fbbdf75ec855a7e5e81ca54632b0b8a0eea0908823bcc3e16f0cdcbe3"
+    },
+    {
+      "path": "docs/review/job-detail-final.jpg",
+      "bytes": 78633,
+      "sha256": "7cf0d6e138a5a9e29e88109d813f215653b9b4858fd7558cc0942cc4e09af80c"
+    },
+    {
+      "path": "docs/review/jobs-comparison.jpg",
+      "bytes": 567922,
+      "sha256": "13ede29b8a7242c0649da17feb38e1172d4185740044d10e09324f49d9f52976"
+    },
+    {
+      "path": "docs/review/jobs-final.jpg",
+      "bytes": 149076,
+      "sha256": "ee7ecd0ea833ccafa7d006b92ac72a8a17551dfc7bc00e5553103e1fe4e8a1c6"
+    },
+    {
+      "path": "docs/review/jobs-rows-comparison.jpg",
+      "bytes": 163289,
+      "sha256": "2f196fed037248e165889b4fb29eb2545f18af55caa45d74a419712b1d1e5efb"
+    },
+    {
+      "path": "docs/review/mobile-account-fixed.jpg",
+      "bytes": 45403,
+      "sha256": "ff914e40658457f8bdf67a93d7775cf33c10c4de35024608e011ae5b72602cac"
+    },
+    {
+      "path": "docs/review/mobile-chat.jpg",
+      "bytes": 49131,
+      "sha256": "ef569308ea809731879b5c488292127baec4420c7668282c7c03e81234554017"
+    },
+    {
+      "path": "docs/review/mobile-jobs.jpg",
+      "bytes": 59069,
+      "sha256": "06f69c3d03aa561d14203bc1c39c9ec006eaf22d0b0d12ff612ae81aa30ad08f"
+    },
+    {
+      "path": "docs/review/mobile-saved-fixed.jpg",
+      "bytes": 56694,
+      "sha256": "55941d2f9c00fab484f0b096b957bef03b327ea016fab0803e5f2f4f1a365411"
+    },
+    {
+      "path": "docs/review/mobile-saved.jpg",
+      "bytes": 56643,
+      "sha256": "a0a35223193e68a093997b83d0dbb70fc60306b469e7e9c709c449cdad1be8ab"
+    },
+    {
+      "path": "docs/review/page-actions-comparison.jpg",
+      "bytes": 231774,
+      "sha256": "cf253a2ccaaf2589515761ded617cb9324a29191441ff9ce1094b189ac04d32e"
+    },
+    {
+      "path": "docs/review/preferences-final.jpg",
+      "bytes": 101086,
+      "sha256": "a50e15b9b416ae916bdb8d93841e9fc1b24c150f845e3dd1496d67dc547b18e8"
+    },
+    {
+      "path": "docs/review/progress-final.jpg",
+      "bytes": 67968,
+      "sha256": "beb2738c5f135eb5b6519fc63908f9d2420affdcd6ba232a36b68d2313367a97"
+    },
+    {
+      "path": "docs/review/saved-comparison.jpg",
+      "bytes": 468002,
+      "sha256": "c7d62b9be77a85100f4a41625cd5ceeb044e8220ed81bbe3c4d60a49bc832920"
+    },
+    {
+      "path": "docs/review/saved-final.jpg",
+      "bytes": 118604,
+      "sha256": "1946663e46b849a74259d462656378566e0ad9ace510fa0e45a33224581e4731"
+    },
+    {
+      "path": "docs/review/saved-rows-comparison.jpg",
+      "bytes": 159269,
+      "sha256": "5a71924da6dc9dbc1c766ab4ac36804d8d9b4ecccb409fa3484248479330e641"
     },
     {
       "path": "drizzle.config.ts",
@@ -1356,6 +1461,11 @@
       "sha256": "fbc63c104a5048fb7d4708d628bf93309345f0bf99873189958604dfa7a02877"
     },
     {
+      "path": "handoff/FIDELITY-REVIEW.md",
+      "bytes": 1075,
+      "sha256": "0d8632dbc33421e591e3a847367da532977f8c0449ffb8cad5b5772fa751780f"
+    },
+    {
       "path": "handoff/FOCUSED-RELEASE.md",
       "bytes": 5116,
       "sha256": "b3282f3e2ea450dea786623611b9e6399dc5638102da6a0775a7d02f4cadb591"
@@ -1432,8 +1542,8 @@
     },
     {
       "path": "handoff/SCOUT-CITY.md",
-      "bytes": 3193,
-      "sha256": "882ea62b56ce135d12959396673e4b3dd47ced6375ebf7b485c5d93331f17fae"
+      "bytes": 3258,
+      "sha256": "bceb0fb49b94215f8fbef91e3f2dc58a3d1b7a0fe9c1bd2e20f01aadb766f5a2"
     },
     {
       "path": "handoff/SCOUT-COMPANION.md",
@@ -2277,8 +2387,8 @@
     },
     {
       "path": "scripts/update-source-manifest.mjs",
-      "bytes": 1261,
-      "sha256": "c6a34f6d028473f8203fc4cf7858270db960127134b0d48d2dfd55d5e645e722"
+      "bytes": 1258,
+      "sha256": "8313084dc5903d686be8f5665c1867fbed72b09489fb7848797ee744b72cd33d"
     },
     {
       "path": "scripts/verify-admin-analytics.mjs",

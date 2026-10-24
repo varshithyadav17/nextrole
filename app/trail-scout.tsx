@@ -1,7 +1,7 @@
 "use client";
 
 import {useEffect,useState,type ReactNode} from 'react';
-import {LoaderCircle,SlidersHorizontal} from 'lucide-react';
+import {LoaderCircle,ChevronDown} from 'lucide-react';
 import type {Profile} from '../lib/types';
 
 export type ScoutPose='saved'|'applications'|'job-detail'|'progress'|'preferences'|'resume'|'alerts'|'help'|'archive'|'admin';
@@ -41,7 +41,7 @@ export function TrailHero({profile,onPreferences,reaction,reactionKey}:{profile:
  const firstName=profile.name.trim().split(/\s+/)[0];
  const preferences=[profile.experience===0?'Fresher':profile.experience+' years experience',profile.graduationYear?profile.graduationYear+' batch':'',profile.locations.slice(0,2).join(', ')].filter(Boolean);
  return <section className="scout-jobs-hero" aria-label="Your job search">
-  <div className="scout-jobs-copy"><span className="trail-heading-marker" aria-hidden="true"/><p className="trail-greeting">{firstName?'Hello, '+firstName+'.':'Your next chapter starts here.'}</p><h1>Find your next move.</h1><button className="trail-profile-link" onClick={onPreferences} aria-label="Edit search preferences"><span>{preferences.join(' · ')}</span><SlidersHorizontal size={15}/></button></div>
+  <div className="scout-jobs-copy"><span className="trail-heading-marker" aria-hidden="true"/><p className="trail-greeting">{firstName?'Hello, '+firstName+'.':'Your next chapter starts here.'}</p><h1>Find your next move.</h1><button className="trail-profile-link" onClick={onPreferences} aria-label="Edit search preferences"><span>{preferences.join(' · ')}</span><ChevronDown size={20}/></button></div>
   <ScoutCityScene onGreet={()=>setHello(true)} greeting={hello} reactionKey={reactionKey}/>
   <span className="sr-only" role="status">{reaction==='saved'?'Job saved.':reaction==='applied'?'Application recorded.':hello?'You’ve got this.':''}</span>
  </section>;

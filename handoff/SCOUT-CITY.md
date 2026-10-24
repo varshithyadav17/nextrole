@@ -1,6 +1,6 @@
 # Scout city and page actions
 
-The owner approved these designs on 23 October 2026, with the foreground company named NEXT JOB. The source implements that revision. Publication receipts identify the released version; browser visual QA remains blocked in [design-qa.md](../design-qa.md).
+The owner approved these designs on 23 October 2026, with the foreground company named NEXT JOB. The source implements that revision. Publication receipts identify the released version; the scoped student-workspace browser review now passes in [design-qa.md](../design-qa.md).
 
 ## Surfaces
 
@@ -30,6 +30,6 @@ All status changes still use the existing authenticated handlers. Opening an app
 
 ## Verification
 
-Source type checking, the native build, the generated Next.js production build and 10 existing navigation-hook checks passed. Generated raster assets and CSS syntax were inspected. Supported preview reported running, but its HTTP port was unreachable; browser screenshots, console inspection and device interactions remain unverified. See the exact remaining review steps in [design QA](../design-qa.md).
+The original release had a blocked preview. The subsequent frontend fidelity correction restored preview access, compared actual Jobs/Saved captures with approved boards, checked page actions and exercised desktop/mobile interactions. It also fixed mobile menu layering, Escape behavior, icon labels and Saved text overlap. [Design QA](../design-qa.md) records the scoped pass, synthetic evidence and separate real-device/provider/load limitations.
 
 Vercel publication uses the generated frontend, with the existing Render backend unchanged. The last Vercel write attempt was rejected for missing team authorization. A source/build handoff is ready, but that denial must not be bypassed and a new Vercel release must not be claimed without a successful deployment result.
