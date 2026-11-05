@@ -15,7 +15,9 @@
     "test": "node --experimental-strip-types scripts/verify-app.mjs",
     "test:scale": "node --experimental-strip-types scripts/verify-app.mjs --scale",
     "verify": "pnpm typecheck && pnpm test:scale && pnpm build",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "demo:seed": "node --experimental-strip-types scripts/seed-admin-demo.mjs",
+    "test:admin-demo": "node --experimental-strip-types scripts/verify-admin-demo.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
