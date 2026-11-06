@@ -5,7 +5,7 @@ import {isSafeJobUrl} from './matching';
 import {importJob} from './import-jobs';
 import {PublicError} from './errors';
 import type {Job,JobView} from './types';
-import {withExperienceRequirements} from './experience';
+import {withExperienceRequirements,EXPERIENCE_RULE_VERSION} from './experience';
 import {matchJob} from './matching';
 import {matchesView} from './job-selection';
 
@@ -23,7 +23,7 @@ export async function companionInbox(userId:string){
  if(!profile.completed||!profile.alerts)return {...base,jobs:[],hasMore:false};
  // notifications_feed_idx bounds per-account work; representative jobs use jobs_representative_idx.
  const records=await rows<{data:string;legacy_description:string|null;first_seen:string;last_checked:string;notified_at:string}>(
-  "SELECT json_remove(j.data,'$.description') as data,CASE WHEN (COALESCE(json_extract(j.data,'$.experienceRequirements.version'),0)<3 OR COALESCE(json_extract(j.data,'$.eligibility.version'),0)<2) THEN json_extract(j.data,'$.description') ELSE NULL END as legacy_description,j.first_seen,j.last_checked,n.created_at as notified_at FROM (SELECT job_key,created_at FROM notifications WHERE user_id=? AND type='match' AND created_at>=? ORDER BY created_at DESC LIMIT 61) n JOIN jobs j ON j.id=(SELECT id FROM jobs WHERE job_key=n.job_key AND active=1 ORDER BY last_checked DESC,id DESC LIMIT 1) LEFT JOIN user_jobs u ON u.user_id=? AND u.job_key=n.job_key WHERE u.status IS NULL OR u.status='new' ORDER BY n.created_at DESC LIMIT 61",
+  "SELECT json_remove(j.data,'$.description') as data,CASE WHEN (COALESCE(json_extract(j.data,'$.experienceRequirements.version'),0)<"+EXPERIENCE_RULE_VERSION+" OR COALESCE(json_extract(j.data,'$.eligibility.version'),0)<2) THEN json_extract(j.data,'$.description') ELSE NULL END as legacy_description,j.first_seen,j.last_checked,n.created_at as notified_at FROM (SELECT job_key,created_at FROM notifications WHERE user_id=? AND type='match' AND created_at>=? ORDER BY created_at DESC LIMIT 61) n JOIN jobs j ON j.id=(SELECT id FROM jobs WHERE job_key=n.job_key AND active=1 ORDER BY last_checked DESC,id DESC LIMIT 1) LEFT JOIN user_jobs u ON u.user_id=? AND u.job_key=n.job_key WHERE u.status IS NULL OR u.status='new' ORDER BY n.created_at DESC LIMIT 61",
   userId,new Date(Date.now()-30*86400000).toISOString(),userId);
  const seen=new Set<string>(),jobs=[];
  for(const record of records.slice(0,60)){

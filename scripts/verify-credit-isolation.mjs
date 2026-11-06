@@ -29,7 +29,9 @@ export async function verifyCreditIsolation({database,put,GET,check,job,raw,sour
   await database.prepare('DELETE FROM meta WHERE key IN (?,?)').bind('source_sweep','last_sync_attempt').run();
   let refresh;
   for(let pass=0;pass<SOURCES.length*2;pass++){
-   const response=await put({action:'refresh'},'credits-none');
+   // A growing shared catalogue can outlive one foreground visit and its rate allowance.
+   // Independent no-key students resume the same checkpoint rather than bypassing that allowance.
+   const response=await put({action:'refresh'},pass<4?'credits-none':'credits-resume-'+Math.floor(pass/4));
    check(response.ok,'An account without AI keys can refresh employer sources.');
    refresh=await response.json();if(!refresh.sourcesPending)break;
   }

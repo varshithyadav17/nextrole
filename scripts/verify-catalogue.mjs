@@ -134,11 +134,13 @@ export async function verifyCatalogue({database,put,GET,check,job,defaultProfile
  }
  for(const expired of [false,true]){
   const raceUser='catalogue-clear-race-'+expired;await put({action:'profile',profile},raceUser);
+  // Control elapsed time explicitly so a near-expiry fixture cannot race CPU load in CI.
+  const clock=Date.now,instant=clock();Date.now=()=>instant;
   const paused=pauseWrite(sql=>sql.startsWith('INSERT INTO catalogue_snapshots'));
-  const pending=cataloguePage(raceUser,{company:'Catalogue Fixture',view:'all'}).then(page=>({page}),error=>({error})),clock=Date.now;
+  const pending=cataloguePage(raceUser,{company:'Catalogue Fixture',view:'all'}).then(page=>({page}),error=>({error}));
   try{
-   await Promise.race([paused.ready,pending.then(()=>{throw new Error('Catalogue preparation ended before its cache-write race could be tested.');})]);
-   if(expired)Date.now=()=>clock()+90001;
+   await Promise.race([paused.ready,pending.then(result=>{throw new Error('Catalogue preparation ended before its cache-write race could be tested: '+(result.error?.message||'completed'));})]);
+   if(expired)Date.now=()=>instant+90001;
    const cleared=await put({action:'delete-account-data',confirmation:'DELETE'},raceUser);
    check(cleared.status===(expired?200:409),expired?'Workspace clear must recover an expired catalogue lease.':'Workspace clear must wait for an active catalogue cache write.');
    paused.release();const result=await pending;
@@ -154,7 +156,7 @@ export async function verifyCatalogue({database,put,GET,check,job,defaultProfile
  const emptyUser='catalogue-empty-race',paused=pauseWrite((sql,args)=>sql.startsWith('INSERT INTO meta(key,value)')&&args[0]==='byok_mutation:'+emptyUser);
  const pending=cataloguePage(emptyUser,{company:'Catalogue Fixture',view:'all'}).then(page=>({page}),error=>({error}));
  try{
-  await Promise.race([paused.ready,pending.then(()=>{throw new Error('Catalogue preparation ended before workspace-lease acquisition could be paused.');})]);
+  await Promise.race([paused.ready,pending.then(result=>{throw new Error('Catalogue preparation ended before workspace-lease acquisition could be paused.');})]);
   check((await put({action:'delete-account-data',confirmation:'DELETE'},emptyUser)).ok,'An empty workspace must be clearable while an earlier ranking request waits to acquire its lease.');
   paused.release();const result=await pending;
   check(result.error?.status===409,'The retained reset marker must invalidate an earlier request even when the workspace had no personal revision.');

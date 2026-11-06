@@ -3,12 +3,27 @@ export async function verifyTitleExperience({database,put,check,defaultProfile,r
  const {extractExperience,experienceForJob,experienceLabel}=await import('../lib/experience.ts');
  const {normalizeLever,normalizeGreenhouse,normalizeAshby}=await import('../lib/job-feeds.ts');
  const {matchJob}=await import('../lib/matching.ts');
+ const {plainText}=await import('../lib/matching.ts');
+ const {extractEligibility,checkEligibility}=await import('../lib/eligibility.ts');
  const {candidateJobs}=await import('../lib/job-selection.ts');
  const {getData,getJob}=await import('../lib/store.ts');
  const {keywordSearchJobs,searchJobs}=await import('../lib/search.ts');
  const {createAlerts}=await import('../lib/sync.ts');
  const {basicFit}=await import('../lib/ai.ts');
  const screenshotTitle='Product Management - Lending Product | Experience : 4 -8 yrs';
+ for(const text of ['Experience: 4&ndash;8 years','Experience: 4&#8211;8 years','Experience: 4&#x2013;8 years','Experience: 4&amp;ndash;8 years']){
+  const rule=extractExperience(text);check(rule.minimum===4&&rule.maximum===8,'Encoded source ranges retain both experience boundaries: '+text);
+ }
+ const encodedFresh=normalizeGreenhouse({...raw,id:99881,title:'Software Engineer | 0&ndash;2 years',content:'<p>Full-time. On-site in India.</p><p>Batch of 2026&ndash;2027.</p>'},source,new Date().toISOString());
+ check(encodedFresh.minExperience===0&&encodedFresh.experienceRequirements.maximum===2&&encodedFresh.title.includes('0–2'),'A feed-encoded title keeps a true zero-to-two-year route available to freshers.');
+ check(checkEligibility(extractEligibility('Batch of 2026&amp;ndash;2027.'),{...defaultProfile,graduationYear:'2027'}).relevant&&!checkEligibility(extractEligibility('Batch of 2026&amp;ndash;2027.'),{...defaultProfile,graduationYear:'2028'}).relevant,'Encoded graduation ranges include only the employer’s published batches.');
+ check(extractExperience(plainText('<p>Requirements<br>3 years of experience required.</p><p>Preferred qualifications<br>5 years of experience preferred.</p>')).minimum===3,'HTML line breaks preserve mandatory and preferred requirement sections.');
+ check(plainText('R&amp;D &#39;role&#39; &#x1f4bc; &#99999999;').includes("R&D 'role' 💼"),'Valid source entities decode while invalid Unicode entities remain safe.');
+ const legacyEncoded={...encodedFresh,id:source.id+':99882',key:'encoded-legacy:99882',title:'Software Engineering Intern',description:'Experience: 0&ndash;2 years. Full-time internship. This is an on-site role.',experienceRequirements:{version:3,minimum:2,maximum:null,evidence:'2 years',review:[]},minExperience:2};
+ await database.prepare('INSERT INTO jobs(id,job_key,source_id,data,first_seen,last_checked,active) VALUES(?,?,?,?,?,?,1)').bind(legacyEncoded.id,legacyEncoded.key,source.id,JSON.stringify(legacyEncoded),legacyEncoded.firstSeen,legacyEncoded.lastChecked).run();
+ const repairedEncoded=(await getData('encoded-range-reader','Reader')).jobs.find(job=>job.id===legacyEncoded.id);
+ check(repairedEncoded.minExperience===0&&repairedEncoded.experienceRequirements.maximum===2&&repairedEncoded.description==='','A lightweight workspace repairs v3 encoded experience from stored source text without sending the description to the browser.');
+ await database.prepare('DELETE FROM jobs WHERE id=?').bind(legacyEncoded.id).run();
  const cases=[
   [screenshotTitle,4,8],
   ['Product Manager (3–5 years)',3,5],

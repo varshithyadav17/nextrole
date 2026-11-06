@@ -1,141 +1,91 @@
 # NextRole
 
-> **Hero framing update:** the NEXT JOB storefront stays visible on shorter screens, and the street fades smoothly into the canvas. [Review and evidence](design-qa.md).
+Find your next job.
 
-> **Compact sizing update:** restored the earlier UI scale while retaining the Scout city design and animations. [Sizing notes](handoff/COMPACT-SIZING.md) · [Browser review](design-qa.md).
+NextRole is a job-search workspace for students and early-career professionals. It brings relevant openings, résumé preparation and application tracking into one place, with ScoutX as a job-aware assistant.
 
-**A calmer job search. A measurable product.**
+[Open NextRole](https://nextrole-scout.vercel.app/)
 
-NextRole helps students and early-career candidates discover relevant openings, prepare a truthful résumé with ScoutX, and keep their applications moving. Its separate admin workspace closes the product loop: understand adoption, diagnose drop-offs, listen to students and decide what to improve.
+## Features
 
-[Open NextRole](https://nextrole-job-radar.ivorypine64.chatgpt.site) · [Explore the synthetic admin demo](https://nextrole-job-radar.ivorypine64.chatgpt.site/demo/admin) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
+- **Job discovery:** structured listings from connected Greenhouse, Lever and Ashby employer boards, plus the supported Jobicy feed. Each opening links to its original source.
+- **Eligibility matching:** role, location, work arrangement, experience, graduation batch, qualifications and supported academic requirements. Title and description evidence are checked together. Explicit conflicts stay out of For you; missing information goes to Needs review.
+- **Saved jobs:** shortlist openings, add private notes and set reminders. Not interested and Applied choices survive refreshes and prevent repeat discovery.
+- **Job details:** a dedicated page with the description, skills, eligibility evidence and employer application link.
+- **ScoutX:** discuss a job, attach a résumé PDF, review résumé/JD compatibility and tailor verified profile facts. Reviewed résumé drafts export as PDF and LaTeX using the built-in template.
+- **Application tracking:** separately confirm submission, record responses, assessments, interviews and outcomes, and download personal progress reports.
+- **Preparation:** keep assessment and interview preparation beside the application, with sourced material distinguished from practice questions.
+- **Browser companion:** save a listing you are viewing and assist supported application forms. Setup instructions are available in the app.
+- **Optional notifications:** in-app updates, browser push and a nightly email digest, subject to device permission, student opt-in and configured delivery services.
+- **Admin analytics:** owner-only adoption, retention, feature usage, application journey, feedback and source/delivery health, with PDF and data exports.
 
-> **Browser-reviewed frontend:** Jobs, Saved and page-specific Scout actions now follow the approved design composition. Desktop/mobile review fixed menu layering, wrapping, row spacing and focus behavior. [Design QA and evidence](design-qa.md) document the scoped pass, synthetic fixtures and remaining real-device/provider checks. [Release notes](handoff/FIDELITY-REVIEW.md) separate native publication from the unresolved Vercel team authorization.
+Browsing, matching and tracking do not require an AI API key. Optional AI requests use the signed-in user's configured provider connections, with that provider's limits and charges. Account sign-in does not supply API credits.
 
-> **Portfolio data disclosure:** the public admin demonstration and report images below use synthetic, illustrative data. The example 973 profiles are not a real campus adoption claim. Live admin analytics use actual recorded activity and are owner-only.
+## Job quality
 
-## The product problem
+The preferred feed requires matching evidence, recent source verification and no unresolved requirement uncertainty. A senior title or an experience range above the candidate's profile cannot become a fresher match just because the description omits a number. Unknown requirements are never treated as zero experience or guaranteed graduation eligibility.
 
-Students lose time repeatedly checking career pages, discovering ineligible roles, preparing the same information and remembering what they applied for. A larger feed alone does not solve that problem. NextRole prioritizes clear eligibility evidence, persistent choices and an actionable application workflow.
+Ingestion is bounded, resumable and protected by leases. A failed or partial source response preserves existing records. Listings removed from a complete employer feed are closed while saved notes and application history remain available. Source health and individual listing check times remain visible.
 
-The product hypothesis is that reliable relevance and a simpler preparation/tracking loop help candidates act on suitable opportunities and return when they need to. That hypothesis needs real pilot evidence; feature availability and demo charts do not prove product-market fit.
+Coverage is limited to connected sources. LinkedIn, Unstop and Internshala are supported through external discovery links and user-directed imports; NextRole does not have their private job feeds. The companion does not provide unattended access to every website.
 
-## What a student can do
+## Application and AI boundaries
 
-- Set role, location, work arrangement, experience, graduation and supported academic preferences. Explicit conflicts are excluded from the preferred feed; missing evidence stays uncertain.
-- Open a complete job page with its source and JD. Save it, dismiss it, or separately confirm Applied. Choices, notes and history survive source refreshes.
-- Talk to ScoutX about the current job, attach an original PDF and check résumé/JD compatibility. Review tailored facts, then export PDF and LaTeX using a fixed template.
-- Track application milestones, prepare using clearly labelled evidence/practice material, and export personal progress.
-- Choose optional alerts, nightly email and feedback. AI calls use the student's explicitly configured providers; shared source discovery does not require student API keys.
+Opening an employer application page does not mark a job Applied. The student confirms submission separately. Auto-Apply is a limited, opt-in workflow for supported forms and remains a beta feature; it is not universal application submission.
 
-Compatibility is an internal estimate, not an employer ATS result. Source coverage is limited to configured feeds and supported discovery/import workflows; the product does not claim access to every job board or universal automatic application submission.
+The résumé/JD score is an internal compatibility estimate, not an employer ATS score or hiring prediction. Students review generated facts and documents before use. No résumé edits invent employment, qualifications or project achievements.
 
-## Admin intelligence
+## Architecture
 
-The host opens a dedicated `/admin` experience instead of a personal job feed. Six views connect behavior, feedback and reliability.
+The frontend runs on Vercel. A stateless Render service handles authentication and forwards allowlisted API requests to the existing data service. Durable account records use Cloudflare D1; private résumé files use R2. The database and file store have not been migrated to Render.
 
-| View | What the team learns | Decision it supports |
-| --- | --- | --- |
-| Overview | Active reach, application action, exact Day-7 return, active-time estimate, onboarding and checked application records | Is the core loop producing useful action? |
-| Retention | Mature return cohorts, Day-1/7/30 return, active-day frequency and inactivity after 1 / 2–3 / 4+ active days | Where does momentum fade? |
-| Feature adoption | Unique participants, adoption, actions per user, complete-period comparisons and time by section | Which features deserve improvement or simplification? |
-| Application journey | Ordered participant visit → job view → Apply open → Marked Applied; current tracked stages | Where should the workflow be investigated? |
-| Feedback & help | Voluntary ratings, selected feedback categories, monthly needs, inbox triage and reply/resolution timing | What do students say is getting in their way? |
-| Operations | Source health, refresh age, delivery backlog, email readiness, retained records and analytics cleanup | Is the experience dependable enough to expand? |
+Google OAuth is implemented with explicit account linking so existing jobs and history retain their account IDs. The current sign-in remains available until Google configuration and account recovery are verified. Host access is enforced on the server.
 
-The dashboard offers an actual PDF report, a PDF for each section, summary CSV and full aggregate JSON. Reports include definitions, observation coverage and exact daily tables. Private messages and student identities do not appear in analytics reports.
+Per-account AI credentials are encrypted and excluded from exports and browser responses. Usage analytics are optional and aggregate visible, focused activity rather than typed content. Users can export their workspace and clear their data.
 
-### Exported report previews
+## Local development
 
-These are rendered pages from the actual PDF exporter using the synthetic fixture. They are **report previews, not browser screenshots or evidence of production adoption**. Browser screenshots should be captured from the demo after real device QA.
-
-![Synthetic NextRole analytics report: overview](docs/images/admin-report-overview-demo.png)
-
-| Retention report | Feature adoption report |
-| --- | --- |
-| ![Synthetic retention report](docs/images/admin-report-retention-demo.png) | ![Synthetic feature report](docs/images/admin-report-features-demo.png) |
-
-[Download the synthetic sample PDF](output/pdf/NextRole_Synthetic_Demo_Analytics.pdf)
-
-## How a product manager would measure it
-
-The north-star candidate is **students recording applications with no detected requirement conflict or uncertainty**. It pairs an action with the quality of the evidence available at confirmation. It remains a proxy: NextRole cannot verify employer acceptance or complete eligibility from incomplete source text.
-
-| Measure | Definition and interpretation |
-| --- | --- |
-| Active participants | Distinct accounts with recorded activity in the same selected IST window. Not verified campus enrollment. |
-| Feature adoption | Distinct accounts using a feature / accounts active in that window. Repetition is reported separately as actions per user. |
-| Day-7 return | Exact seventh-day activity / first-observed accounts with a full seven days of follow-up. Immature cohorts are excluded. |
-| Active time | Visible, focused and recently used time estimate. It is neither open-tab wall time nor time saved. |
-| Inactive after one use | One recorded active day, with at least seven days since last activity. It is not a session count or a verified reason for leaving. |
-| Journey drop-off | Ordered unique-account steps during the window; may involve different jobs. It is not same-job submission conversion. |
-
-No retention target or impact percentage is invented for the portfolio. Establish a pilot baseline, review relevance and feedback alongside return, then predefine the success metric for each change. Avoid optimizing raw time spent or clicks when the candidate's goal is to complete their task efficiently.
-
-### Tracking active time responsibly
-
-The browser samples elapsed monotonic time only while the page is visible, focused and used within the previous 60 seconds. It observes interaction timestamps, not typed content. Large suspended-clock gaps are discarded.
-
-The authenticated server validates a small, allowlisted sample payload. Cumulative per-account minute maxima make retries and overlapping tabs idempotent; atomic triggers add only the delta to daily section totals. The first accepted section receives that minute. Sequential tab switches, throttling or lost requests can undercount, so the UI calls this an estimate.
-
-Host actions are excluded. Analytics opt-out removes the participant's events, cohorts, minute ledger and daily time totals; subsequent requests remain disabled. Workspace deletion does the same. Student data export includes their own daily time estimates. The ledger expires after 48 hours, events/daily aggregates after 90 days. Cleanup resumes through the existing bounded maintenance workflow.
-
-See the [complete event/metric definitions and caveats](handoff/ADMIN-ANALYTICS.md).
-
-## Architecture and deployment status
-
-The deployed product uses a Vercel Next.js frontend, a stateless Render authentication/API gateway, and an owner-authorized Site data service with Cloudflare D1 and private R2. The native Site remains available. Existing maintenance tools preserve source, alert and delivery checkpoints.
-
-```mermaid
-flowchart TD
-  A["Student or admin UI / Vercel"] --> B["Authentication and API gateway / Render"]
-  B --> C["D1 / private account records"]
-  B --> D["R2 / private resume files"]
-  E["Owner maintenance"] --> B
-```
-
-Render runs the Google-authentication/API tier; the frontend's forwarding mode needs no OAuth/signing secrets. Existing storage and canonical account IDs remain in place. Live checks verify Google configuration, authorization redirects, secure cookies and anonymous access boundaries. An actual account owner's consent/token exchange and account linking require that owner's sign-in. The [cutover guide](handoff/RENDER-MIGRATION.md) explains verification and rollback; a full database migration is not claimed.
-
-Google-only sign-in is gated until existing accounts are linked safely. Students can connect Google from Preferences; admins have a dedicated **Account** entry and `/account` page. No password login is introduced. The current working sign-in remains during the transition.
-
-## Run and verify
-
-Use Node 22.13+ with the package manager pinned in `package.json`.
+Use Node.js 22.13 or later and the pnpm version pinned in `package.json`.
 
 ```bash
 corepack pnpm install --frozen-lockfile
+node handoff/setup-local.mjs
 pnpm dev
-pnpm typecheck
-node --experimental-strip-types scripts/verify-app.mjs
-node --experimental-strip-types scripts/verify-app.mjs --scale
-node --experimental-strip-types scripts/export-demo-report.mjs
 ```
 
-`/demo/admin` works with synthetic data and no student/provider credentials. Live APIs require real identity and configured storage. Native hosting uses the repository's existing Sites build integration. To prepare a conventional frontend or the Render service:
+The local setup helper creates development-only configuration. Use `.dev.vars.example` to see supported environment variable names. Never copy local keys into production or replace an existing encryption root.
 
 ```bash
-node scripts/prepare-vercel.mjs --out /absolute/empty/frontend
-node scripts/prepare-render.mjs --out .deploy/render
-# After Render is configured and verified:
-node scripts/prepare-vercel.mjs --out /absolute/empty/render-frontend --render-backend
+pnpm typecheck
+pnpm test
+pnpm test:scale
+pnpm build
 ```
 
-Use the [environment guide](handoff/ENVIRONMENT.md), [Vercel guide](handoff/VERCEL.md) and [Render migration guide](handoff/RENDER-MIGRATION.md). Never commit secrets or student data. The blueprint leaves secret values for secure configuration.
+Tests use isolated databases and mocked provider/delivery requests. Local scale measurements do not establish production capacity.
 
-## Evidence and honest limits
+## Deployment
 
-The isolated regression suite covers eligibility boundaries, persistent application state, account isolation, encrypted provider keys, owner access, consent, time deduplication, cleanup and PDF export. Separate generated-handler checks cover Google OIDC/session boundaries and the Render-to-Vercel forwarding mode. Synthetic load checks exercise bounded catalogues and maintenance; they are not proof of production capacity.
+Generate the conventional Next.js frontend and Render service from this repository:
 
-Real Google sign-in, real browser/device accessibility, campus concurrency, provider billing and Render cold-start behavior need rollout checks. Current job-board restrictions, browser-store approval and conditional email activation are documented rather than hidden behind placeholder success messages.
+```bash
+node scripts/prepare-vercel.mjs --out ../nextrole-vercel --render-backend
+node scripts/prepare-render.mjs --out .deploy/render
+```
 
-## Source map
+Use an empty output directory outside the repository for the Vercel generator. Configure runtime secrets in the hosting provider. Keep OAuth secrets on Render, preserve the existing data-service secrets and bindings, and never commit credentials. Vercel needs the exact app, Render and storage origins. `render.yaml` describes the backend service.
 
-- `app/host-dashboard.tsx`, `app/admin.css`: dedicated analytics workspace and synthetic demo.
-- `lib/admin-analytics.ts`, `lib/host-metrics.ts`: aggregate queries and coverage.
-- `app/use-active-time.ts`, `lib/activity.ts`, migration `0015`: active-time estimate and atomic deduplication.
-- `lib/admin-pdf.ts`: vector PDF report and methodology appendix.
-- `app/scout-chat.tsx`, `lib/scout*`: job-aware assistant and reviewed résumé workflow.
-- `scripts/prepare-vercel.mjs`, `scripts/prepare-render.mjs`, `render.yaml`: reproducible deployment variants.
-- `scripts/verify-*.mjs`, `handoff/`: executable evidence and operational handoff.
+Follow [Render and Vercel setup](handoff/RENDER-MIGRATION.md), [Vercel deployment](handoff/VERCEL.md) and [email activation](handoff/EMAIL-ACTIVATION.md). Verify the deployed commit, authentication, source refresh, delivery backlog and rollback path before expanding access.
 
-NextRole is a product case study in making a narrow job-search loop useful, measurable and understandable before claiming large-scale impact.
+## Release checks
+
+See [production review](handoff/PRODUCTION-REVIEW.md) for the latest verified changes and remaining launch gates. Before a wider campus rollout, complete real-account sign-in and linking, mobile/device notification checks, verified email delivery, quota monitoring, backup/restore and staged production load testing.
+
+## Repository guide
+
+- `app/`: student workspace, ScoutX, admin views and API routes.
+- `lib/`: matching, ingestion, private account data, résumé generation and analytics.
+- `db/` and `drizzle/`: schema and additive migrations.
+- `companion/`: browser extension source.
+- `deploy/` and `scripts/`: reproducible deployment outputs and verification.
+- `handoff/`: setup, operations and release documentation.

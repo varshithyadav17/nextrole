@@ -2,7 +2,8 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import path from 'node:path';
-const [directory,out,commit]=process.argv.slice(2);
+const [directory,out,commit,target='preview']=process.argv.slice(2);
+if(!['preview','production'].includes(target))throw new Error('Use preview or production as the deployment target.');
 if(!directory||!path.isAbsolute(directory)||!out||!path.isAbsolute(out)||!/^[a-f0-9]{40}$/.test(commit||''))throw new Error('Use absolute generated source/output paths and the exact pushed commit.');
 const manifest=JSON.parse(await readFile(path.join(directory,'VERCEL-SOURCE-MANIFEST.json'),'utf8')),files=[];
 for(const entry of [...manifest.files,{path:'VERCEL-SOURCE-MANIFEST.json'}]){
@@ -13,5 +14,5 @@ for(const entry of [...manifest.files,{path:'VERCEL-SOURCE-MANIFEST.json'}]){
  else if(/\.(?:png|webp|avif|jpe?g|gif|zip|woff2?|ttf|ico|pdf)$/i.test(entry.path))files.push({file:entry.path,data:data.toString('base64'),encoding:'base64'});
  else files.push({file:entry.path,data:data.toString('utf8'),encoding:'utf-8'});
 }
-await writeFile(out,JSON.stringify({requestBody:{name:'nextrole-scout',project:'prj_6MsqOzhV4nAgtZSve5zhjqoecd2M',target:'production',files,gitMetadata:{commitSha:commit,commitRef:'main',commitMessage:'NextRole: NEXT JOB city and page-specific Scout actions',dirty:false},projectSettings:{framework:'nextjs',nodeVersion:'22.x'}}}));
+await writeFile(out,JSON.stringify({requestBody:{name:'nextrole-scout',project:'prj_6MsqOzhV4nAgtZSve5zhjqoecd2M',...(target==='production'?{target:'production'}:{}),files,gitMetadata:{commitSha:commit,commitRef:'main',commitMessage:'NextRole: production readiness and reliable job matching',dirty:false},projectSettings:{framework:'nextjs',nodeVersion:'22.x'}}}));
 console.log(JSON.stringify({output:out,files:files.length,referencedExistingLargeBlobs:files.filter(f=>f.sha).map(f=>({file:f.file,sha:f.sha,size:f.size}))}));

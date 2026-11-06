@@ -34,12 +34,12 @@ try{
  const cursor='live-v14-opaque+cursor/=';
  await database.prepare('INSERT INTO meta(key,value) VALUES(?,?)').bind('jobicy_state:'+board.id,JSON.stringify({version:1,startedAt:now,phase:'feed',cursor,pages:1,seen:[jobs[0].id],imported:1,statusCursor:''})).run();
  await apply(migrations.slice(8));
- check(migrations.length===14,'The upgrade applies the six pending additive migrations, including application-link intents.');
+ check(migrations.length===16&&migrations.some(name=>name.startsWith('0014_'))&&migrations.some(name=>name.startsWith('0015_')),'The upgrade applies all eight pending additive migrations, including Google linking and admin analytics.');
  check((await database.prepare('SELECT COUNT(*) as n FROM user_jobs WHERE user_id=?').bind('upgrade-student').first()).n===3,'Migrations preserve every existing tracking row.');
  check(!!await database.prepare('SELECT revision FROM user_catalogue_versions WHERE user_id=?').bind('upgrade-student').first(),'Existing users receive a catalogue generation without resetting their profiles.');
  const requests=[];
- globalThis.fetch=async input=>{const u=new URL(String(input));requests.push(u);if(u.hostname==='api.lever.co')return Response.json([]);if(u.pathname.endsWith('/status')){const ids=u.searchParams.get('ids').split(',');return Response.json({success:true,statusCode:200,count:ids.length,jobs:ids.map(id=>({id:Number(id),status:'active'}))});}return Response.json({success:true,statusCode:200,jobCount:0,jobs:[],hasMore:false,nextCursor:null});};
- const {syncJobs}=await import('../lib/sync.ts');let result=await syncJobs();for(let i=0;result.sourcesPending&&i<3;i++)result=await syncJobs();
+ globalThis.fetch=async input=>{const u=new URL(String(input));requests.push(u);if(u.hostname==='api.lever.co')return Response.json([]);if(u.hostname==='boards-api.greenhouse.io')return Response.json({jobs:[],meta:{total:0}});if(u.hostname==='api.ashbyhq.com')return Response.json({jobs:[]});if(u.pathname.endsWith('/status')){const ids=u.searchParams.get('ids').split(',');return Response.json({success:true,statusCode:200,count:ids.length,jobs:ids.map(id=>({id:Number(id),status:'active'}))});}return Response.json({success:true,statusCode:200,jobCount:0,jobs:[],hasMore:false,nextCursor:null});};
+ const {syncJobs}=await import('../lib/sync.ts');let result=await syncJobs();for(let i=0;result.sourcesPending&&i<SOURCES.length;i++)result=await syncJobs();
  check(!result.sourcesPending&&result.sourceProgress.checked===SOURCES.length&&!result.failures.length,'The unfinished live sweep completes without forcing or restarting.');
  check(requests[0].searchParams.get('cursor')===cursor&&requests[0].searchParams.get('geo')==='anywhere','The existing opaque cursor and original filter survive upgrade unchanged.');
  const retained=(await database.prepare('SELECT job_key,status,stage,note FROM user_jobs WHERE user_id=? ORDER BY job_id').bind('upgrade-student').all()).results;
@@ -52,5 +52,5 @@ try{
  const {matchJob}=await import('../lib/matching.ts');check(!matchJob(titleJob,profile).relevant,'The title-experience fix still rejects the screenshot regression with old metadata.');
  const {locationFit}=await import('../lib/location.ts');check(locationFit({location:'Anywhere',mode:'Remote',sourceCategory:'job-board'},['India']).unknownRemote,'Legacy Jobicy Anywhere metadata also requires a country eligibility review.');
  const {mailReady}=await import('../lib/digests.ts');check(!mailReady(),'Deployment without sender configuration does not activate mail delivery.');
- console.log(JSON.stringify({passed:true,checks,upgrade:'live v14 schema and checkpoint to focused NextRole with retained v17 compatibility',pendingMigrations:6,productionDataUsed:false}));
+ console.log(JSON.stringify({passed:true,checks,upgrade:'live v14 schema and checkpoint to current NextRole',pendingMigrations:migrations.length-8,productionDataUsed:false}));
 }finally{await mf.dispose();}

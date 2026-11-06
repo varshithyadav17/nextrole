@@ -5,6 +5,7 @@ import {matchesRole} from './matching';
 import {matchesView} from './job-selection';
 import {verificationState,FRESHNESS_WINDOW_MS} from './freshness';
 import {loadSources} from './source-registry';
+import {EXPERIENCE_RULE_VERSION} from './experience';
 import {ROLE_CATEGORIES} from './categories';
 import {digest} from './keyring';
 import {acquireLease,releaseLease,type Lease} from './lease';
@@ -22,7 +23,7 @@ async function catalogueState(userId:string){
  const state=await db().prepare("SELECT (SELECT value FROM meta WHERE key='catalogue_revision') as catalogue,(SELECT value FROM meta WHERE key='source_registry_v1') as registry,(SELECT revision FROM user_catalogue_versions WHERE user_id=?) as workspace,(SELECT data FROM profiles WHERE user_id=?) as profile,(SELECT updated_at FROM engagement_settings WHERE user_id=?) as reset_at").bind(userId,userId,userId).first<{catalogue:string|null;registry:string|null;workspace:string|null;profile:string|null;reset_at:string|null}>();
  const profile:Profile={...defaultProfile,...(state?.profile?JSON.parse(state.profile):{})};
  const {name:_,alerts:__,reminders:___,completed:____,...preferences}=profile;void _;void __;void ___;void ____;
- const generation=await digest(JSON.stringify([2,state?.catalogue||'0',state?.registry||'',state?.workspace||'0',state?.reset_at||'',preferences]));
+ const generation=await digest(JSON.stringify([3,EXPERIENCE_RULE_VERSION,state?.catalogue||'0',state?.registry||'',state?.workspace||'0',state?.reset_at||'',preferences]));
  return {profile,generation};
 }
 

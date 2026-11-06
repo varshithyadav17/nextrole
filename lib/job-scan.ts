@@ -1,11 +1,11 @@
 import {db} from './store';
 import {matchJob} from './matching';
-import {withExperienceRequirements} from './experience';
+import {withExperienceRequirements,EXPERIENCE_RULE_VERSION} from './experience';
 import type {Job,JobView,Profile} from './types';
 
 type MetadataRow={ref:number;data:string;legacy_description:string|null;first_seen:string;last_checked:string;active:number;status:string|null;stage:string|null;note:string|null;updated_at:string|null;remind_at:string|null};
 export type ScannedJob={ref:number;job:JobView};
-const columns="json_remove(j.data,'$.description') as data,CASE WHEN (COALESCE(json_extract(j.data,'$.experienceRequirements.version'),0)<3 OR COALESCE(json_extract(j.data,'$.eligibility.version'),0)<2) THEN json_extract(j.data,'$.description') ELSE NULL END as legacy_description,j.first_seen,j.last_checked,j.active,u.status,u.stage,u.note,u.updated_at,u.remind_at";
+const columns="json_remove(j.data,'$.description') as data,CASE WHEN (COALESCE(json_extract(j.data,'$.experienceRequirements.version'),0)<"+EXPERIENCE_RULE_VERSION+" OR COALESCE(json_extract(j.data,'$.eligibility.version'),0)<2) THEN json_extract(j.data,'$.description') ELSE NULL END as legacy_description,j.first_seen,j.last_checked,j.active,u.status,u.stage,u.note,u.updated_at,u.remind_at";
 const visible="(j.active=1 OR u.status IN ('interested','applied','dismissed') OR length(u.note)>0)";
 // Choose one stable representative before applying filters, as the old catalogue did.
 const preferred="NOT EXISTS (SELECT 1 FROM jobs p WHERE p.job_key=j.job_key AND (p.active>j.active OR (p.active=j.active AND (p.last_checked>j.last_checked OR (p.last_checked=j.last_checked AND p.rowid<j.rowid)))))";

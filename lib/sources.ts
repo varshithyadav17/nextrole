@@ -75,6 +75,12 @@ export const SOURCES: Source[] = [
   {"id": "supabase", "company": "Supabase", "provider": "ashby", "token": "supabase", "careerUrl": "https://jobs.ashbyhq.com/supabase"},
   {"id": "zapier", "company": "Zapier", "provider": "ashby", "token": "zapier", "careerUrl": "https://jobs.ashbyhq.com/zapier"},
   {id:'jobicy-worldwide',company:'Jobicy',provider:'jobicy',token:'anywhere',careerUrl:'https://jobicy.com/jobs',category:'job-board',scope:'Worldwide remote listings published in the last 7 days, with a 3-hour provider delay. Older imported jobs are checked separately. New discovery passes run at most hourly.'}
-  ,{id:'zeta',company:'Zeta',provider:'lever',token:'zeta',careerUrl:'https://www.zeta.tech/us/careers/'}
+  ,{id:'zeta',company:'Zeta',provider:'lever',token:'zeta',careerUrl:'https://www.zeta.tech/us/careers/'},
+  // Append reviewed public boards so existing resumable source cursors keep their order.
+  {id:'merklescience',company:'Merkle Science',provider:'lever',token:'merklescience',careerUrl:'https://jobs.lever.co/merklescience'},
+  {id:'enterpret',company:'Enterpret',provider:'greenhouse',token:'enterpret',careerUrl:'https://job-boards.greenhouse.io/enterpret'},
+  {id:'sigmoid',company:'Sigmoid',provider:'greenhouse',token:'sigmoid',careerUrl:'https://job-boards.greenhouse.io/sigmoid'},
+  {id:'fourkites',company:'FourKites',provider:'greenhouse',token:'fourkites',careerUrl:'https://job-boards.greenhouse.io/fourkites'},
+  {id:'wikimediainternship',company:'Wikimedia Foundation Internship Program',provider:'greenhouse',token:'wikimediainternship',careerUrl:'https://job-boards.greenhouse.io/wikimediainternship'}
 ];
 export const SOURCE_REGISTRY = SOURCES.map(s=>s.id+':'+s.provider+':'+s.token).join('|');
