@@ -3,7 +3,6 @@ import {safeReturnPath} from '../../lib/bridge/session';
 import {ScoutMark} from '../scout';
 import SignInMethods from './sign-in-methods';
 import {redirect} from 'next/navigation';
-import './login.css';
 export const dynamic='force-dynamic';
 const messages:Record<string,string>={'google-not-ready':'Google sign-in is being connected. Please try again later.','google-cancelled':'Google sign-in was cancelled. Choose an account when you’re ready.','google-failed':'Google sign-in could not finish. Please try again.','google-workspace-unavailable':'Google returned successfully, but your workspace could not be reached. Please try again shortly.','google-conflict':'That Google account or workspace is already connected elsewhere. Your existing accounts are safe.','google-signin-first':'Sign in to your existing workspace, then connect Google from Preferences.'};
 export default async function Login({searchParams}:{searchParams:Promise<Record<string,string|string[]|undefined>>}){

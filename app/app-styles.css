@@ -1,0 +1,9 @@
+/* Keep the approved workspace overrides after their base styles in every build. */
+@import "./globals.css";
+@import "./focus.css";
+@import "./trail.css";
+@import "./scout-pages.css";
+@import "./design-fidelity.css";
+@import "./compact-layout.css";
+@import "./admin.css";
+@import "./login/login.css";

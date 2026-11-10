@@ -3,7 +3,6 @@ import {getWorkspaceRole} from '../auth-role';
 import SignInMethods from '../sign-in-methods';
 import {ScoutMark} from '../scout';
 import {ScoutIllustration} from '../trail-scout';
-import '../login/login.css';
 export const dynamic='force-dynamic';
 export default async function Account(){
  const user=await requireChatGPTUser('/account'),host=await getWorkspaceRole(user)==='host';

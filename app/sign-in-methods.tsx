@@ -1,7 +1,6 @@
 "use client";
 import {useEffect,useState} from 'react';
 import EmailForm from './login/email-form';
-import './login/login.css';
 type Methods={emailReady?:boolean;passwordLinked?:boolean;googleReady:boolean;googleExternal:boolean;linked?:boolean;manageHref?:string|null};
 export default function SignInMethods({email}:{email:string}){
  const [methods,setMethods]=useState<Methods|null>(null),[error,setError]=useState(false);

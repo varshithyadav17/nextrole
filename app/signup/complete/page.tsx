@@ -3,7 +3,6 @@ import {safeReturnPath} from '../../../lib/bridge/session';
 import {ScoutMark} from '../../scout';
 import EmailForm from '../../login/email-form';
 import {redirect} from 'next/navigation';
-import '../../login/login.css';
 
 export const dynamic='force-dynamic';
 
