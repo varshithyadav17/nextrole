@@ -34,14 +34,21 @@ export async function verifyAdminAnalytics({database,put,check}){
  check(result.analytics.cohorts.every(c=>c.cells.length===5),'Cohorts expose maturity for all five observation weeks.');
  check(!result.analytics.comparison.previousComplete,'Insufficient historical coverage suppresses misleading previous-period comparisons.');
  check(result.analytics.journey.visited>=result.analytics.journey.viewed&&result.analytics.journey.viewed>=result.analytics.journey.opened&&result.analytics.journey.opened>=result.analytics.journey.applied,'Ordered journey counts are monotonically decreasing.');
+ const future=shiftDay(today,3);
+ await database.prepare('INSERT INTO product_events(id,user_id,kind,day,created_at) VALUES(?,?,?,?,?)').bind('future-metric-probe','future-metric-user','workspace_open',future,future+'T12:00:00Z').run();
+ await database.prepare('INSERT INTO feedback(id,user_id,kind,context_id,rating,category,subject,message,created_at,updated_at) VALUES(?,?,?,?,?,?,?,?,?,?)').bind('future-feedback-probe','future-metric-user','apply','fixture',5,'Usability','Fixture','Fixture',future+'T12:00:00Z',future+'T12:00:00Z').run();
+ const bounded=await (await get('?days=30')).json();
+ check(bounded.active.mau===result.active.mau&&bounded.ratings.count===result.ratings.count,'Future-dated activity and feedback cannot inflate the selected reporting period.');
+ await database.prepare('DELETE FROM product_events WHERE id=?').bind('future-metric-probe').run();
+ await database.prepare('DELETE FROM feedback WHERE id=?').bind('future-feedback-probe').run();
  const demo=await (await get('?mode=demo&days=30')).json();
- check(demo.analytics.dataMode==='demo'&&demo.analytics.demoLabel.includes('SYNTHETIC')&&demo.operations===null,'Demo data is labelled and never mixed with live operational data.');
+ check(demo.analytics.dataMode==='live'&&demo.analytics.demoLabel===null&&demo.operations!==null&&demo.analytics.comparison.current.students===result.analytics.comparison.current.students,'A stale demo query cannot replace recorded activity with synthetic aggregates.');
  check((await get('?mode=demo','a-student',false)).status===403,'The private demo API still requires owner authorization.');
  user(null);check((await pdf.GET(new Request('https://nextrole.test/api/host/report'))).status===401,'Anonymous users cannot download real analytics PDFs.');
  user('a-student');check((await pdf.GET(new Request('https://nextrole.test/api/host/report?mode=demo'))).status===403,'Students cannot use the private admin report endpoint.');
  user('analytics-owner',true);const response=await pdf.GET(new Request('https://nextrole.test/api/host/report?mode=demo&days=30'));
- check(response.ok&&response.headers.get('Content-Type')==='application/pdf'&&response.headers.get('Content-Disposition').includes('SYNTHETIC-DEMO'),'The authenticated report is a direct PDF download with a synthetic filename.');
+ check(response.ok&&response.headers.get('Content-Type')==='application/pdf'&&response.headers.get('Content-Disposition').includes('NextRole_all_'),'The authenticated report exports the recorded dataset.');
  const bytes=new Uint8Array(await response.arrayBuffer()),document=await PDFDocument.load(bytes);
- check(document.getPageCount()>=7&&document.getTitle().includes('SYNTHETIC DEMO'),'The full report includes all sections, appendices and a synthetic title.');
+ check(document.getPageCount()>=7&&!document.getTitle().includes('SYNTHETIC'),'The full recorded report includes all sections and measurement definitions.');
  user('analytics-owner',true);check((await pdf.GET(new Request('https://nextrole.test/api/host/report?section=unknown'))).status===400,'Report sections are bounded to supported values.');
 }

@@ -1,0 +1,45 @@
+import assert from 'node:assert/strict';
+import {registerHooks} from 'node:module';
+import {pathToFileURL} from 'node:url';
+import path from 'node:path';
+const root=path.resolve(process.argv[2]||'.deploy/render');
+let checks=0;const check=(ok,message)=>{assert.ok(ok,message);checks++;},jar=new Map(),accounts=new Map(),calls=[];
+globalThis.__emailTestJar={get:name=>jar.has(name)?{value:jar.get(name)}:undefined};
+registerHooks({resolve(specifier,context,next){if(specifier==='next/headers')return {url:'nextrole-email:cookies',shortCircuit:true};if(specifier==='next/server')return next('next/server.js',context);if(specifier==='next/navigation')return next('next/navigation.js',context);try{return next(specifier,context);}catch(error){if(specifier.startsWith('.')&&!/\.(ts|mjs|js|json)$/.test(specifier))return next(specifier+'.ts',context);throw error;}},load(url,context,next){if(url==='nextrole-email:cookies')return {format:'module',source:'export async function cookies(){return globalThis.__emailTestJar;}',shortCircuit:true};return next(url,context);}});
+process.env.NEXTROLE_APP_ORIGIN='https://nextrole.example.test';process.env.NEXTROLE_BACKEND_ORIGIN='https://storage.example.test';process.env.NEXTROLE_BRIDGE_SECRET='d3'.repeat(32);process.env.NEXTROLE_EMAIL_ENABLED='true';
+const load=file=>import(pathToFileURL(path.join(root,file)).href),originalFetch=globalThis.fetch;
+try{
+ const {emailAuth}=await load('lib/vercel-email.ts'),session=await load('lib/bridge/session.ts'),{serverConfig}=await load('app/chatgpt-auth.ts'),config=serverConfig();
+ process.env.NEXTROLE_BACKEND_ORIGIN='https://nextrole-job-radar.ivorypine64.chatgpt.site';
+ const moved=serverConfig();
+ check(moved.issuer===process.env.NEXTROLE_BACKEND_ORIGIN&&moved.storageOrigin==='https://nextrole-job-radar.varshithyadav-1720.chatgpt.site','A renamed Site uses its current network origin while retaining its session issuer.');
+ process.env.NEXTROLE_BACKEND_ORIGIN=config.issuer;
+ const request=(data,origin=config.audience)=>new Request(config.audience+'/api/auth/email',{method:'POST',headers:{'content-type':'application/json',origin},body:JSON.stringify(data)});
+ const password='An isolated gateway phrase 2026',email='gateway-fixture@example.test';
+ globalThis.fetch=async(url,init)=>{
+  check(String(url)===config.issuer+'/api/bridge/email'&&init.redirect==='error','Credential exchange is pinned to the existing trusted data service.');
+  const body=JSON.parse(init.body);check(await session.verifyProof(config,'email-auth-v1',body.payload,body.signature),'Each credential exchange is signed and authenticated.');
+  const data=JSON.parse(Buffer.from(body.payload,'base64url').toString());calls.push(data);
+  check(!('password' in data),'Plaintext passwords never reach the data service.');
+  if(data.action==='lookup')return Response.json({account:accounts.get(data.email)||null});
+  const user=data.previousSession?await session.verifySession(config,data.previousSession):{userId:'email:gateway-fixture',email:data.email,fullName:data.fullName,displayName:data.fullName};
+  accounts.set(data.email,{user,passwordHash:data.passwordHash});return Response.json({user});
+ };
+ check((await emailAuth(request({action:'signup',email,password,fullName:'Fixture'},'https://evil.example'))).status===403&&calls.length===0,'Cross-origin signup is rejected before any account lookup.');
+ check((await emailAuth(request({action:'signup',email,password:'short',fullName:'Fixture'}))).status===400,'The gateway independently enforces password length.');
+ const signup=await emailAuth(request({action:'signup',email,password,fullName:'Gateway Fixture',returnTo:'https://evil.example'})),cookie=signup.headers.get('set-cookie');
+ check(signup.ok&&(await signup.json()).returnTo==='/'&&cookie.includes('Secure')&&cookie.includes('HttpOnly')&&cookie.includes('SameSite=lax')&&!cookie.includes('Domain='),'Signup issues a secure host-only cookie and rejects external return URLs.');
+ const signupSession=cookie.match(/__Host-nextrole-session=([^;]+)/)[1];check((await session.verifySession(config,signupSession)).userId==='email:gateway-fixture','The created session verifies using the existing workspace protocol.');
+ check((await emailAuth(request({action:'signup',email,password,fullName:'Overwrite'}))).status===409,'Repeated signup cannot replace a credential.');
+ check((await emailAuth(request({action:'login',email,password:'A different incorrect phrase'}))).status===401,'Incorrect passwords cannot issue a session.');
+ check((await emailAuth(request({action:'login',email:'missing@example.test',password}))).status===401,'Unknown accounts receive the same sign-in failure.');
+ const login=await emailAuth(request({action:'login',email,password,returnTo:'/admin'}));check(login.ok&&(await login.json()).returnTo==='/admin','Correct email/password sign-in restores the account and requested page.');
+ check((await emailAuth(request({action:'link',email,password,fullName:'Fixture'}))).status===401,'Adding a password requires a verified existing account session.');
+ const legacy={userId:'gateway-legacy-fixture',email:'legacy-gateway@example.test',fullName:'Legacy',displayName:'Legacy'};jar.set('__Host-nextrole-session',await session.issueSession(config,legacy));
+ const linked=await emailAuth(request({action:'link',email:legacy.email,password,fullName:'Legacy'}));check(linked.ok&&accounts.get(legacy.email).user.userId===legacy.userId,'Password linking retains the exact legacy workspace ID.');
+ const before=calls.length;delete process.env.NEXTROLE_EMAIL_ENABLED;
+ check((await emailAuth(request({action:'login',email,password}))).status===503&&calls.length===before,'An incomplete rollout cannot expose a non-working email method.');
+ process.env.NEXTROLE_EMAIL_ENABLED='true';globalThis.fetch=async()=>new Response('Unavailable',{status:503});
+ check((await emailAuth(request({action:'login',email,password}))).status===503,'Data-service outages fail explicitly instead of accepting a fake local login.');
+ console.log(JSON.stringify({passed:true,checks,scope:'Actual Node email gateway, scrypt, signed data boundary, secure cookies and existing-account linking; isolated synthetic accounts'}));
+}finally{globalThis.fetch=originalFetch;}

@@ -44,6 +44,10 @@ jobs:
           ln -s "$GITHUB_WORKSPACE/node_modules" "$RUNNER_TEMP/nextrole-render/node_modules"
       - name: Verify Render and frontend identity boundaries
         run: node --experimental-strip-types scripts/verify-render.mjs "$RUNNER_TEMP/nextrole-render" "$RUNNER_TEMP/nextrole-vercel"
+      - name: Verify password authentication and generated backend preparation
+        run: |
+          node --experimental-strip-types scripts/verify-email-gateway.mjs "$RUNNER_TEMP/nextrole-render"
+          node --experimental-strip-types scripts/verify-render-preparation.mjs
       - name: Build the frontend without production credentials
         working-directory: ${{ runner.temp }}/nextrole-vercel
         run: node node_modules/next/dist/bin/next build --webpack

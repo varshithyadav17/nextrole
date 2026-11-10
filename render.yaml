@@ -24,3 +24,6 @@ services:
         sync: false
       - key: NEXTROLE_GOOGLE_ONLY
         value: "false"
+      # Activate only after migration 0016 and the data-service endpoint are deployed.
+      - key: NEXTROLE_EMAIL_ENABLED
+        value: "false"

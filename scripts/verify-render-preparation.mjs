@@ -10,7 +10,7 @@ const check=(value,message)=>{assert.ok(value,message);checks++;};
 const exists=async file=>access(file).then(()=>true,()=>false);
 async function fixture(name){
  const directory=path.join(temporary,name);await mkdir(path.join(directory,'scripts'),{recursive:true});
- for(const file of ['scripts/prepare-render.mjs','package.json','pnpm-lock.yaml','pnpm-workspace.yaml','tsconfig.json','lib/bridge/session.ts','lib/google-oidc.ts','lib/http-json.ts']){await mkdir(path.dirname(path.join(directory,file)),{recursive:true});await cp(path.join(root,file),path.join(directory,file));}
+ for(const file of ['scripts/prepare-render.mjs','package.json','pnpm-lock.yaml','pnpm-workspace.yaml','tsconfig.json','lib/bridge/session.ts','lib/password.ts','lib/google-oidc.ts','lib/http-json.ts']){await mkdir(path.dirname(path.join(directory,file)),{recursive:true});await cp(path.join(root,file),path.join(directory,file));}
  await cp(path.join(root,'deploy'),path.join(directory,'deploy'),{recursive:true});
  await mkdir(path.join(directory,'app/api/example'),{recursive:true});await writeFile(path.join(directory,'app/api/example/route.ts'),'export async function GET(){return Response.json({ok:true});}\n');
  return directory;
