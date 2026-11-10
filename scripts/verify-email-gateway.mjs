@@ -23,6 +23,7 @@ try{
   check(!('password' in data),'Plaintext passwords never reach the data service.');
   if(data.action==='lookup')return Response.json({account:accounts.get(data.email)||null});
   const user=data.previousSession?await session.verifySession(config,data.previousSession):{userId:'email:gateway-fixture',email:data.email,fullName:data.fullName,displayName:data.fullName};
+  if(data.action==='setup'){const completed={...user,fullName:data.fullName,displayName:data.fullName,setupPending:false};if(data.passwordHash)accounts.set(data.email,{user:completed,passwordHash:data.passwordHash});return Response.json({user:completed});}
   accounts.set(data.email,{user,passwordHash:data.passwordHash});return Response.json({user});
  };
  check((await emailAuth(request({action:'signup',email,password,fullName:'Fixture'},'https://evil.example'))).status===403&&calls.length===0,'Cross-origin signup is rejected before any account lookup.');
@@ -37,8 +38,20 @@ try{
  check((await emailAuth(request({action:'link',email,password,fullName:'Fixture'}))).status===401,'Adding a password requires a verified existing account session.');
  const legacy={userId:'gateway-legacy-fixture',email:'legacy-gateway@example.test',fullName:'Legacy',displayName:'Legacy'};jar.set('__Host-nextrole-session',await session.issueSession(config,legacy));
  const linked=await emailAuth(request({action:'link',email:legacy.email,password,fullName:'Legacy'}));check(linked.ok&&accounts.get(legacy.email).user.userId===legacy.userId,'Password linking retains the exact legacy workspace ID.');
+ const googleUser={userId:'google:gateway-setup',email:'gateway-setup@example.test',fullName:'Google Name',displayName:'Google Name',setupPending:true};
+ jar.set('__Host-nextrole-session',await session.issueSession(config,googleUser));
+ const setup=await emailAuth(request({action:'setup',email:googleUser.email,fullName:'Chosen Name',returnTo:'/jobs/fixture'}));
+ const setupCookie=setup.headers.get('set-cookie').match(/__Host-nextrole-session=([^;]+)/)[1],setupUser=await session.verifySession(config,setupCookie);
+ check(setup.ok&&setupUser.fullName==='Chosen Name'&&!setupUser.setupPending,'Google account setup refreshes its session and allows an omitted password.');
+ check(!accounts.has(googleUser.email),'Continuing with Google alone does not invent a password credential.');
+ const setupWithPassword=await emailAuth(request({action:'setup',email:googleUser.email,fullName:'Chosen Name',password}));
+ check(setupWithPassword.ok&&accounts.get(googleUser.email).user.userId===googleUser.userId,'Adding an optional password during setup keeps the same Google workspace.');
+ jar.delete('__Host-nextrole-session');
+ check((await emailAuth(request({action:'setup',email:googleUser.email,fullName:'Claimed'}))).status===401,'Unauthenticated callers cannot complete another Google account.');
  const before=calls.length;delete process.env.NEXTROLE_EMAIL_ENABLED;
  check((await emailAuth(request({action:'login',email,password}))).status===503&&calls.length===before,'An incomplete rollout cannot expose a non-working email method.');
+ jar.set('__Host-nextrole-session',await session.issueSession(config,googleUser));
+ check((await emailAuth(request({action:'setup',email:googleUser.email,fullName:'Chosen Name'}))).ok,'Google-only setup remains usable when password sign-in is disabled.');
  process.env.NEXTROLE_EMAIL_ENABLED='true';globalThis.fetch=async()=>new Response('Unavailable',{status:503});
  check((await emailAuth(request({action:'login',email,password}))).status===503,'Data-service outages fail explicitly instead of accepting a fake local login.');
  console.log(JSON.stringify({passed:true,checks,scope:'Actual Node email gateway, scrypt, signed data boundary, secure cookies and existing-account linking; isolated synthetic accounts'}));

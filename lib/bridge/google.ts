@@ -20,10 +20,17 @@ export async function googleExchange(config:BridgeConfig,body:unknown,now=Date.n
   db().prepare('SELECT user_id FROM email_accounts WHERE email=?').bind(identity.email.trim().toLowerCase()).first<{user_id:string}>()
  ]);
  if(!canonical&&!existingGoogle&&emailAccount)throw new PublicError('Sign in with email and password, then connect Google from Your account.',428);
- await db().prepare('INSERT INTO google_accounts(subject_hash,user_id,user_data,linked_at) VALUES(?,?,?,?) ON CONFLICT DO NOTHING').bind(subjectHash,user.userId,JSON.stringify(user),new Date(now).toISOString()).run();
- const row=await db().prepare('SELECT user_id,user_data FROM google_accounts WHERE subject_hash=?').bind(subjectHash).first<{user_id:string;user_data:string}>();
+ await db().prepare('INSERT INTO google_accounts(subject_hash,user_id,user_data,linked_at) VALUES(?,?,?,?) ON CONFLICT DO NOTHING').bind(subjectHash,user.userId,JSON.stringify({...user,...(!canonical?{setupPending:true}:{})}),new Date(now).toISOString()).run();
+ let row=await db().prepare('SELECT user_id,user_data FROM google_accounts WHERE subject_hash=?').bind(subjectHash).first<{user_id:string;user_data:string}>();
  if(!row||canonical&&row.user_id!==canonical.userId)throw new PublicError('That Google account or workspace already has a different sign-in connection. No accounts were merged.',409);
- if(canonical||row.user_id===user.userId){row.user_data=JSON.stringify(user);await db().prepare('UPDATE google_accounts SET user_data=? WHERE subject_hash=? AND user_id=?').bind(row.user_data,subjectHash,row.user_id).run();}
- const session=await issueSession(config,JSON.parse(row.user_data),Math.floor(now/1000));return {session,expiresIn:86400,linked:value.mode==='link'};
+ if(canonical||row.user_id===user.userId){
+  const stored=JSON.parse(row.user_data) as BridgeUser;
+  const fullName=stored.setupPending?identity.fullName:stored.fullName||identity.fullName;
+  const updated={...stored,email:user.email,fullName,displayName:fullName||user.email};
+  await db().prepare('UPDATE google_accounts SET user_data=? WHERE subject_hash=? AND user_id=? AND user_data=?').bind(JSON.stringify(updated),subjectHash,row.user_id,row.user_data).run();
+  row=(await db().prepare('SELECT user_id,user_data FROM google_accounts WHERE subject_hash=?').bind(subjectHash).first<{user_id:string;user_data:string}>())!;
+ }
+ const account=JSON.parse(row.user_data) as BridgeUser;
+ const session=await issueSession(config,account,Math.floor(now/1000));return {session,expiresIn:86400,linked:value.mode==='link',needsSetup:account.setupPending===true};
 }
 export async function googleConnection(userId:string){const row=await db().prepare('SELECT linked_at FROM google_accounts WHERE user_id=?').bind(userId).first<{linked_at:string}>();return {linked:!!row,linkedAt:row?.linked_at||null};}

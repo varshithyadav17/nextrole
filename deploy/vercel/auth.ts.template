@@ -13,7 +13,7 @@ export function serverConfig(){
 }
 export async function sessionToken(){const config=serverConfig(),token=(await cookies()).get(SESSION_COOKIE)?.value||null;return config&&await verifySession(config,token)?token:null;}
 export async function getChatGPTUser():Promise<ChatGPTUser|null>{const config=serverConfig();return config?verifySession(config,(await cookies()).get(SESSION_COOKIE)?.value||null):null;}
-export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
+export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user?.setupPending&&returnTo!=='/signup/complete')redirect('/signup/complete?return_to='+encodeURIComponent(safeReturnPath(returnTo)));if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
 export function getSignInOptions(_defer=false){return {emailReady:!!serverConfig()&&process.env.NEXTROLE_EMAIL_ENABLED==='true',googleReady:!!serverConfig()&&typeof process.env.GOOGLE_CLIENT_ID==='string'&&process.env.GOOGLE_CLIENT_ID.endsWith('.apps.googleusercontent.com')&&!!process.env.GOOGLE_CLIENT_SECRET&&process.env.GOOGLE_CLIENT_SECRET.length>=16,googleOnly:false,googleExternal:false,googleOrigin:''};}
 export function chatGPTSignInPath(returnTo:string){return '/signin-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(returnTo));}
 export function chatGPTSignOutPath(returnTo='/'){return '/signout-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(returnTo));}

@@ -5,18 +5,20 @@ import {boundedJSON} from './http-json';
 import {hashPassword,checkPassword,validPassword,PasswordBusyError} from './password';
 import {z} from 'zod';
 const security={'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'};
-const input=z.object({action:z.enum(['login','signup','link']),email:z.string().trim().toLowerCase().email().max(254),password:z.string().max(128),fullName:z.string().trim().min(1).max(100).optional(),returnTo:z.string().max(1500).optional()});
+const input=z.object({action:z.enum(['login','signup','link','setup']),email:z.string().trim().toLowerCase().email().max(254),password:z.string().max(128).default(''),fullName:z.string().trim().min(1).max(100).optional(),returnTo:z.string().max(1500).optional()});
 class AccountError extends Error {status:number;constructor(message:string,status:number){super(message);this.status=status;}}
 export function emailReady(){return !!serverConfig()&&process.env.NEXTROLE_EMAIL_ENABLED==='true';}
 export async function emailAuth(request:Request){
  const config=serverConfig(),respond=(error:string,status:number)=>Response.json({error},{status,headers:{...security,...(status===429?{'Retry-After':'60'}:{})}});
- if(!config||!emailReady())return respond('Email sign-in is being connected. Please use Google for now.',503);
+ if(!config)return respond('Sign-in is temporarily unavailable. Please try again.',503);
  if(request.headers.get('origin')!==config.audience)return respond('Start sign-in from NextRole.',403);
  try{
   const value=input.parse(await boundedJSON(request,4096));
-  if(!validPassword(value.password,value.action!=='login'))return respond(value.action==='login'?'Enter your email and password.':'Use a password with 12 to 128 characters.',400);
-  const previous=value.action==='link'?await sessionToken():null,user=previous?await verifySession(config,previous):null;
-  if(value.action==='link'&&(!user||user.email.trim().toLowerCase()!==value.email))return respond('Sign in to this account before adding a password.',401);
+  if(!emailReady()&&(value.action!=='setup'||value.password))return respond('Email sign-in is being connected. Please use Google for now.',503);
+  if((value.action!=='setup'||value.password)&&!validPassword(value.password,value.action!=='login'))return respond(value.action==='login'?'Enter your email and password.':'Use a password with 12 to 128 characters.',400);
+  const needsSession=value.action==='link'||value.action==='setup';
+  const previous=needsSession?await sessionToken():null,user=previous?await verifySession(config,previous):null;
+  if(needsSession&&(!user||user.email.trim().toLowerCase()!==value.email))return respond('Sign in to this account before adding a password.',401);
   if(value.action!=='login'&&!value.fullName)return respond('Enter your full name.',400);
   async function store(data:Record<string,unknown>){
    const payload=base64url(new TextEncoder().encode(JSON.stringify({...data,issuedAt:Date.now(),requestId:randomToken()})));
@@ -27,7 +29,10 @@ export async function emailAuth(request:Request){
    return dataOut;
   }
   const lookup=await store({action:'lookup',email:value.email});let account:BridgeUser;
-  if(value.action==='login'){
+  if(value.action==='setup'){
+   const completed=await store({action:'setup',email:value.email,fullName:value.fullName,previousSession:previous,...(value.password?{passwordHash:await hashPassword(value.password)}:{})});
+   account=completed.user;
+  }else if(value.action==='login'){
    if(!await checkPassword(value.password,lookup.account?.passwordHash||null)||!lookup.account?.user)return respond('Email or password is incorrect. If you joined with Google, use Google to sign in.',401);
    account=lookup.account.user;
   }else{

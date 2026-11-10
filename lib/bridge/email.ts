@@ -2,10 +2,12 @@ import {z} from 'zod';
 import {db} from '../store';
 import {PublicError} from '../errors';
 import {allowRequest} from '../rate-limit';
+import {acquireLease,releaseLease} from '../lease';
+import {defaultProfile} from '../types';
 import {sha256,verifyProof,verifySession,type BridgeConfig,type BridgeUser} from './session';
 
 const passwordHash=z.string().regex(/^scrypt\$131072\$8\$1\$[a-f0-9]{32}\$[a-f0-9]{64}$/);
-const input=z.object({action:z.enum(['lookup','create']),email:z.string().trim().toLowerCase().email().max(254),fullName:z.string().trim().min(1).max(100).optional(),passwordHash:passwordHash.optional(),previousSession:z.string().max(4096).nullable().optional(),issuedAt:z.number().int(),requestId:z.string().regex(/^[A-Za-z0-9_-]{43}$/)});
+const input=z.object({action:z.enum(['lookup','create','setup']),email:z.string().trim().toLowerCase().email().max(254),fullName:z.string().trim().min(1).max(100).optional(),passwordHash:passwordHash.optional(),previousSession:z.string().max(4096).nullable().optional(),issuedAt:z.number().int(),requestId:z.string().regex(/^[A-Za-z0-9_-]{43}$/)});
 
 /** Only a signed gateway request may read a hash or create a password identity. */
 export async function emailExchange(config:BridgeConfig,body:unknown,now=Date.now()){
@@ -26,10 +28,15 @@ export async function emailExchange(config:BridgeConfig,body:unknown,now=Date.no
   const account=await db().prepare('SELECT user_data,password_hash FROM email_accounts WHERE email=?').bind(value.email).first<{user_data:string;password_hash:string}>();
   return {account:account?{user:JSON.parse(account.user_data) as BridgeUser,passwordHash:account.password_hash}:null};
  }
- if(!value.passwordHash||!value.fullName)throw new PublicError('Enter your name and a valid password.',400);
  const canonical=value.previousSession?await verifySession(config,value.previousSession):null;
  if(value.previousSession&&!canonical)throw new PublicError('Sign in again before adding a password.',401);
  if(canonical&&canonical.email.trim().toLowerCase()!==value.email)throw new PublicError('Use the email address of your signed-in account.',403);
+ if(value.action==='setup'){
+  if(!canonical)throw new PublicError('Continue with Google before completing your account.',401);
+  if(!value.fullName)throw new PublicError('Enter your full name.',400);
+  return completeGoogleSignup(canonical,{...value,fullName:value.fullName},now);
+ }
+ if(!value.passwordHash||!value.fullName)throw new PublicError('Enter your name and a valid password.',400);
  const user:BridgeUser=canonical||{userId:'email:'+await sha256(config.issuer+'\n'+value.email),email:value.email,fullName:value.fullName,displayName:value.fullName};
  // A matching Google email never merges accounts without an authenticated linking session.
  const existingGoogle=await db().prepare("SELECT user_id FROM google_accounts WHERE lower(json_extract(user_data,'$.email'))=? LIMIT 1").bind(value.email).first<{user_id:string}>();
@@ -37,5 +44,29 @@ export async function emailExchange(config:BridgeConfig,body:unknown,now=Date.no
  const result=await db().prepare('INSERT INTO email_accounts(email,user_id,password_hash,user_data,created_at) VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING').bind(value.email,user.userId,value.passwordHash,JSON.stringify(user),new Date(now).toISOString()).run();
  if(!result.meta.changes)throw new PublicError('An account already uses these details. Sign in to continue.',409);
  return {user};
+}
+
+async function completeGoogleSignup(canonical:BridgeUser,value:{email:string;fullName:string;passwordHash?:string},now:number){
+ const lease=await acquireLease('account-setup:'+canonical.userId,30000);
+ if(!lease)throw new PublicError('Your account is being saved. Please try again in a moment.',409);
+ try{
+  const google=await db().prepare('SELECT user_data FROM google_accounts WHERE user_id=?').bind(canonical.userId).first<{user_data:string}>();
+  if(!google)throw new PublicError('Continue with Google before completing your account.',403);
+  const stored=JSON.parse(google.user_data) as BridgeUser;
+  if(stored.setupPending!==true)return {user:stored};
+  if(stored.email.toLowerCase()!==value.email)throw new PublicError('Use the email address verified by Google.',403);
+  const existing=await db().prepare('SELECT user_id FROM email_accounts WHERE email=? OR user_id=?').bind(value.email,canonical.userId).first<{user_id:string}>();
+  if(value.passwordHash&&existing)throw new PublicError('A password is already enabled for these details. Continue without adding another password.',409);
+  const user:BridgeUser={userId:canonical.userId,email:canonical.email,fullName:value.fullName,displayName:value.fullName};
+  const timestamp=new Date(now).toISOString();
+  const statements=[
+   db().prepare('UPDATE google_accounts SET user_data=? WHERE user_id=?').bind(JSON.stringify({...user,setupPending:false}),user.userId),
+   db().prepare("INSERT INTO profiles(user_id,data,created_at,updated_at) VALUES(?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET data=json_set(profiles.data,'$.name',?),updated_at=excluded.updated_at").bind(user.userId,JSON.stringify({...defaultProfile,name:value.fullName,completed:false}),timestamp,timestamp,value.fullName),
+   db().prepare('UPDATE email_accounts SET user_data=? WHERE user_id=?').bind(JSON.stringify(user),user.userId)
+  ];
+  if(value.passwordHash)statements.push(db().prepare('INSERT INTO email_accounts(email,user_id,password_hash,user_data,created_at) VALUES(?,?,?,?,?)').bind(value.email,user.userId,value.passwordHash,JSON.stringify(user),timestamp));
+  await db().batch(statements);
+  return {user};
+ }finally{await releaseLease(lease);}
 }
 export async function emailConnection(userId:string){return {passwordLinked:!!await db().prepare('SELECT user_id FROM email_accounts WHERE user_id=?').bind(userId).first()};}

@@ -1,7 +1,7 @@
 export async function verifyEmailAuth({database,check}){
  const {emailExchange,emailConnection}=await import('../lib/bridge/email.ts');
  const {hashPassword,checkPassword,validPassword}=await import('../lib/password.ts');
- const {bridgeConfig,proof,base64url,randomToken,issueSession}=await import('../lib/bridge/session.ts');
+ const {bridgeConfig,proof,base64url,randomToken,issueSession,verifySession}=await import('../lib/bridge/session.ts');
  const {googleExchange}=await import('../lib/bridge/google.ts');
  const {isHost}=await import('../lib/admin.ts');
  const config=bridgeConfig('8c'.repeat(32),'https://backend.example.test','https://nextrole.example.test'),email='password-fixture@example.test',password='An isolated test phrase 9847';
@@ -37,6 +37,30 @@ export async function verifyEmailAuth({database,check}){
  check(await fails(async()=>googleExchange(config,await packet(identity,'google-identity-v1')),428),'First Google login cannot silently create a second workspace for an existing password account.');
  const explicit=await googleExchange(config,await packet({...identity,mode:'link',previousSession:await issueSession(config,user)},'google-identity-v1'));
  check(explicit.linked,'An authenticated password account can explicitly connect Google.');
+ const pending=await googleExchange(config,await packet({identity:{subject:'new-setup-fixture',email:'new-setup@example.test',fullName:'Google Name'},mode:'login',previousSession:null},'google-identity-v1'));
+ const pendingUser=await verifySession(config,pending.session);
+ check(pending.needsSetup&&pendingUser.setupPending,'First Google sign-in retains a setup marker until the user confirms their account.');
+ check(await fails(()=>call({action:'setup',email:pendingUser.email,fullName:'Claimed'}),401),'Account setup requires its authenticated Google session.');
+ check(await fails(()=>call({action:'setup',email:'different@example.test',fullName:'Claimed',previousSession:pending.session}),403),'Setup cannot replace the Google-verified email address.');
+ const completed=await call({action:'setup',email:pendingUser.email,fullName:'Chosen Name',previousSession:pending.session});
+ const confirmedProfile=JSON.parse((await database.prepare('SELECT data FROM profiles WHERE user_id=?').bind(pendingUser.userId).first()).data);
+ check(!completed.user.setupPending&&confirmedProfile.name==='Chosen Name'&&!confirmedProfile.completed,'Confirmed account details continue into the existing job-preferences onboarding.');
+ check(!(await emailConnection(pendingUser.userId)).passwordLinked,'Google registration supports continuing without a separate password.');
+ const returning=await googleExchange(config,await packet({identity:{subject:'new-setup-fixture',email:pendingUser.email,fullName:'Google Name'},mode:'login',previousSession:null},'google-identity-v1'));
+ check(!returning.needsSetup&&(await verifySession(config,returning.session)).fullName==='Chosen Name','Returning Google users skip registration and retain their confirmed name.');
+ await call({action:'setup',email:pendingUser.email,fullName:'Retry Name',previousSession:pending.session});
+ check(JSON.parse((await database.prepare('SELECT data FROM profiles WHERE user_id=?').bind(pendingUser.userId).first()).data).name==='Chosen Name','Retrying a completed setup is idempotent.');
+ const withPassword=await googleExchange(config,await packet({identity:{subject:'password-setup-fixture',email:'setup-password@example.test',fullName:'Google Name'},mode:'login',previousSession:null},'google-identity-v1'));
+ const passwordUser=await call({action:'setup',email:'setup-password@example.test',fullName:'Password Setup',passwordHash:hash,previousSession:withPassword.session});
+ const passwordLookup=await call({action:'lookup',email:'setup-password@example.test'});
+ check(passwordLookup.account.user.userId===passwordUser.user.userId&&await checkPassword(password,passwordLookup.account.passwordHash),'An optional setup password signs in to the same Google workspace.');
+ const prelinked=await googleExchange(config,await packet({identity:{subject:'prelinked-setup-fixture',email:'prelinked-setup@example.test',fullName:'Initial Name'},mode:'login',previousSession:null},'google-identity-v1'));
+ const prelinkedUser=await verifySession(config,prelinked.session);
+ await call({action:'create',email:prelinkedUser.email,fullName:'Initial Name',passwordHash:hash,previousSession:prelinked.session});
+ await call({action:'setup',email:prelinkedUser.email,fullName:'Confirmed Name',previousSession:prelinked.session});
+ const prelinkedLookup=await call({action:'lookup',email:prelinkedUser.email});
+ check(prelinkedLookup.account.user.fullName==='Confirmed Name'&&!prelinkedLookup.account.user.setupPending,'Setup also refreshes an already linked password identity without retaining a pending marker.');
+ await database.batch([pendingUser.userId,passwordUser.user.userId,prelinkedUser.userId].flatMap(id=>['google_accounts','email_accounts','profiles'].map(table=>database.prepare('DELETE FROM '+table+' WHERE user_id=?').bind(id))));
  const owner=globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL;globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=email;
  try{check(!isHost(user),'A newly registered password account cannot gain admin access by typing the owner email.');}finally{globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=owner;}
  for(let i=0;i<8;i++)await call({action:'lookup',email:'rate-password@example.test'});

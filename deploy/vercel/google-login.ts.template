@@ -43,7 +43,8 @@ export async function googleCallback(request:Request){
   if(upstream.status===409)return failed(config.audience,'google-conflict',returnTo);
   if(upstream.status===428)return failed(config.audience,'google-signin-first',returnTo);
   if(!upstream.ok){console.warn('nextrole_auth',{method:'google',stage,status:upstream.status});return failed(config.audience,'google-workspace-unavailable',returnTo);}const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');
-  const response=NextResponse.redirect(config.audience+returnTo,303);response.cookies.set(SESSION_COOKIE,result.session,{...cookieOptions,maxAge:SESSION_SECONDS});response.cookies.set(COOKIE,'',{...cookieOptions,maxAge:0});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
+  const destination=result.needsSetup?'/signup/complete?return_to='+encodeURIComponent(returnTo):returnTo;
+  const response=NextResponse.redirect(config.audience+destination,303);response.cookies.set(SESSION_COOKIE,result.session,{...cookieOptions,maxAge:SESSION_SECONDS});response.cookies.set(COOKIE,'',{...cookieOptions,maxAge:0});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
  }catch{console.warn('nextrole_auth',{method:'google',stage});return failed(config.audience,stage==='account-store'?'google-workspace-unavailable':'google-failed',returnTo);}
 }
 export async function authOptions(){

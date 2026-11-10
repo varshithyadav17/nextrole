@@ -10,7 +10,7 @@ export async function authenticatedSession(){
  try{const r=await fetch(origin+'/api/auth/session',{headers:{cookie:SESSION_COOKIE+'='+token},cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});if(!r.ok)return null;const data=await r.json() as {user?:BridgeUser;role?:string};if(!data.user||typeof data.user.userId!=='string'||typeof data.user.email!=='string'||typeof data.user.displayName!=='string')return null;return {user:data.user,role:data.role==='host'?'host':'student'};}catch{return null;}
 }
 export async function getChatGPTUser(){return (await authenticatedSession())?.user||null;}
-export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
+export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user?.setupPending&&returnTo!=='/signup/complete')redirect('/signup/complete?return_to='+encodeURIComponent(safeReturnPath(returnTo)));if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
 export async function getSignInOptions(defer=false){
  const origin=renderOrigin(),fallback={emailReady:false,googleReady:false,googleOnly:false,googleExternal:false,googleOrigin:'',serviceUnavailable:!!origin};
  if(!origin||defer)return fallback;

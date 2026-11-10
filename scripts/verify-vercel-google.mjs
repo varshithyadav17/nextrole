@@ -1,7 +1,7 @@
 export async function verifyVercelGoogle({load,jar,check,config,user,token,issueSession,SESSION_COOKIE}){
  const {googleStart,googleLink,googleCallback,authOptions}=await load('lib/vercel-google.ts'),{base64url,verifyProof}=await load('lib/bridge/session.ts');
  const originalFetch=globalThis.fetch,oldId=process.env.GOOGLE_CLIENT_ID,oldSecret=process.env.GOOGLE_CLIENT_SECRET,encoder=new TextEncoder();
- const clientId='123456789.apps.googleusercontent.com';let googleCalls=0,exchanges=0,activeNonce='',seenPacket=null;
+ const clientId='123456789.apps.googleusercontent.com';let googleCalls=0,exchanges=0,activeNonce='',seenPacket=null,needsSetup=false;
  try{
   delete process.env.GOOGLE_CLIENT_ID;delete process.env.GOOGLE_CLIENT_SECRET;
   check((await googleStart(new Request(config.audience+'/auth/google'))).headers.get('Location').includes('google-not-ready'),'An unconfigured Google button never pretends authentication works.');
@@ -17,7 +17,7 @@ export async function verifyVercelGoogle({load,jar,check,config,user,token,issue
    if(url===config.issuer+'/api/bridge/google'){
     exchanges++;const body=JSON.parse(init.body);check(await verifyProof(config,'google-identity-v1',body.payload,body.signature)&&init.redirect==='error','The Google callback signs its server-to-server identity packet and refuses redirects.');
     seenPacket=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(body.payload.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))));
-    return Response.json({session:await issueSession(config,seenPacket.mode==='link'?user:{...user,userId:'google:synthetic-vercel'})});
+    return Response.json({session:await issueSession(config,seenPacket.mode==='link'?user:{...user,userId:'google:synthetic-vercel'}),needsSetup});
    }
    if(url===config.issuer+'/api/auth/options')return Response.json({linked:true});
    throw new Error('Unexpected network call in isolated Vercel Google checks.');
@@ -29,6 +29,12 @@ export async function verifyVercelGoogle({load,jar,check,config,user,token,issue
   check((await googleCallback(new Request(callback.href.replace(/state=.*/,'state=wrong')))).headers.get('Location').includes('google-failed')&&googleCalls===0,'Forged Google callback state stops before code exchange.');
   const complete=await googleCallback(new Request(callback));check(complete.status===303&&complete.headers.get('Location')===config.audience+deep&&complete.cookies.get(SESSION_COOKIE)?.value&&complete.cookies.get('__Host-nextrole-google')?.maxAge===0,'Google sign-in stores a verified app session, clears transaction state and restores the exact job URL.');
   check(seenPacket.mode==='login'&&seenPacket.previousSession===null&&!complete.headers.get('Set-Cookie').includes('synthetic-unused-access'),'Google OAuth access tokens are not stored in browser cookies or silently linked to an existing account.');
+  needsSetup=true;
+  const firstLogin=await googleStart(new Request(config.audience+'/auth/google?return_to='+encodeURIComponent(deep))),firstURL=new URL(firstLogin.headers.get('Location'));
+  activeNonce=firstURL.searchParams.get('nonce');jar.set('__Host-nextrole-google',firstLogin.cookies.get('__Host-nextrole-google').value);
+  const firstCallback=await googleCallback(new Request(config.audience+'/auth/google/callback?code=synthetic-new-code&state='+firstURL.searchParams.get('state')));
+  check(firstCallback.headers.get('Location')===config.audience+'/signup/complete?return_to='+encodeURIComponent(deep),'A first Google callback opens account setup and retains the requested destination.');
+  needsSetup=false;
   jar.delete('__Host-nextrole-google');check((await googleCallback(new Request(callback))).headers.get('Location').includes('google-failed'),'A callback without its browser transaction cookie cannot complete again.');
   const before=exchanges;check((await googleLink(new Request(config.audience+'/auth/google/link',{method:'POST',headers:{Origin:'https://evil.test'}}))).status===403&&exchanges===before,'Cross-site Google-link requests cannot change account connections.');
   jar.set(SESSION_COOKIE,token);const linking=await googleLink(new Request(config.audience+'/auth/google/link',{method:'POST',headers:{Origin:config.audience}})),linkURL=new URL(linking.headers.get('Location'));
