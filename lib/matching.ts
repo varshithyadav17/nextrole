@@ -5,9 +5,8 @@ import {extractExperience,experienceForJob} from './experience';
 import {locationFit} from './location';
 import {verificationState} from './freshness';
 import {availabilityUnconfirmed} from './availability';
-import {decodeSourceEntities} from './source-text';
 export function plainText(value: string): string {
-  return decodeSourceEntities(value).replace(/<br\s*\/?\s*>|<\/(?:p|div|li|h[1-6]|ul|ol)>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/[ \t]+/g,' ').replace(/\n\s*\n/g,'\n\n').trim();
+  return value.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/<\/(p|div|li|h[1-6])>/gi,'\n').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&#39;|&apos;/g,"'").replace(/&quot;/g,'"').replace(/[ \t]+/g,' ').replace(/\n\s*\n/g,'\n\n').trim();
 }
 const SKILLS=['Python','SQL','JavaScript','TypeScript','React','Java','C++','Excel','Figma','Tableau','Power BI','AWS','Docker','Kubernetes','Machine learning','Product management','Data analysis','Communication','Sales','Marketing','Go','Rust'];
 export function extractSkills(text: string): string[] {

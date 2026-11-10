@@ -7,19 +7,21 @@ import {feedbackColumns} from '../../../lib/product';
 import {FEEDBACK_CATEGORIES} from '../../../lib/community-types';
 import {requestJSON} from '../../../lib/request-json';
 import {allowRequest} from '../../../lib/rate-limit';
+import {demoAdminReport} from '../../../lib/admin-demo';
 export const dynamic='force-dynamic';
 const respond=(d:unknown,s=200)=>Response.json(d,{status:s,headers:{'Cache-Control':'no-store'}});
 export async function GET(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);if(!isHost(user))return respond({error:'This workspace is available only to the NextRole host.'},403);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);if(!isHost(user))return respond({error:'This workspace is available only to the NextRole host.'},403);
  try{
   const p=new URL(request.url).searchParams;
   if(p.get('view')==='inbox')return respond(await hostInbox(z.object({page:z.coerce.number().int().min(0).max(10000),kind:z.enum(['all','apply','monthly','help','idea']),status:z.enum(['all','new','reviewing','planned','resolved']),category:z.enum(['all',...FEEDBACK_CATEGORIES]),q:z.string().trim().max(100)}).parse({page:p.get('page')||0,kind:p.get('kind')||'all',status:p.get('status')||'all',category:p.get('category')||'all',q:p.get('q')||''})));
   const days=z.coerce.number().refine(n=>[7,30,90].includes(n)).parse(p.get('days')||30);
+  if(p.get('mode')==='demo')return respond(demoAdminReport(days));
   return respond(await hostMetrics(days,user.userId));
  }catch(e){return respond({error:e instanceof z.ZodError?'Choose a valid host view and date range.':'The host dashboard is temporarily unavailable. Please try again.'},e instanceof z.ZodError?400:503);}
 }
 export async function POST(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);if(!isHost(user))return respond({error:'Host access is required.'},403);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);if(!isHost(user))return respond({error:'Host access is required.'},403);
  if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return respond({error:'Use NextRole to update the inbox.'},403);
  try{
   if(!await allowRequest(user.userId,'feedback',30))return respond({error:'Please wait a minute before updating more feedback.'},429);

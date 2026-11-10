@@ -8,7 +8,6 @@ export type ChatGPTUser = {
   displayName: string;
   email: string;
   fullName: string | null;
-  setupPending?: boolean;
 };
 
 const USER_ID_HEADER = "oai-authenticated-user-id";
@@ -53,13 +52,12 @@ export async function requireChatGPTUser(
   returnTo: string,
 ): Promise<ChatGPTUser> {
   const user = await getChatGPTUser();
-  if (user?.setupPending && returnTo !== '/signup/complete') redirect('/signup/complete?return_to='+encodeURIComponent(returnTo));
   if (user) return user;
 
   redirect('/login?return_to='+encodeURIComponent(safeRelativeReturnPath(returnTo)));
 }
 
-export function getSignInOptions(_defer=false){const config=siteBridgeConfig();return {googleReady:false,googleOnly:false,googleExternal:!!config,googleOrigin:config?.audience||''};}
+export function getSignInOptions(){const config=siteBridgeConfig();return {googleReady:false,googleOnly:false,googleExternal:!!config,googleOrigin:config?.audience||''};}
 
 export function chatGPTSignInPath(returnTo: string): string {
   const safeReturnTo = safeRelativeReturnPath(returnTo);

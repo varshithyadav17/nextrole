@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import "./app-styles.css";
+import "./globals.css";
+import "./focus.css";
+import "./trail.css";
+import "./scout-pages.css";
+import "./design-fidelity.css";
+import "./compact-layout.css";
 import {ScoutMotionProvider} from './scout-motion';
 
 export const metadata: Metadata = {

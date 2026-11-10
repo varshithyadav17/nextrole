@@ -19,7 +19,7 @@ function base(raw:Record<string,unknown>,source:Source,now:string,fields:{id:unk
  if(!/^[a-zA-Z0-9_-]{1,100}$/.test(String(fields.id))||typeof fields.title!=='string'||!fields.title.trim()||typeof fields.url!=='string'||fields.url.length>2048||!isSafeJobUrl(fields.url))return null;
  const fullText=plainText(fields.description.slice(0,200000));
  const evidenceComplete=fields.description.length<=200000&&fullText.length<=35000&&!(source.provider==='lever'&&Array.isArray(raw.lists)&&raw.lists.length>30);
- const description=fullText.slice(0,35000),title=plainText(fields.title.slice(0,1000)).slice(0,250),experienceRequirements=extractExperience(description,title),exp={value:experienceRequirements.minimum,evidence:experienceRequirements.evidence};
+ const description=fullText.slice(0,35000),title=fields.title.trim().slice(0,250),experienceRequirements=extractExperience(description,title),exp={value:experienceRequirements.minimum,evidence:experienceRequirements.evidence};
  const canonical=canonicalJobUrl(fields.url),parsed=new URL(canonical),knownPage=/^(jobs\.ashbyhq\.com|jobs(?:\.eu)?\.lever\.co)$/.test(parsed.hostname)&&/^\/[^/]+\/[a-zA-Z0-9_-]{6,100}$/.test(parsed.pathname)||/^(?:job-boards|boards)\.greenhouse\.io$/.test(parsed.hostname)&&/\/jobs\/\d+$/.test(parsed.pathname);
  const strong=knownPage||parsed.pathname.split('/').includes(String(fields.id))||[...parsed.searchParams.values()].includes(String(fields.id));
  const explicitCountries=[raw.country,object(object(raw.address).postalAddress).addressCountry,...(Array.isArray(raw.secondaryLocations)?raw.secondaryLocations.slice(0,10).map((s:unknown)=>object(object(s).address).addressCountry):[])].filter((v):v is string=>typeof v==='string'&&/^[A-Z]{2}$/.test(v));

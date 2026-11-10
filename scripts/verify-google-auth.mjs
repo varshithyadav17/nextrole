@@ -34,6 +34,6 @@ export async function verifyGoogleAuth({database,check}){
   check(await rejects(async()=>googleExchange(config,await signed(identity,'login',null,Date.now()-61000))),'Expired identity-exchange proofs cannot issue sessions.');
   const forged=await signed(identity);check(await rejects(()=>googleExchange(config,{...forged,signature:'forged'})),'A public request or Site bypass value cannot assert a Google identity.');
   const oldOwner=globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL;globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=canonical.email;
-  try{check(!isHost(firstUser)&&isHost({...firstUser,email:canonical.email})&&isHost(canonical),'The configured owner can use a verified Google identity; another Google email cannot acquire host access.');}finally{globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=oldOwner;}
+  try{check(!isHost({...firstUser,email:canonical.email})&&isHost(canonical),'An unlinked Google login cannot acquire host privileges by matching an owner email.');}finally{globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=oldOwner;}
  }finally{globalThis.fetch=originalFetch;await database.prepare("DELETE FROM google_accounts WHERE user_data LIKE '%Synthetic Student%' OR user_id=?").bind(canonical.userId).run();}
 }

@@ -1,7 +1,7 @@
 import {availabilityUnconfirmed} from './availability';
 import {db,one,rows} from './store';
 import {matchJob,needsReminder} from './matching';
-import {withExperienceRequirements,EXPERIENCE_RULE_VERSION} from './experience';
+import {withExperienceRequirements} from './experience';
 import {matchesView} from './job-selection';
 import {defaultProfile,type Job,type Profile} from './types';
 import {acquireLease,releaseLease} from './lease';
@@ -13,7 +13,7 @@ type State={job_key:string;status:string;remind_at:string|null};
 type Alert={id:string;jobKey:string;title:string;body:string;type:'match'|'reminder'|'change';createdAt:string};
 const BATCH_SIZE=50;
 export async function requestAlertSweep(target:string){await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('alerts_target',target).run();}
-async function activeMetadata(){const raw=await rows<{data:string;legacy_description:string|null;first_seen:string;last_checked:string}>("SELECT json_remove(data,'$.description') as data,CASE WHEN (COALESCE(json_extract(data,'$.experienceRequirements.version'),0)<"+EXPERIENCE_RULE_VERSION+" OR COALESCE(json_extract(data,'$.eligibility.version'),0)<2) THEN json_extract(data,'$.description') ELSE NULL END as legacy_description,first_seen,last_checked FROM jobs WHERE active=1");return [...new Map(raw.map(r=>{const j=withExperienceRequirements({...JSON.parse(r.data),description:r.legacy_description||'',...(r.legacy_description&&r.legacy_description.length>=35000?{evidenceComplete:false}:{}),firstSeen:r.first_seen,lastChecked:r.last_checked,active:true} as Job);return[j.key,j] as const;})).values()].filter(j=>!availabilityUnconfirmed(j));}
+async function activeMetadata(){const raw=await rows<{data:string;legacy_description:string|null;first_seen:string;last_checked:string}>("SELECT json_remove(data,'$.description') as data,CASE WHEN (COALESCE(json_extract(data,'$.experienceRequirements.version'),0)<3 OR COALESCE(json_extract(data,'$.eligibility.version'),0)<2) THEN json_extract(data,'$.description') ELSE NULL END as legacy_description,first_seen,last_checked FROM jobs WHERE active=1");return [...new Map(raw.map(r=>{const j=withExperienceRequirements({...JSON.parse(r.data),description:r.legacy_description||'',...(r.legacy_description&&r.legacy_description.length>=35000?{evidenceComplete:false}:{}),firstSeen:r.first_seen,lastChecked:r.last_checked,active:true} as Job);return[j.key,j] as const;})).values()].filter(j=>!availabilityUnconfirmed(j));}
 async function personAlerts(person:Person,jobs:Job[]){
  const lease=await acquireLease('byok_mutation:'+person.user_id);if(!lease)return {busy:true,count:0};
  try{

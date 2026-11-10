@@ -27,7 +27,7 @@ async function start(request:Request,link:boolean){
  const response=NextResponse.redirect(transaction.url,302);response.cookies.set(COOKIE,payload+'.'+await proof(config,'google-login-v1',payload),{...cookieOptions,maxAge:600});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
 }
 export async function googleCallback(request:Request){
- const config=serverConfig();if(!config)return new Response('Sign-in is temporarily unavailable.',{status:503,headers:security});let returnTo='/',stage='transaction';
+ const config=serverConfig();if(!config)return new Response('Sign-in is temporarily unavailable.',{status:503,headers:security});let returnTo='/';
  try{
   const url=new URL(request.url),saved=(await cookies()).get(COOKIE)?.value,google=googleConfiguration(process.env.GOOGLE_CLIENT_ID,process.env.GOOGLE_CLIENT_SECRET);
   if(!google||url.origin!==config.audience||url.pathname!=='/auth/google/callback'||!saved||saved.length>4096)throw new Error('Invalid sign-in.');
@@ -37,18 +37,15 @@ export async function googleCallback(request:Request){
   returnTo=safeReturnPath(value.returnTo);if(url.searchParams.has('error'))return failed(config.audience,'google-cancelled',returnTo);
   const previous=value.mode==='link'?await sessionToken():null,user=previous?await verifySession(config,previous):null;
   if(value.mode==='link'&&(!user||user.userId!==value.linkUserId||await sha256(previous!)!==value.linkSession))return failed(config.audience,'google-signin-first',returnTo);
-  stage='provider';const identity=await googleIdentity(google,url,value),packet=base64url(new TextEncoder().encode(JSON.stringify({identity,mode:value.mode,previousSession:previous,issuedAt:Date.now(),requestId:randomToken()})));
-  stage='account-store';
-  const upstream=await fetch(config.storageOrigin+'/api/bridge/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:packet,signature:await proof(config,'google-identity-v1',packet)}),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
+  const identity=await googleIdentity(google,url,value),packet=base64url(new TextEncoder().encode(JSON.stringify({identity,mode:value.mode,previousSession:previous,issuedAt:Date.now(),requestId:randomToken()})));
+  const upstream=await fetch(config.issuer+'/api/bridge/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:packet,signature:await proof(config,'google-identity-v1',packet)}),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
   if(upstream.status===409)return failed(config.audience,'google-conflict',returnTo);
-  if(upstream.status===428)return failed(config.audience,'google-signin-first',returnTo);
-  if(!upstream.ok){console.warn('nextrole_auth',{method:'google',stage,status:upstream.status});return failed(config.audience,'google-workspace-unavailable',returnTo);}const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');
-  const destination=result.needsSetup?'/signup/complete?return_to='+encodeURIComponent(returnTo):returnTo;
-  const response=NextResponse.redirect(config.audience+destination,303);response.cookies.set(SESSION_COOKIE,result.session,{...cookieOptions,maxAge:SESSION_SECONDS});response.cookies.set(COOKIE,'',{...cookieOptions,maxAge:0});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
- }catch{console.warn('nextrole_auth',{method:'google',stage});return failed(config.audience,stage==='account-store'?'google-workspace-unavailable':'google-failed',returnTo);}
+  if(!upstream.ok)throw new Error('Identity could not be saved.');const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');
+  const response=NextResponse.redirect(config.audience+returnTo,303);response.cookies.set(SESSION_COOKIE,result.session,{...cookieOptions,maxAge:SESSION_SECONDS});response.cookies.set(COOKIE,'',{...cookieOptions,maxAge:0});for(const [key,value]of Object.entries(security))response.headers.set(key,value);return response;
+ }catch{return failed(config.audience,'google-failed',returnTo);}
 }
 export async function authOptions(){
- const user=await getChatGPTUser();let linked=false,passwordLinked=false;
- if(user){try{const {proxy}=await import('./vercel-proxy');const r=await proxy(new Request(serverConfig()!.audience+'/api/auth/options'),'/api/auth/options');if(r.ok){const data=await r.json() as {linked?:boolean;passwordLinked?:boolean};linked=!!data.linked;passwordLinked=!!data.passwordLinked;}}catch{}}
- return Response.json({emailReady:!!serverConfig()&&process.env.NEXTROLE_EMAIL_ENABLED==='true',googleReady:googleReady(),googleExternal:false,linked,passwordLinked},{headers:security});
+ const user=await getChatGPTUser();let linked=false;
+ if(user){try{const {proxy}=await import('./vercel-proxy');const r=await proxy(new Request(serverConfig()!.audience+'/api/auth/options'),'/api/auth/options');if(r.ok){const data=await r.json() as {linked?:boolean};linked=!!data.linked;}}catch{}}
+ return Response.json({googleReady:googleReady(),googleExternal:false,linked},{headers:security});
 }

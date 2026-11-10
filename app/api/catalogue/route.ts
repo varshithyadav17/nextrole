@@ -6,7 +6,7 @@ import {z} from 'zod';
 export const dynamic='force-dynamic';
 const respond=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','Vary':'Cookie'}});
 export async function GET(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);
  try{
   if(!await allowRequest(user.userId,'catalogue',90))return respond({error:'Please wait a minute before loading more catalogue pages.'},429);
   const params=new URL(request.url).searchParams,input:Record<string,unknown>=Object.fromEntries(params);

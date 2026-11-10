@@ -13,7 +13,7 @@ import {z} from 'zod';
 export const dynamic='force-dynamic';
 const respond=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 export async function GET(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);
  try{
   const params=new URL(request.url).searchParams,id=params.get('kitId');
   if(params.get('drafts')==='1')return respond({history:await preparationHistory(user.userId,undefined,true)});
@@ -29,7 +29,7 @@ export async function GET(request:Request){
  }catch(error){return respond({error:error instanceof PublicError?error.message:'Could not load preparation. Please try again.'},error instanceof PublicError?error.status:503);}
 }
 export async function POST(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);
  if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return respond({error:'Use NextRole to save preparation.'},403);
  let lease:Lease|null=null;
  try{

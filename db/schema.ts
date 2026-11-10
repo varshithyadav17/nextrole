@@ -105,6 +105,3 @@ export const applicationIntents=sqliteTable('application_intents',{
 export const googleAccounts=sqliteTable('google_accounts',{
  subjectHash:text('subject_hash').primaryKey(),userId:text('user_id').notNull().unique(),userData:text('user_data').notNull(),linkedAt:text('linked_at').notNull(),
 });
-export const emailAccounts=sqliteTable('email_accounts',{
- email:text('email').primaryKey(),userId:text('user_id').notNull().unique(),passwordHash:text('password_hash').notNull(),userData:text('user_data').notNull(),createdAt:text('created_at').notNull(),
-});

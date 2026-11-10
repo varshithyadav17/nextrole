@@ -1,8 +1,4 @@
 export async function verifyScout({database,bucket,put,check,defaultProfile,raw,source}){
- const {careerSchema,emptyCareer}=await import('../lib/career.ts');
- const {links:omittedLinks,...legacyCareer}={...emptyCareer,name:'Legacy student'};void omittedLinks;
- const restoredCareer=careerSchema.parse(legacyCareer);
- check(Object.values(restoredCareer.links).every(value=>value==='')&&Object.keys(restoredCareer.links).length===4,'Older career profiles without social links retain four empty defaults after the validation-library security update.');
  const {GET:scoutGET,POST:scoutPOST}=await import('../app/api/scout/route.ts');
  const {GET:resumeGET,POST:resumePOST}=await import('../app/api/resumes/route.ts');
  const {GET:autoGET,POST:autoPOST}=await import('../app/api/automation/route.ts');

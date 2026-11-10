@@ -1,10 +1,9 @@
 import {extractEligibility,type EligibilityRequirements} from './eligibility';
-import {decodeSourceEntities} from './source-text';
 /** Source-backed experience rules. Unknown or conflicting wording is never proof of zero experience. */
-export const EXPERIENCE_RULE_VERSION=4;
+export const EXPERIENCE_RULE_VERSION=3;
 type EvidenceSource='title'|'description';
 export type ExperienceRequirements={
- version:1|2|3|typeof EXPERIENCE_RULE_VERSION;minimum:number|null;maximum:number|null;maximumExclusive?:boolean;
+ version:1|2|typeof EXPERIENCE_RULE_VERSION;minimum:number|null;maximum:number|null;maximumExclusive?:boolean;
  evidence:string|null;review:string[];excludesFreshers?:boolean;
  evidenceItems?:{source:EvidenceSource;text:string}[];
 };
@@ -94,7 +93,7 @@ function combineExperience(body:ExperienceRequirements,title:ExperienceRequireme
 
 /** Inspect both actual source fields, keeping optional description headings separate from the title. */
 export function extractExperience(description:string,title=''):ExperienceRequirements{
- return combineExperience(parseExperience(decodeSourceEntities(description.slice(0,35000))),parseExperience(decodeSourceEntities(title.slice(0,500)),true));
+ return combineExperience(parseExperience(description),parseExperience(title.slice(0,500),true));
 }
 
 type ExperienceJob={title:string;description:string;minExperience:number|null;experienceEvidence:string|null;experienceRequirements?:ExperienceRequirements;eligibility?:EligibilityRequirements};

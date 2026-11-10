@@ -10,11 +10,11 @@ import {discoveryStatus} from '../../../lib/discovery-sync';
 export const dynamic='force-dynamic';
 const respond=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 export async function GET(){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);
  try{const [sources,metrics,discovery]=await Promise.all([loadSources(),sourceMetrics(),discoveryStatus()]);return respond({sources,metrics,discovery});}catch{return respond({error:'Sources are temporarily unavailable.'},503);}
 }
 export async function POST(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);
  if(!isHost(user))return respond({error:'Only the host can connect shared employer sources.'},403);
  if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return respond({error:'Use NextRole to connect a source.'},403);
  try{

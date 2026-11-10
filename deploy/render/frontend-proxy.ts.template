@@ -14,7 +14,7 @@ export async function renderProxy(request:Request,path:string){
   const response=await fetch(backend+path+new URL(request.url).search,{method:request.method,headers,body:body as BodyInit|undefined,redirect:'manual',cache:'no-store',signal:AbortSignal.timeout(110000)});
   const output=new Headers({'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer'});for(const key of ['content-type','content-disposition','retry-after','content-security-policy']){const value=response.headers.get(key);if(value)output.set(key,value);}
   for(const cookie of response.headers.getSetCookie())if(/^__Host-nextrole-(?:session|google|login)=/.test(cookie)&&/;\s*Secure/i.test(cookie)&&/;\s*HttpOnly/i.test(cookie)&&!/;\s*Domain=/i.test(cookie)&&/;\s*Path=\/(?:;|$)/i.test(cookie))output.append('Set-Cookie',cookie);
-  const location=response.headers.get('location');if(location){const next=new URL(location,app);const configuredStorage=process.env.NEXTROLE_STORAGE_ORIGIN;const storageOrigin=configuredStorage==='https://nextrole-job-radar.ivorypine64.chatgpt.site'?'https://nextrole-job-radar.varshithyadav-1720.chatgpt.site':configuredStorage;if(next.protocol!=='https:'||!([app,'https://accounts.google.com',storageOrigin].includes(next.origin)))return fail(502);output.set('location',next.href);}
+  const location=response.headers.get('location');if(location){const next=new URL(location,app);const storageOrigin=process.env.NEXTROLE_STORAGE_ORIGIN;if(next.protocol!=='https:'||!([app,'https://accounts.google.com',storageOrigin].includes(next.origin)))return fail(502);output.set('location',next.href);}
   return new Response(response.body,{status:response.status,headers:output});
  }catch{return fail(503);}
 }

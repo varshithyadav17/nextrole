@@ -1,6 +1,5 @@
 import type {Profile,RequirementCheck} from './types';
 import {extractTiming,type TimingRequirements} from './job-timing';
-import {decodeSourceEntities} from './source-text';
 
 type EducationLevel='diploma'|'bachelor'|'master'|'doctorate';
 export type EligibilityRequirements={
@@ -38,7 +37,7 @@ function graduationRule(part:string):Graduation|undefined{
  return{years:years.sort(),...(minimum?{minimum:Number(minimum[1])}:{}),...(maximum?{maximum:Number(maximum[1])}:{}),evidence:evidence(part)};
 }
 export function extractEligibility(description:string):EligibilityRequirements{
- const text=decodeSourceEntities(description.slice(0,35000)),parts=text.split(/\n|[.!?;](?=\s+[A-Z0-9])|,\s+(?=(?:only|minimum|required|must|candidates?|applicants?|graduation|year of passing|20\d{2})\b)/i).map(s=>s.trim()).filter(s=>s.length>3);
+ const text=description.slice(0,35000),parts=text.split(/\n|[.!?;](?=\s+[A-Z0-9])|,\s+(?=(?:only|minimum|required|must|candidates?|applicants?|graduation|year of passing|20\d{2})\b)/i).map(s=>s.trim()).filter(s=>s.length>3);
  const result:EligibilityRequirements={version:2,review:[],timing:extractTiming(text)};const batches:Graduation[]=[];let optionalSection=false;
  for(const part of parts){
   const heading=part.replace(/[:\s]+$/,'');

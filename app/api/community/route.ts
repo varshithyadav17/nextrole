@@ -12,9 +12,9 @@ import {recordActivity} from '../../../lib/activity';
 export const dynamic='force-dynamic';
 const respond=(d:unknown,s=200)=>Response.json(d,{status:s,headers:{'Cache-Control':'no-store'}});
 const text=z.string().trim().max(1500).refine(s=>!/(?:sk-(?:proj-)?|gsk_|AIza)[A-Za-z0-9_-]{12,}/.test(s),'Remove API credentials before sharing feedback.');
-export async function GET(request:Request){const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);try{const page=z.coerce.number().int().min(0).max(1000).parse(new URL(request.url).searchParams.get('page')||0);const items=await myFeedback(user.userId,page);return respond({state:await communityState(user),items:items.slice(0,20),hasMore:items.length>20,page});}catch(e){return respond({error:e instanceof z.ZodError?'Choose a valid feedback page.':'Feedback is temporarily unavailable. Your saved jobs are safe.'},e instanceof z.ZodError?400:503);}}
+export async function GET(request:Request){const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);try{const page=z.coerce.number().int().min(0).max(1000).parse(new URL(request.url).searchParams.get('page')||0);const items=await myFeedback(user.userId,page);return respond({state:await communityState(user),items:items.slice(0,20),hasMore:items.length>20,page});}catch(e){return respond({error:e instanceof z.ZodError?'Choose a valid feedback page.':'Feedback is temporarily unavailable. Your saved jobs are safe.'},e instanceof z.ZodError?400:503);}}
 export async function POST(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);
  if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return respond({error:'Use NextRole to send this request.'},403);
  let lease:Lease|null=null;
  try{

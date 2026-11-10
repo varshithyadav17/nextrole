@@ -8,7 +8,7 @@ export function siteBridgeConfigs(){
  const primary=siteBridgeConfig(),render=bridgeConfig(env.NEXTROLE_RENDER_BRIDGE_SECRET,env.NEXTROLE_BRIDGE_ISSUER,env.NEXTROLE_VERCEL_ORIGIN);
  return [primary,render].filter((value,index,all):value is BridgeConfig=>!!value&&all.findIndex(candidate=>candidate?.secret===value.secret)===index);
 }
-export async function siteBridgeProofConfig(purpose:'exchange-v1'|'google-identity-v1'|'email-auth-v1',value:unknown,signature:unknown){
+export async function siteBridgeProofConfig(purpose:'exchange-v1'|'google-identity-v1',value:unknown,signature:unknown){
  if(typeof value!=='string'||value.length>9000||typeof signature!=='string'||signature.length!==43)return null;
  for(const config of siteBridgeConfigs())if(await verifyProof(config,purpose,value,signature))return config;
  return null;
