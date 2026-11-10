@@ -10,6 +10,10 @@ process.env.NEXTROLE_APP_ORIGIN='https://nextrole.example.test';process.env.NEXT
 const load=file=>import(pathToFileURL(path.join(root,file)).href),originalFetch=globalThis.fetch;
 try{
  const {emailAuth}=await load('lib/vercel-email.ts'),session=await load('lib/bridge/session.ts'),{serverConfig}=await load('app/chatgpt-auth.ts'),config=serverConfig();
+ process.env.NEXTROLE_BACKEND_ORIGIN='https://nextrole-job-radar.ivorypine64.chatgpt.site';
+ const moved=serverConfig();
+ check(moved.issuer===process.env.NEXTROLE_BACKEND_ORIGIN&&moved.storageOrigin==='https://nextrole-job-radar.varshithyadav-1720.chatgpt.site','A renamed Site uses its current network origin while retaining its session issuer.');
+ process.env.NEXTROLE_BACKEND_ORIGIN=config.issuer;
  const request=(data,origin=config.audience)=>new Request(config.audience+'/api/auth/email',{method:'POST',headers:{'content-type':'application/json',origin},body:JSON.stringify(data)});
  const password='An isolated gateway phrase 2026',email='gateway-fixture@example.test';
  globalThis.fetch=async(url,init)=>{

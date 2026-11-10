@@ -20,7 +20,7 @@ export async function emailAuth(request:Request){
   if(value.action!=='login'&&!value.fullName)return respond('Enter your full name.',400);
   async function store(data:Record<string,unknown>){
    const payload=base64url(new TextEncoder().encode(JSON.stringify({...data,issuedAt:Date.now(),requestId:randomToken()})));
-   const response=await fetch(config!.issuer+'/api/bridge/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload,signature:await proof(config!,'email-auth-v1',payload)}),cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});
+   const response=await fetch(config!.storageOrigin+'/api/bridge/email',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload,signature:await proof(config!,'email-auth-v1',payload)}),cache:'no-store',redirect:'error',signal:AbortSignal.timeout(20000)});
    if(!response.ok&&![400,401,409,429].includes(response.status)){console.warn('nextrole_auth',{method:'email',stage:'account-store',status:response.status});throw new AccountError('Account sign-in is temporarily unavailable. Please try again.',503);}
    const dataOut=await boundedJSON(response,12000);
    if(!response.ok)throw new AccountError(typeof dataOut.error==='string'?dataOut.error:'Sign-in could not finish.',response.status);

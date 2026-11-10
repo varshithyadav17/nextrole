@@ -39,7 +39,7 @@ export async function googleCallback(request:Request){
   if(value.mode==='link'&&(!user||user.userId!==value.linkUserId||await sha256(previous!)!==value.linkSession))return failed(config.audience,'google-signin-first',returnTo);
   stage='provider';const identity=await googleIdentity(google,url,value),packet=base64url(new TextEncoder().encode(JSON.stringify({identity,mode:value.mode,previousSession:previous,issuedAt:Date.now(),requestId:randomToken()})));
   stage='account-store';
-  const upstream=await fetch(config.issuer+'/api/bridge/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:packet,signature:await proof(config,'google-identity-v1',packet)}),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
+  const upstream=await fetch(config.storageOrigin+'/api/bridge/google',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload:packet,signature:await proof(config,'google-identity-v1',packet)}),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
   if(upstream.status===409)return failed(config.audience,'google-conflict',returnTo);
   if(upstream.status===428)return failed(config.audience,'google-signin-first',returnTo);
   if(!upstream.ok){console.warn('nextrole_auth',{method:'google',stage,status:upstream.status});return failed(config.audience,'google-workspace-unavailable',returnTo);}const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');

@@ -12,7 +12,7 @@ export async function signIn(request:Request){
  if(new URL(request.url).origin!==config.audience)return NextResponse.redirect(config.audience+'/signin-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(new URL(request.url).searchParams.get('return_to')||'/')),302);
  const state=randomToken(),verifier=randomToken(),returnTo=safeReturnPath(new URL(request.url).searchParams.get('return_to')||'/');
  const payload=base64url(new TextEncoder().encode(JSON.stringify({state,verifier,returnTo,expires:Date.now()+600000})));
- const url=new URL(config.issuer+'/api/bridge/authorize');url.searchParams.set('redirect_uri',config.audience+'/callback');url.searchParams.set('state',state);url.searchParams.set('code_challenge',await sha256(verifier));url.searchParams.set('code_challenge_method','S256');
+ const url=new URL(config.storageOrigin+'/api/bridge/authorize');url.searchParams.set('redirect_uri',config.audience+'/callback');url.searchParams.set('state',state);url.searchParams.set('code_challenge',await sha256(verifier));url.searchParams.set('code_challenge_method','S256');
  const response=NextResponse.redirect(url,302);response.cookies.set(LOGIN_COOKIE,payload+'.'+await proof(config,'login-v1',payload),{...options,maxAge:600});for(const [key,value] of Object.entries(security))response.headers.set(key,value);return response;
 }
 export async function callback(request:Request){
@@ -22,7 +22,7 @@ export async function callback(request:Request){
   const state=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(payload.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0)))),url=new URL(request.url),code=url.searchParams.get('code')||'';
   if(state.expires<=Date.now()||state.expires>Date.now()+600000||state.state!==url.searchParams.get('state')||!/^\d{13}\.[A-Za-z0-9_-]{43}\.[A-Za-z0-9_-]{43}$/.test(code)||!/^[A-Za-z0-9_-]{43}$/.test(state.verifier))throw new Error('Invalid state.');
   const redirectUri=config.audience+'/callback',body={code,verifier:state.verifier,redirectUri,proof:await proof(config,'exchange-v1',exchangeValue(code,state.verifier,redirectUri))};
-  const upstream=await fetch(config.issuer+'/api/bridge/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
+  const upstream=await fetch(config.storageOrigin+'/api/bridge/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),redirect:'error',cache:'no-store',signal:AbortSignal.timeout(20000)});
   if(!upstream.ok)throw new Error('Exchange failed.');const result=await boundedJSON(upstream,6000);if(!await verifySession(config,result.session))throw new Error('Invalid session.');
   const response=NextResponse.redirect(config.audience+safeReturnPath(state.returnTo),303);response.cookies.set(SESSION_COOKIE,result.session,{...options,maxAge:SESSION_SECONDS});response.cookies.set(LOGIN_COOKIE,'',{...options,maxAge:0});for(const [key,value] of Object.entries(security))response.headers.set(key,value);return response;
  }catch{const response=failure();response.headers.append('Set-Cookie',LOGIN_COOKIE+'=; Path=/; Max-Age=0; Secure; HttpOnly; SameSite=Lax');return response;}
