@@ -15,6 +15,11 @@ export async function googleExchange(config:BridgeConfig,body:unknown,now=Date.n
  const used=await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO NOTHING').bind(nonceKey,String(now+120000)).run();
  if(!used.meta.changes)throw new PublicError('This sign-in was already used. Please try again.',401);
  const identity=value.identity,user:BridgeUser=canonical||{userId:'google:'+subjectHash,email:identity.email,fullName:identity.fullName,displayName:identity.fullName||identity.email};
+ const [existingGoogle,emailAccount]=await Promise.all([
+  db().prepare('SELECT user_id FROM google_accounts WHERE subject_hash=?').bind(subjectHash).first<{user_id:string}>(),
+  db().prepare('SELECT user_id FROM email_accounts WHERE email=?').bind(identity.email.trim().toLowerCase()).first<{user_id:string}>()
+ ]);
+ if(!canonical&&!existingGoogle&&emailAccount)throw new PublicError('Sign in with email and password, then connect Google from Your account.',428);
  await db().prepare('INSERT INTO google_accounts(subject_hash,user_id,user_data,linked_at) VALUES(?,?,?,?) ON CONFLICT DO NOTHING').bind(subjectHash,user.userId,JSON.stringify(user),new Date(now).toISOString()).run();
  const row=await db().prepare('SELECT user_id,user_data FROM google_accounts WHERE subject_hash=?').bind(subjectHash).first<{user_id:string;user_data:string}>();
  if(!row||canonical&&row.user_id!==canonical.userId)throw new PublicError('That Google account or workspace already has a different sign-in connection. No accounts were merged.',409);

@@ -113,6 +113,13 @@
       "when": 1792749705588,
       "tag": "0015_admin_analytics",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "6",
+      "when": 1794305436168,
+      "tag": "0016_email_password_accounts",
+      "breakpoints": true
     }
   ]
 }

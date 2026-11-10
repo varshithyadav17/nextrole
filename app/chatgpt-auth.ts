@@ -57,7 +57,7 @@ export async function requireChatGPTUser(
   redirect('/login?return_to='+encodeURIComponent(safeRelativeReturnPath(returnTo)));
 }
 
-export function getSignInOptions(){const config=siteBridgeConfig();return {googleReady:false,googleOnly:false,googleExternal:!!config,googleOrigin:config?.audience||''};}
+export function getSignInOptions(_defer=false){const config=siteBridgeConfig();return {googleReady:false,googleOnly:false,googleExternal:!!config,googleOrigin:config?.audience||''};}
 
 export function chatGPTSignInPath(returnTo: string): string {
   const safeReturnTo = safeRelativeReturnPath(returnTo);

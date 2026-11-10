@@ -17,7 +17,7 @@ NextRole is a job-search workspace for students and early-career professionals. 
 - **Preparation:** keep assessment and interview preparation beside the application, with sourced material distinguished from practice questions.
 - **Browser companion:** save a listing you are viewing and assist supported application forms. Setup instructions are available in the app.
 - **Optional notifications:** in-app updates, browser push and a nightly email digest, subject to device permission, student opt-in and configured delivery services.
-- **Admin analytics:** owner-only adoption, retention, feature usage, application journey, feedback and source/delivery health, with PDF and data exports.
+- **Admin analytics:** owner-only recorded adoption, retention, feature usage, application journey, feedback and source/delivery health, with automatic refresh, date ranges, PDF and data exports. The admin page and its exports always read the operational database; sample aggregates cannot be selected with a URL flag.
 
 Browsing, matching and tracking do not require an AI API key. Optional AI requests use the signed-in user's configured provider connections, with that provider's limits and charges. Account sign-in does not supply API credits.
 
@@ -39,7 +39,7 @@ The résumé/JD score is an internal compatibility estimate, not an employer ATS
 
 The frontend runs on Vercel. A stateless Render service handles authentication and forwards allowlisted API requests to the existing data service. Durable account records use Cloudflare D1; private résumé files use R2. The database and file store have not been migrated to Render.
 
-Google OAuth is implemented with explicit account linking so existing jobs and history retain their account IDs. The current sign-in remains available until Google configuration and account recovery are verified. Host access is enforced on the server.
+Email/password and Google sign-in use explicit account linking so existing jobs and history retain their account IDs. Sign-up asks for a name, email and confirmed password; password fields include visibility controls. Password authentication must be enabled only after the additive database migration and identity endpoint are deployed. Host access is enforced on the server, and a new registration cannot acquire admin privileges by claiming an email.
 
 Per-account AI credentials are encrypted and excluded from exports and browser responses. Usage analytics are optional and aggregate visible, focused activity rather than typed content. Users can export their workspace and clear their data.
 
@@ -79,7 +79,7 @@ Follow [Render and Vercel setup](handoff/RENDER-MIGRATION.md), [Vercel deploymen
 
 ## Release checks
 
-See [production review](handoff/PRODUCTION-REVIEW.md) for the latest verified changes and remaining launch gates. Before a wider campus rollout, complete real-account sign-in and linking, mobile/device notification checks, verified email delivery, quota monitoring, backup/restore and staged production load testing.
+See [authentication and analytics review](handoff/AUTH-AND-ANALYTICS-REVIEW.md) for this candidate’s verified changes and blocked production rollout, and [production review](handoff/PRODUCTION-REVIEW.md) for the previous release. Before a wider campus rollout, complete real-account sign-in and linking, mobile/device notification checks, verified email delivery, quota monitoring, backup/restore and staged production load testing.
 
 ## Repository guide
 

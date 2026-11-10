@@ -11,12 +11,12 @@ export async function authenticatedSession(){
 }
 export async function getChatGPTUser(){return (await authenticatedSession())?.user||null;}
 export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
-export async function getSignInOptions(){
- const origin=renderOrigin(),fallback={googleReady:false,googleOnly:false,googleExternal:false,googleOrigin:'',serviceUnavailable:!!origin};
- if(!origin)return fallback;
+export async function getSignInOptions(defer=false){
+ const origin=renderOrigin(),fallback={emailReady:false,googleReady:false,googleOnly:false,googleExternal:false,googleOrigin:'',serviceUnavailable:!!origin};
+ if(!origin||defer)return fallback;
  try{
   const r=await fetch(origin+'/api/auth/options',{cache:'no-store',redirect:'error',signal:AbortSignal.timeout(15000)});
-  if(r.ok){const d=await r.json() as {googleReady?:boolean;googleOnly?:boolean};if(typeof d?.googleReady==='boolean'&&typeof d?.googleOnly==='boolean')return {...fallback,googleReady:d.googleReady,googleOnly:d.googleOnly,serviceUnavailable:false};}
+  if(r.ok){const d=await r.json() as {emailReady?:boolean;googleReady?:boolean;googleOnly?:boolean};if(typeof d?.googleReady==='boolean'&&typeof d?.googleOnly==='boolean')return {...fallback,emailReady:d.emailReady===true,googleReady:d.googleReady,googleOnly:false,serviceUnavailable:false};}
  }catch{}
  return fallback;
 }
