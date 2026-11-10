@@ -1,50 +1,31 @@
-# NextRole authentication and recorded analytics review
+# NextRole authentication and live analytics
 
-Review date: 10 November 2026. This is a review candidate; the existing production deployments and database have not been changed by this work.
+Updated 10 November 2026.
 
-## Resulting behavior
+## Account flow
 
-The login page offers email/password sign-in, a separate account-creation state (name, email, password and confirmation), password visibility controls and the configured Google option. It removes the ChatGPT button and outdated sign-in instructions. The form renders without waiting for the free authentication service to wake; availability is checked in the background. Existing compatibility routes remain for account recovery and previously issued sessions.
+Production offers email/password sign-in, account creation with name, email, password and confirmation, password visibility controls, and Google. Existing authenticated users can add a password in Your account. Password linking retains the current workspace ID.
 
-Existing authenticated users can enable a password from Your account or Preferences. Linking retains their exact user ID, saved jobs, private files, applications and analytics history. New registrations receive their own email namespace. They do not verify ownership of an email address, automatically merge another workspace or acquire owner privileges. Verified Google users must add a password while signed in, and password users must explicitly connect Google. Password recovery email and email verification are not implemented in this change.
+The Node authentication service uses salted scrypt, signed single-use credential exchanges, durable attempt limits, origin checks and Secure HttpOnly session cookies. New email registrations receive their own namespace and cannot gain admin access by claiming an owner email. Google verifies email ownership. A verified Google account matching the configured owner email can access the admin dashboard.
 
-Passwords are processed on the Node authentication tier using salted scrypt (N=131072, r=8, p=1), with one concurrent derivation to bound memory on the existing free gateway. Only hashes reach the existing durable database. The exchange uses signed, short-lived, single-use requests; lookup limits are enforced in D1 before expensive hashing. Browser sessions retain secure, HttpOnly, SameSite=Lax, host-only cookies. Passwords and hashes are excluded from browser responses, workspace exports and logs. New registrations cannot become admins by entering the owner email.
+Google callback requests now use the current data-service address after the Site domain changed. Signatures, session issuers and workspace IDs keep their original identifiers. Existing account data stays associated with its original workspace.
 
-Google's public start route was observed returning the expected authorization redirect. This does not verify real account consent or callback completion. The candidate distinguishes account-store failure from provider/state failures and emits only method, stage and HTTP status. It never logs an authorization code, token, cookie, password or user identity. Existing-account sign-in and linking still need a real-account production check.
+Email verification and password-recovery emails are pending. Separate existing accounts require an explicit signed-in linking flow.
 
-The admin page and its JSON/PDF endpoints always query the operational tables, including when an old `mode=demo` URL is opened. The former public sample page redirects to the authenticated admin page. The synthetic aggregate generator remains an explicit script/fixture utility and is not used by the app. No fixture values are relabelled as measured results or inserted into operational tables.
+## Admin analytics
 
-The dashboard refreshes once a minute while visible and when returning to the tab. It shows the recorded period, measurement coverage and last update time. A failed refresh displays an error and keeps the timestamp of the previous response. Date-filter changes clear the previous period. Exports use the same recorded dataset. Future-dated events, onboarding and feedback cannot inflate the selected reporting period. Feedback messages remain owner-only; active-time estimates and self-reported application confirmations retain their definitions.
+Admin pages and JSON/PDF exports query the operational database. Old mode=demo URLs use recorded data. The public sample analytics route redirects to authenticated admin.
 
-## Verification evidence
+The dashboard refreshes while visible and when returning to its tab. It shows its date range and last update time. Failed refreshes display an error with the previous timestamp. Activity time remains an estimate, and applications are user-confirmed.
 
-- Root TypeScript check: passed.
-- Isolated D1/R2 workflow and scale suite: 1,072 checks passed, plus 26 Worker transport checks.
-- Actual Node email gateway: 36 checks passed, covering real scrypt, signup, correct/incorrect login, same-account linking, signed exchanges, origin checks, safe return URLs, session cookies, disabled rollout and upstream outage.
-- Generated Render/frontend identity boundary suite: 19 checks passed.
-- Generated Google OAuth, callback and private upload boundary suite: 31 checks passed.
-- Render regeneration/cache-safety suite: 10 checks passed.
-- Canonical Worker, generated Render backend and generated Vercel frontend production builds: passed.
-- Browser visual review: sign-in, sign-up switching and password visibility were checked in the isolated local preview. Authentication was disabled there; screenshots do not demonstrate a live signup or Google login.
+The connected database contained 4 profiles, 5 observed participants, 365 product events and 0 feedback rows before verification. These are separate record counts. Earlier reviews require their original data source or export.
 
-[Login screen](../docs/review/account-flow/login.png) · [Signup screen](../docs/review/account-flow/signup.png)
+## Deployment and verification
 
-All test accounts, recorded events and feedback fixtures were isolated from production. Scale timings do not establish production capacity. Live student counts, review ratings and historical adoption totals were not independently verified because database access was unavailable.
+The merged source is in varshithyadav17/nextrole. Vercel serves https://nextrole-scout.vercel.app. The existing nextrole-backend Render service handles authentication and API forwarding. The original Site retains D1/R2, maintenance and scheduled operations.
 
-## Production dependency and rollout order
+Data-service version 42 applied additive migration 0016_email_password_accounts.sql. The email activation flag is enabled on Render. The current owner-access update is published through the same data-service workflow.
 
-The GitHub repository is `varshithyadav17/nextrole`; the Vercel project is `nextrole-scout`; the Render service is `srv-dbdk6fvb9u1s73a010u0`. Durable D1/R2 remains attached to the original Site `appgprj_6ad224df721c8191ba6037935d0477b6`.
+Verification completed during this rollout includes TypeScript, isolated workflow and Worker transport checks, 37 Node email gateway checks, 19 generated Render/frontend boundary checks, production builds, and browser review of sign-up switching and password visibility.
 
-The connected account could retrieve Site metadata (version 41), but source write credentials, runtime configuration and database reads returned `project_not_found`; NextRole was absent from the account's owned Site list. Continue from the account that owns the original Site. Do not recreate the database or replace the production bridge/encryption secrets to work around this access boundary.
-
-1. Open the original Site's current source with its authorized write credential. Compare it with this candidate before applying the changes; preserve hosted-only changes, its project ID, bindings, schedules, secrets and migration history.
-2. Confirm a backup/rollback path and inspect applied migrations. Apply only pending additive migrations, including `0016_email_password_accounts.sql`, through the normal Site deployment workflow. The new table does not change existing account IDs or analytics records.
-3. Publish the updated data-service source, including `/api/bridge/email`, Google identity linking safeguards, password-method status, owner authorization and recorded-only analytics endpoints. Verify these using the existing trusted bridge configuration.
-4. Merge the reviewed source and deploy the generated Render tier with `NEXTROLE_EMAIL_ENABLED=false`. Set that flag to `true` only after the data-service migration and endpoint have been verified. Preserve every other environment variable; no new service or paid plan is required by this candidate.
-5. Deploy the generated Vercel frontend to the existing project, with the existing Render, storage and app origins. No new credential belongs in frontend environment variables.
-6. Verify a new email account, incorrect password, sign-out/sign-in, an existing Google account, explicit linking and owner access. Confirm that a student cannot access `/admin` or another workspace. Check saved-job/file continuity before releasing widely.
-7. Compare admin counts, rating numerators/denominators, feedback messages and exports with the actual records. Historical values require those records; this change does not backfill adoption or create reviews. Observe the sanitized callback diagnostics if Google still fails.
-
-Keep the pull request in draft until the original data service is accessible and the rollout can be completed. The email activation flag defaults to false so a partial deployment cannot pretend that a disconnected email method is working.
-
-References: [Node crypto](https://nodejs.org/docs/latest-v22.x/api/crypto.html#cryptoscryptpassword-salt-keylen-options-callback), [OWASP password storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#scrypt).
+Live checks confirmed enabled email/Google methods, invalid signup rejection, incorrect/unknown password rejection, cross-origin rejection, protected admin/report routes, and Google's authorization page with no provider configuration error. Real-account Google consent and callback completion require the account holder. Successful signup and password login were exercised with isolated database fixtures.
