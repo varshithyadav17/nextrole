@@ -9,7 +9,8 @@ import {pruneTransientData,productCleanupStatus} from '../../lib/rate-limit';
 import {loadSources,sourceFingerprint} from '../../lib/source-registry';
 import {discoveryMetrics} from '../../lib/discovery-metrics';
 import {advanceDiscovery,discoveryStatus} from '../../lib/discovery-sync';
-import {importAnalytics} from '../../lib/analytics-import';
+import {importAnalytics,importedSummary,readImportedReport} from '../../lib/analytics-import';
+import {issueAnalyticsUpload} from '../../lib/analytics-import-upload';
 import {PublicError} from '../../lib/errors';
 import {z} from 'zod';
 export const dynamic='force-dynamic';
@@ -47,7 +48,7 @@ export async function POST(request:Request){
    if(sources.cached&&!sources.sourcesPending){details=await refreshSavedDetails();alerts=await processAlertBatch();push=await drainPushBatch();cleanup=await pruneTransientData();}
    const search=sources.sourcesPending?{pending:false,deferred:true}:await advanceDiscovery();
    const delivery=await deliveryStatus();
-   value={...sources,search,details,alerts,push,delivery,cleanup,workPending:search.pending||cleanup.pending||!!sources.sourcesPending||details.pending||delivery.alertsPending||!!delivery.push?.due};
+   value={...sources,search,details,alerts,push,delivery,cleanup,importUpload:await issueAnalyticsUpload(),workPending:search.pending||cleanup.pending||!!sources.sourcesPending||details.pending||delivery.alertsPending||!!delivery.push?.due};
    await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('schedule',JSON.stringify({enabled:true,times:['09:00','14:00','19:00'],timezone:'Asia/Kolkata',transport:'owner-mcp'})).run();
   }else{
    const SOURCES=await loadSources(),SOURCE_REGISTRY=sourceFingerprint(SOURCES);
@@ -56,7 +57,8 @@ export async function POST(request:Request){
    const sources=await rows<{id:string;success:number;count:number;checked_at:string}>('SELECT id,success,count,checked_at,error FROM source_runs');
    const progress=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_sweep');let sourceProgress=null;try{const state=progress?JSON.parse(progress.value):null;sourceProgress=state?{checked:state.cursor,total:SOURCES.length,complete:state.complete&&state.registry===SOURCE_REGISTRY,startedAt:state.startedAt}:null;}catch{}
    const privateFiles=await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files');const automation=await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state');
-   value={ok:true,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
+   const imported=await readImportedReport();
+   value={ok:true,importedAnalytics:imported?importedSummary(imported):null,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
   }
   return result({content:[{type:'text',text:JSON.stringify(value)}]});
  }catch(error){return result({isError:true,content:[{type:'text',text:name==='nextrole_import_analytics'?(error instanceof PublicError?error.message:error instanceof z.ZodError?'Invalid import data.':'The import could not complete. Previously accepted pages are preserved; inspect import status and retry.'):'The source update could not complete. Saved student data is preserved. Try again or inspect source health.'}]});}

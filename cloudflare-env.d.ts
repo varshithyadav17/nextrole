@@ -3,6 +3,7 @@ declare namespace Cloudflare {
     DB?: D1Database;
     BUCKET?: R2Bucket;
     NEXTROLE_OWNER_EMAIL?: string;
+    NEXTROLE_ANALYTICS_IMPORT_SCOPE?: string;
     KEYRING_ENCRYPTION_KEY?: string;
     VAPID_PUBLIC_KEY?: string;
     VAPID_PRIVATE_KEY?: string;

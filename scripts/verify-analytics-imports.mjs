@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import path from 'node:path';
 const sha=value=>createHash('sha256').update(value).digest('hex');
 export async function verifyAnalyticsImports({database,bucket,check}){
- const originalUser=globalThis.__nextroleTestUser,originalOwner=globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL,originalBucket=globalThis.__nextroleTestEnv.BUCKET;
+ const originalUser=globalThis.__nextroleTestUser,originalOwner=globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL,originalBucket=globalThis.__nextroleTestEnv.BUCKET,originalScope=globalThis.__nextroleTestEnv.NEXTROLE_ANALYTICS_IMPORT_SCOPE;
  globalThis.__nextroleTestEnv.BUCKET=bucket;
  const {importAnalytics,readImportedReport}=await import('../lib/analytics-import.ts'),api=await import('../app/api/host/imports/route.ts'),mcp=await import('../app/mcp/route.ts');
  try{
@@ -19,6 +19,18 @@ export async function verifyAnalyticsImports({database,bucket,check}){
   for(const source of sources)for(const sheet of [...new Set(all.filter(r=>r.source===source.sha256).map(r=>r.sheet))])source.sheets.push({name:sheet,rows:all.filter(r=>r.source===source.sha256&&r.sheet===sheet).length,headerRow:sheet==='User Database'?6:5,columns:{A:'identifier'}});
   const raw=Buffer.from(JSON.stringify(all)),manifest={version:1,title:'Isolated import verification',totalRows:all.length,sources,pages:[{index:0,sha256:sha(raw),rows:all.length}]},packet=gzipSync(raw).toString('base64');
   const started=await importAnalytics('begin',manifest),id=started.id;
+  const scope={id,manifestSHA256:sha(JSON.stringify(manifest)),expiresAt:Date.now()+60000};globalThis.__nextroleTestEnv.NEXTROLE_ANALYTICS_IMPORT_SCOPE=JSON.stringify(scope);
+  const {issueAnalyticsUpload}=await import('../lib/analytics-import-upload.ts'),upload=await import('../app/api/host/imports/upload/route.ts'),permit=await issueAnalyticsUpload();
+  const uploadRequest=(operation,payload,token=permit.token,origin=null)=>upload.POST(new Request('https://nextrole.test/api/host/imports/upload',{method:'POST',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{}),...(origin?{Origin:origin}:{})},body:JSON.stringify({operation,payload:typeof payload==='string'?payload:JSON.stringify(payload)})}));
+  check((await uploadRequest('status',{id},null)).status===401,'Upload packets require a scoped permission before parsing private data.');
+  check((await uploadRequest('status',{id},'x'.repeat(43))).status===401,'A forged upload token cannot read import progress or write rows.');
+  check((await uploadRequest('status',{id:'0'.repeat(64)})).status===403,'Upload permissions cannot access another import.');
+  check((await uploadRequest('begin',{...manifest,title:'Changed manifest'})).status===403,'Upload permissions bind the exact manifest text and cannot start modified sources.');
+  check((await uploadRequest('status',{id},permit.token,'https://other.example')).status===403,'Cross-origin upload attempts are rejected.');
+  check((await uploadRequest('begin',JSON.stringify(manifest))).ok,'A scoped permission accepts the exact owner-configured source manifest.');
+  globalThis.__nextroleTestEnv.NEXTROLE_ANALYTICS_IMPORT_SCOPE=JSON.stringify({...scope,expiresAt:Date.now()-1});
+  check((await uploadRequest('status',{id})).status===401,'Expired runtime upload scopes immediately reject the same token.');
+  globalThis.__nextroleTestEnv.NEXTROLE_ANALYTICS_IMPORT_SCOPE=JSON.stringify(scope);
   check(started.state==='pending'&&started.sourceRows===0,'Imports begin as private, incomplete batches.');
   await importAnalytics('begin',manifest);
   check((await database.prepare('SELECT COUNT(*) as n FROM analytics_imports WHERE id=?').bind(id).first()).n===1,'Beginning the same source files twice does not duplicate an import.');
@@ -28,7 +40,9 @@ export async function verifyAnalyticsImports({database,bucket,check}){
   const before=await database.prepare('SELECT (SELECT COUNT(*) FROM email_accounts) as accounts,(SELECT COUNT(*) FROM product_events) as events').first();
   await importAnalytics('append',{id,page:0,packed:packet});const repeated=await importAnalytics('append',{id,page:0,packed:packet});
   check(repeated.replayed&&(await database.prepare('SELECT COUNT(*) as n FROM analytics_import_rows WHERE import_id=?').bind(id).first()).n===all.length,'Replaying accepted pages preserves exactly one copy of every row.');
-  const finished=await importAnalytics('finalize',{id}),again=await importAnalytics('finalize',{id}),report=await readImportedReport(id),s=report.sources[0];
+  const finished=await (await uploadRequest('finalize',{id})).json(),again=await importAnalytics('finalize',{id}),report=await readImportedReport(id),s=report.sources[0];
+  check((await uploadRequest('status',{id})).status===401,'Successful finalization revokes its temporary upload permission.');
+  check((await issueAnalyticsUpload()).alreadyImported,'Completed sources cannot mint another upload permission.');
   check(finished.state==='complete'&&again.alreadyImported,'Finalization is resumable and idempotent.');
   check(s.profileRows===3&&report.sources[1].profileRows===1,'Source snapshots are analyzed separately even when names match.');
   check(s.windows['30'].active===2&&s.windows['7'].active===2,'Activity dates are recovered from IDs and users are deduplicated per day.');
@@ -66,5 +80,5 @@ export async function verifyAnalyticsImports({database,bucket,check}){
    await database.prepare('DELETE FROM analytics_import_pages WHERE import_id=?').bind(begun.id).run();await database.prepare('DELETE FROM analytics_import_rows WHERE import_id=?').bind(begun.id).run();await database.prepare('DELETE FROM analytics_imports WHERE id=?').bind(begun.id).run();
   }
   await database.prepare('DELETE FROM analytics_import_pages WHERE import_id=?').bind(id).run();await database.prepare('DELETE FROM analytics_import_rows WHERE import_id=?').bind(id).run();await database.prepare('DELETE FROM analytics_imports WHERE id=?').bind(id).run();
- }finally{globalThis.__nextroleTestUser=originalUser;globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=originalOwner;globalThis.__nextroleTestEnv.BUCKET=originalBucket;}
+ }finally{globalThis.__nextroleTestUser=originalUser;globalThis.__nextroleTestEnv.NEXTROLE_OWNER_EMAIL=originalOwner;globalThis.__nextroleTestEnv.BUCKET=originalBucket;globalThis.__nextroleTestEnv.NEXTROLE_ANALYTICS_IMPORT_SCOPE=originalScope;}
 }
