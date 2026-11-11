@@ -9,19 +9,24 @@ import {pruneTransientData,productCleanupStatus} from '../../lib/rate-limit';
 import {loadSources,sourceFingerprint} from '../../lib/source-registry';
 import {discoveryMetrics} from '../../lib/discovery-metrics';
 import {advanceDiscovery,discoveryStatus} from '../../lib/discovery-sync';
+import {importAnalytics} from '../../lib/analytics-import';
+import {PublicError} from '../../lib/errors';
+import {z} from 'zod';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'no-store'};
 const tools=[
+ {name:'nextrole_import_analytics',description:'Owner-only, resumable import of supplied workbook snapshots into private historical analytics. Operations: begin (manifest JSON), append (id/page/gzip-base64 packed rows JSON), file (id/source/base64 original workbook JSON), finalize (id JSON), status (id JSON). Checksums and source labels preserved. Never creates login accounts, live usage events or sends email.',inputSchema:{type:'object',properties:{operation:{type:'string',enum:['begin','append','file','finalize','status']},payload:{type:'string',maxLength:1100000,description:'JSON-encoded operation data.'}},required:['operation','payload'],additionalProperties:false},annotations:{readOnlyHint:false,destructiveHint:false,idempotentHint:true,openWorldHint:false}},
  {name:'nextrole_send_daily_digests',description:'Process up to five opted-in nightly job emails after 21:00 Asia/Kolkata, only when the host has explicitly activated its email service. Sends email through the configured provider. Owner only. No inbox reading, application submission or LLM calls.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:false,destructiveHint:false,idempotentHint:true,openWorldHint:true}},
  {name:'nextrole_refresh_status',description:'Read NextRole source refresh time, listing counts and source health. Owner only. Contains no student profiles, API keys or application history.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false}},
  {name:'nextrole_refresh_sources',description:'Refresh NextRole public feeds and, only if the host has explicitly enabled it, request-capped SerpApi job discovery. Generate opted-in updates and preserve saved student decisions. Owner only. No LLM calls, student API keys, application submissions, sharing changes or redeployment.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:false,destructiveHint:false,idempotentHint:true,openWorldHint:true}}
 ];
 export async function POST(request:Request){
  const origin=request.headers.get('origin');if(origin&&origin!==new URL(request.url).origin&&origin!=='https://chatgpt.com')return Response.json({error:'Origin is not allowed.'},{status:403,headers});
- let body:any;try{body=await requestJSON(request,8192);}catch{return Response.json({error:'Invalid JSON.'},{status:400,headers});}
+ let body:any;try{body=await requestJSON(request,1200000);}catch{return Response.json({error:'Invalid JSON.'},{status:400,headers});}
  if(!body||Array.isArray(body)||body.jsonrpc!=='2.0')return Response.json({error:'Invalid JSON-RPC request.'},{status:400,headers});
  const id=typeof body.id==='string'||typeof body.id==='number'?body.id:null;
  const result=(value:unknown)=>Response.json({jsonrpc:'2.0',id,result:value},{headers});
+ if(body.method==='server/discover')return result({supportedVersions:['2026-07-28'],capabilities:{tools:{}}});
  if(body.method==='initialize')return result({protocolVersion:['2024-11-05','2025-03-26','2025-06-18','2025-11-25'].includes(body.params?.protocolVersion)?body.params.protocolVersion:'2025-03-26',capabilities:{tools:{}},serverInfo:{name:'NextRole',version:'1.0.0'}});
  if(body.method==='notifications/initialized'||body.method==='notifications/cancelled')return new Response(null,{status:202,headers});
  if(body.method==='ping')return result({});
@@ -32,10 +37,10 @@ export async function POST(request:Request){
  const name=body.params?.name;
  if(!tools.some(t=>t.name===name))return Response.json({jsonrpc:'2.0',id,error:{code:-32602,message:'Unknown tool.'}},{headers});
  const args=body.params?.arguments;
- if(args&&(typeof args!=='object'||Array.isArray(args)||Object.keys(args).length))return result({isError:true,content:[{type:'text',text:'This tool accepts no arguments.'}]});
+ if(name!=='nextrole_import_analytics'&&args&&(typeof args!=='object'||Array.isArray(args)||Object.keys(args).length))return result({isError:true,content:[{type:'text',text:'This tool accepts no arguments.'}]});
  try{
   let value:unknown;
-  if(name==='nextrole_send_daily_digests'){value=await drainDigests();}else if(name==='nextrole_refresh_sources'){
+  if(name==='nextrole_import_analytics'){const input=z.object({operation:z.enum(['begin','append','file','finalize','status']),payload:z.string().max(1100000)}).strict().parse(args);value=await importAnalytics(input.operation,JSON.parse(input.payload));}else if(name==='nextrole_send_daily_digests'){value=await drainDigests();}else if(name==='nextrole_refresh_sources'){
    const sources=await syncJobs();
    let cleanup=await productCleanupStatus();
    let details={checked:0,pending:false,failures:0},alerts={processed:0,notifications:0,pending:false,busy:false},push={processed:0,sent:0,pending:false,busy:false};
@@ -54,5 +59,5 @@ export async function POST(request:Request){
    value={ok:true,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
   }
   return result({content:[{type:'text',text:JSON.stringify(value)}]});
- }catch{return result({isError:true,content:[{type:'text',text:'The source update could not complete. Saved student data is preserved. Try again or inspect source health.'}]});}
+ }catch(error){return result({isError:true,content:[{type:'text',text:name==='nextrole_import_analytics'?(error instanceof PublicError?error.message:error instanceof z.ZodError?'Invalid import data.':'The import could not complete. Previously accepted pages are preserved; inspect import status and retry.'):'The source update could not complete. Saved student data is preserved. Try again or inspect source health.'}]});}
 }

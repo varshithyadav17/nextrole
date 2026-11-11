@@ -11,7 +11,7 @@ import {demoAdminReport} from '../../../lib/admin-demo';
 export const dynamic='force-dynamic';
 const respond=(d:unknown,s=200)=>Response.json(d,{status:s,headers:{'Cache-Control':'no-store'}});
 export async function GET(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);if(!isHost(user))return respond({error:'This workspace is available only to the NextRole host.'},403);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);if(!isHost(user))return respond({error:'This workspace is available only to the NextRole host.'},403);
  try{
   const p=new URL(request.url).searchParams;
   if(p.get('view')==='inbox')return respond(await hostInbox(z.object({page:z.coerce.number().int().min(0).max(10000),kind:z.enum(['all','apply','monthly','help','idea']),status:z.enum(['all','new','reviewing','planned','resolved']),category:z.enum(['all',...FEEDBACK_CATEGORIES]),q:z.string().trim().max(100)}).parse({page:p.get('page')||0,kind:p.get('kind')||'all',status:p.get('status')||'all',category:p.get('category')||'all',q:p.get('q')||''})));

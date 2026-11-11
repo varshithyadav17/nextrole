@@ -108,3 +108,14 @@ export const googleAccounts=sqliteTable('google_accounts',{
 export const emailAccounts=sqliteTable('email_accounts',{
  email:text('email').primaryKey(),userId:text('user_id').notNull().unique(),passwordHash:text('password_hash').notNull(),userData:text('user_data').notNull(),createdAt:text('created_at').notNull(),
 });
+
+// Private historical sources, separate from login accounts and measured product events.
+export const analyticsImports=sqliteTable('analytics_imports',{
+ id:text('id').primaryKey(),title:text('title').notNull(),createdAt:text('created_at').notNull(),manifest:text('manifest').notNull(),manifestHash:text('manifest_hash').notNull(),state:text('state').notNull().default('pending'),report:text('report'),
+});
+export const analyticsImportRows=sqliteTable('analytics_import_rows',{
+ importId:text('import_id').notNull().references(()=>analyticsImports.id),sourceSha:text('source_sha').notNull(),sheet:text('sheet').notNull(),rowNumber:integer('row_number').notNull(),data:text('data').notNull(),
+},t=>[primaryKey({columns:[t.importId,t.sourceSha,t.sheet,t.rowNumber]}),index('analytics_import_rows_order_idx').on(t.importId,t.sourceSha,t.sheet,t.rowNumber)]);
+export const analyticsImportPages=sqliteTable('analytics_import_pages',{
+ importId:text('import_id').notNull().references(()=>analyticsImports.id),page:integer('page').notNull(),digest:text('digest').notNull(),rowCount:integer('row_count').notNull(),
+},t=>[primaryKey({columns:[t.importId,t.page]})]);
