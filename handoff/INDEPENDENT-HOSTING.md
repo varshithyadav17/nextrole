@@ -36,6 +36,8 @@ Keep its output private and outside Git. An authenticated owner calls the Site M
 
 When a client cannot yet discover the new MCP command, an owner can temporarily configure `NEXTROLE_ANALYTICS_IMPORT_SCOPE` with the import ID, SHA-256 of the exact manifest text, and expiry timestamp. The existing owner-authenticated maintenance tool then issues a 15-minute upload capability for that source set. `scripts/upload-analytics-import.py` reads that token from hidden stdin and submits to `/api/host/imports/upload`. This is not a login session or an admin permission: other imports, different manifests, changed source bytes, and account operations are rejected. Finalization revokes the capability. Remove the temporary runtime scope after transfer. Never commit a scope token, source rows or original files.
 
+For a Sites access boundary, the script optionally accepts `siteAccessToken` in the same hidden stdin object, sent only to that Site as `OAI-Sites-Authorization`. This platform credential supplies no visitor identity and cannot authorize the import without the separate exact-source upload token. HTTP redirects are rejected so neither credential is forwarded to another destination.
+
 ## Next migration: storage into the owner's account
 
 The smallest change is to keep the SQLite model and move the D1 database, R2 bucket and storage Worker into an owner-controlled Cloudflare account. This avoids rewriting the application around MongoDB or changing the existing user IDs. PostgreSQL is another option, but requires a deliberate data-access and SQL migration.

@@ -8,9 +8,10 @@ import json
 import sys
 import termios
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import Request, HTTPRedirectHandler, build_opener
 
 
 def main():
@@ -27,7 +28,9 @@ def main():
             hidden[3] &= ~termios.ECHO
             termios.tcsetattr(sys.stdin, termios.TCSANOW, hidden)
         print('Ready for upload permission JSON on stdin (input is hidden).', flush=True)
-        token = json.loads(sys.stdin.readline())['token']
+        credentials = json.loads(sys.stdin.readline())
+        token = credentials['token']
+        site_access = credentials.get('siteAccessToken')
     finally:
         if settings:
             termios.tcsetattr(sys.stdin, termios.TCSANOW, settings)
@@ -35,19 +38,29 @@ def main():
         raise ValueError('Invalid upload permission.')
     directory = Path(args.directory)
 
+    class NoRedirects(HTTPRedirectHandler):
+        def redirect_request(self, request, fp, code, message, headers, new_url):
+            return None
+
+    opener = build_opener(NoRedirects())
+
     def send(operation, data):
         payload = data if isinstance(data, str) else json.dumps(data, ensure_ascii=False, separators=(',', ':'))
         body = json.dumps({'operation': operation, 'payload': payload}, ensure_ascii=False).encode()
         for attempt in range(3):
-            request = Request(args.origin + '/api/host/imports/upload', data=body, method='POST', headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'})
+            request = Request(args.origin + '/api/host/imports/upload', data=body, method='POST', headers={'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json', **({'OAI-Sites-Authorization': 'Bearer ' + site_access} if site_access else {})})
             try:
-                with urlopen(request, timeout=50) as response:
+                with opener.open(request, timeout=50) as response:
                     return json.load(response)
             except HTTPError as error:
                 if error.code >= 500 and attempt < 2:
                     time.sleep(attempt + 1)
                     continue
-                raise RuntimeError('Upload rejected with HTTP ' + str(error.code) + '; accepted pages are preserved.') from None
+                try:
+                    detail = json.loads(error.read(2000)).get('error', '')
+                except (ValueError, AttributeError):
+                    detail = ''
+                raise RuntimeError('Upload rejected with HTTP ' + str(error.code) + (': ' + detail if detail else '') + '; accepted pages are preserved.') from None
             except (URLError, TimeoutError):
                 if attempt == 2:
                     raise RuntimeError('Upload connection failed; accepted pages are preserved.') from None
@@ -66,10 +79,20 @@ def main():
             send('file', {'id': identifier, 'source': source['sha256'], 'data': file_data})
             print(json.dumps({'originalStored': source['sha256'], 'bytes': source['bytes']}), flush=True)
         pages = json.loads((directory / 'pages.json').read_text())
-        for index, packet in enumerate(pages):
-            send('append', packet)
-            if (index + 1) % 20 == 0 or index + 1 == len(pages):
-                print(json.dumps({'acceptedPages': index + 1, 'totalPages': len(pages)}), flush=True)
+        # Pages have independent immutable checksums; retries are safe in any order.
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            futures = [pool.submit(send, 'append', packet) for packet in pages]
+            accepted = 0
+            try:
+                for future in as_completed(futures):
+                    future.result()
+                    accepted += 1
+                    if accepted % 10 == 0 or accepted == len(pages):
+                        print(json.dumps({'acceptedPages': accepted, 'totalPages': len(pages)}), flush=True)
+            except Exception:
+                for future in futures:
+                    future.cancel()
+                raise
     result = send('finalize', {'id': identifier})
     print(json.dumps({'id': identifier, 'state': result['state'], 'sourceRows': result['sourceRows'], 'summary': result.get('summary')}), flush=True)
 
