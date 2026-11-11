@@ -7,7 +7,9 @@ import {deliveryStatus} from './alerts';
 import {FEATURE_LABELS} from './community-types';
 import {discoveryMetrics} from './discovery-metrics';
 import {adminAnalytics} from './admin-analytics';
-export async function hostMetrics(days:number,hostId:string){
+import {combineHostMetrics} from './combined-analytics';
+import {analyticsBaseline,baselineFeedback,type AdminFeedbackItem} from './combined-baseline';
+export async function recordedHostMetrics(days:number,hostId:string){
  const today=indiaDay(),start=shiftDay(today,1-days),week=shiftDay(today,-6),month=shiftDay(today,-29),mature=shiftDay(today,-7);
  const since=new Date(Date.parse(start+'T00:00:00Z')-330*60000).toISOString();
  const [active,features,daily,activation,retention,ratings,voices,themes,health,sourceRuns,sync,tracking,counts]=await Promise.all([
@@ -29,10 +31,15 @@ export async function hostMetrics(days:number,hostId:string){
  const totalOpen=await one<{n:number;oldest:string|null}>("SELECT COUNT(*) as n,MIN(created_at) as oldest FROM feedback WHERE status<>'resolved' AND user_id<>?",hostId);
  return {analytics,applicationValue,days,start,today,timezone:'Asia/Kolkata',generatedAt:new Date().toISOString(),trackingSince:tracking?.value||null,active,features:features.map(f=>({...f,label:FEATURE_LABELS[f.kind]||f.kind})),daily:Array.from({length:days},(_,i)=>{const day=shiftDay(start,i);return daily.find(d=>d.day===day)||{day,active:0,applyClicks:0,applied:0};}),activation,retention,ratings:{distribution:ratings,count:ratingCount,average,positive:ratings.filter(r=>r.rating>=4).reduce((n,r)=>n+r.n,0)},voices,themes,backlog:totalOpen,operations:{email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,...await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files')},automation:await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state'),cleanup,discovery:await discoveryMetrics(),sources:sourceRuns,lastSync:sync?.value||null,delivery:health,records:counts}};
 }
+export type RecordedHostMetrics=Awaited<ReturnType<typeof recordedHostMetrics>>;
+export async function hostMetrics(days:number,hostId:string){return combineHostMetrics(await recordedHostMetrics(days,hostId),hostId);}
 export async function hostInbox(filters:{page:number;kind:string;status:string;category:string;q:string}){
  const where:string[]=[],params:unknown[]=[];
  for(const key of ['kind','status','category'] as const)if(filters[key]!=='all'){where.push(key+'=?');params.push(filters[key]);}
  if(filters.q){where.push("(subject LIKE ? ESCAPE '\\' OR message LIKE ? ESCAPE '\\' OR needs LIKE ? ESCAPE '\\' OR difficulty LIKE ? ESCAPE '\\')");const q='%'+filters.q.replace(/[\\%_]/g,'\\$&')+'%';params.push(q,q,q,q);}
- const items=await rows('SELECT '+feedbackColumns+' FROM feedback'+(where.length?' WHERE '+where.join(' AND '):'')+' ORDER BY created_at DESC,id DESC LIMIT 26 OFFSET ?',...params,filters.page*25);
- return {items:items.slice(0,25),hasMore:items.length>25,page:filters.page};
+ const suffix=where.length?' WHERE '+where.join(' AND '):'',count=await one<{n:number}>('SELECT COUNT(*) as n FROM feedback'+suffix,...params),liveCount=count?.n||0,offset=filters.page*25;
+ const baseline=await analyticsBaseline(),query=filters.q.toLowerCase(),source=baseline&&filters.kind==='all'?baselineFeedback(baseline).filter(r=>(filters.status==='all'||r.status===filters.status)&&(filters.category==='all'||r.category===filters.category)&&(!query||[r.subject,r.message,r.needs,r.difficulty,r.source.name].some(v=>v.toLowerCase().includes(query)))):[];
+ const items:AdminFeedbackItem[]=offset<liveCount?await rows('SELECT '+feedbackColumns+' FROM feedback'+suffix+' ORDER BY created_at DESC,id DESC LIMIT 26 OFFSET ?',...params,offset):[];
+ if(items.length<26)items.push(...source.slice(Math.max(0,offset-liveCount),Math.max(0,offset-liveCount)+26-items.length));
+ return {items:items.slice(0,25),hasMore:offset+25<liveCount+source.length,page:filters.page};
 }

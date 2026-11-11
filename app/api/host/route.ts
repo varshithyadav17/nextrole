@@ -21,7 +21,7 @@ export async function GET(request:Request){
  }catch(e){return respond({error:e instanceof z.ZodError?'Choose a valid host view and date range.':'The host dashboard is temporarily unavailable. Please try again.'},e instanceof z.ZodError?400:503);}
 }
 export async function POST(request:Request){
- const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in with ChatGPT.'},401);if(!isHost(user))return respond({error:'Host access is required.'},403);
+ const user=await getChatGPTUser();if(!user)return respond({error:'Please sign in to NextRole.'},401);if(!isHost(user))return respond({error:'Host access is required.'},403);
  if(request.headers.get('origin')&&request.headers.get('origin')!==new URL(request.url).origin)return respond({error:'Use NextRole to update the inbox.'},403);
  try{
   if(!await allowRequest(user.userId,'feedback',30))return respond({error:'Please wait a minute before updating more feedback.'},429);

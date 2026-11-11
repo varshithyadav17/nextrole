@@ -16,6 +16,12 @@ This is not MongoDB. The current deployment is not yet fully independent of Site
 
 ## Workbook imports
 
+The default admin overview combines one canonical detailed workbook baseline with newly recorded application accounts, activity and feedback. Alternate directory versions are preserved without adding their totals again. Charts and totals refresh every 30 seconds while the owner dashboard is visible. Raw source browsing and backups remain under **Data sources & backups**.
+
+The combined profile/account count unions stored profiles, Google accounts, email accounts and observed account IDs before adding source records. Linking an additional sign-in method does not duplicate an app account. New registrations count before preference completion; activity counts require recorded activity and respect analytics opt-outs. Imported identities are not promoted into sign-in accounts or matched by names.
+
+Combined rating averages use response sums and counts across all available responses. Original source review dates are unavailable, so lifetime ratings are labelled separately from dated activity windows. Imported return cohorts only mature through their recorded coverage end; later app cohorts use current app observations. Source feature-days and app events are labelled observations, and unordered source reach is never described as an ordered conversion funnel. Original synthetic/fictional source labels remain in the dashboard and every export.
+
 The owner-only **Admin → Imported data** screen contains historical workbook snapshots, source provenance, source quality notes, normalized users and reviews, computed analytics, and private backup downloads.
 
 - `analytics_imports` stores immutable import manifests, completion state and computed reports.

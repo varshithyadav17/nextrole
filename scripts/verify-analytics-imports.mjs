@@ -66,6 +66,7 @@ export async function verifyAnalyticsImports({database,bucket,check}){
   const people=await (await get('people',{q:'u1@example.test'})).json();check(people.total===1&&people.items[0].id==='U1'&&!JSON.stringify(people).includes('placeholder'),'Owner user search returns normalized, password-free records.');
   const original=await get('original');check(original.ok&&sha(Buffer.from(await original.arrayBuffer()))===sources[0].sha256,'Private original workbook exports preserve exact source bytes.');
   const backup=await (await get('raw')).json();check(backup.rows.length===all.length&&JSON.stringify(backup).includes('private-test-placeholder'),'Only the explicit private raw backup preserves all source columns.');
+  const {verifyCombinedAnalytics}=await import('./verify-combined-analytics.mjs');await verifyCombinedAnalytics({database,check});
   // Optional private end-to-end fixture. Never commit workbook data or generated packets.
   if(process.env.NEXTROLE_IMPORT_FIXTURE){
    const directory=process.env.NEXTROLE_IMPORT_FIXTURE,load=name=>JSON.parse(readFileSync(path.join(directory,name),'utf8')),manifest=load('manifest.json'),begun=await importAnalytics('begin',manifest),packets=load('pages.json'),parts=load('files.json');

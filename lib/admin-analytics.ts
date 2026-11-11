@@ -23,7 +23,7 @@ export async function adminAnalytics(days:number,hostId:string){
  const current=periods.find(p=>p.period==='current')||{students:0,appliers:0,viewers:0,activeDays:0};
  const previous=periods.find(p=>p.period==='previous')||{students:0,appliers:0,viewers:0,activeDays:0};
  return {
-  dataMode:'live' as 'live'|'demo',demoLabel:null as string|null,coverage:{...coverage,trackingSince:tracking?.value||null,historyFloor:eventFloor,observedPeriodStart:start<trackedDay?trackedDay:start},
+  dataMode:'live' as 'live'|'demo'|'combined',demoLabel:null as string|null,coverage:{...coverage,trackingSince:tracking?.value||null,historyFloor:eventFloor,observedPeriodStart:start<trackedDay?trackedDay:start},
   comparison:{current,previous,previousStart,previousEnd,previousComplete},
   time:{seconds:time?.seconds||0,participants:time?.participants||0,medianSeconds:time?.medianSeconds??null,sections,daily:Array.from({length:days},(_,i)=>{const day=shiftDay(start,i);return timeDaily.find(d=>d.day===day)||{day,seconds:0,students:0};}),method:'Visible, focused, recently used time. Idle after 60 seconds. Per-account minute maximum prevents duplicate retries/tabs; switching tabs or dropped telemetry can undercount. Not time saved.'},
   retention,cohorts:cohorts.map(c=>({...c,cells:[c.w0,c.w1,c.w2,c.w3,c.w4].map((returned,w)=>({returned,eligible:c.size,mature:shiftDay(c.latest,w*7+6)<=today}))})),
