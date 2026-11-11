@@ -16,7 +16,8 @@ export default function SignInMethods({initial,returnTo}:{initial:Options;return
   return()=>{active=false;clearTimeout(timer);controller.abort();};
  },[attempt,initial]);
  return <div className="auth-methods">
-  {(options.googleReady||options.googleExternal)&&<><a className="google-signin" href={options.googleOrigin+'/auth/google?return_to='+encodeURIComponent(returnTo)} target="_top"><span aria-hidden="true" className="google-mark">G</span>Continue with Google</a><div className="login-divider"><span>or</span></div></>}
+  {/* The OAuth entry must be present on the first render, even while the health check is pending. */}
+  <a className="google-signin" href={options.googleOrigin+'/auth/google?return_to='+encodeURIComponent(returnTo)} target="_top"><span aria-hidden="true" className="google-mark">G</span>Continue with Google</a><div className="login-divider"><span>or</span></div>
   <h2>{mode==='login'?'Welcome back.':'Let’s get you started.'}</h2>
   <EmailForm key={mode} mode={mode} returnTo={returnTo} enabled={!!options.emailReady&&!checking}/>
   {!options.emailReady&&<p className="login-pending" role="status" aria-live="polite">{checking?'Connecting to sign-in…':options.serviceUnavailable?'Sign-in is temporarily unavailable. Please retry.':options.googleReady||options.googleExternal?'Email sign-in is being connected. You can continue with Google.':'Sign-in is temporarily unavailable. Please try again shortly.'}</p>}
