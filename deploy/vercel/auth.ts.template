@@ -3,10 +3,17 @@ import {redirect} from 'next/navigation';
 import {bridgeConfig,verifySession,safeReturnPath,type BridgeUser} from '../lib/bridge/session';
 export type ChatGPTUser=BridgeUser;
 export const SESSION_COOKIE='__Host-nextrole-session';
-export function serverConfig(){return bridgeConfig(process.env.NEXTROLE_BRIDGE_SECRET,process.env.NEXTROLE_BACKEND_ORIGIN,process.env.NEXTROLE_APP_ORIGIN);}
+export function serverConfig(){
+ const config=bridgeConfig(process.env.NEXTROLE_BRIDGE_SECRET,process.env.NEXTROLE_BACKEND_ORIGIN,process.env.NEXTROLE_APP_ORIGIN);
+ if(!config)return null;
+ // Session signatures and workspace IDs retain the original issuer after a Site domain change.
+ const storageOrigin=config.issuer==='https://nextrole-job-radar.ivorypine64.chatgpt.site'
+  ? 'https://nextrole-job-radar.varshithyadav-1720.chatgpt.site' : config.issuer;
+ return {...config,storageOrigin};
+}
 export async function sessionToken(){const config=serverConfig(),token=(await cookies()).get(SESSION_COOKIE)?.value||null;return config&&await verifySession(config,token)?token:null;}
 export async function getChatGPTUser():Promise<ChatGPTUser|null>{const config=serverConfig();return config?verifySession(config,(await cookies()).get(SESSION_COOKIE)?.value||null):null;}
-export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
-export function getSignInOptions(){return {googleReady:!!serverConfig()&&typeof process.env.GOOGLE_CLIENT_ID==='string'&&process.env.GOOGLE_CLIENT_ID.endsWith('.apps.googleusercontent.com')&&!!process.env.GOOGLE_CLIENT_SECRET&&process.env.GOOGLE_CLIENT_SECRET.length>=16,googleOnly:false,googleExternal:false,googleOrigin:''};}
+export async function requireChatGPTUser(returnTo:string){const user=await getChatGPTUser();if(user?.setupPending&&returnTo!=='/signup/complete')redirect('/signup/complete?return_to='+encodeURIComponent(safeReturnPath(returnTo)));if(user)return user;redirect('/login?return_to='+encodeURIComponent(safeReturnPath(returnTo)));}
+export function getSignInOptions(_defer=false){return {emailReady:!!serverConfig()&&process.env.NEXTROLE_EMAIL_ENABLED==='true',googleReady:!!serverConfig()&&typeof process.env.GOOGLE_CLIENT_ID==='string'&&process.env.GOOGLE_CLIENT_ID.endsWith('.apps.googleusercontent.com')&&!!process.env.GOOGLE_CLIENT_SECRET&&process.env.GOOGLE_CLIENT_SECRET.length>=16,googleOnly:false,googleExternal:false,googleOrigin:''};}
 export function chatGPTSignInPath(returnTo:string){return '/signin-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(returnTo));}
 export function chatGPTSignOutPath(returnTo='/'){return '/signout-with-chatgpt?return_to='+encodeURIComponent(safeReturnPath(returnTo));}

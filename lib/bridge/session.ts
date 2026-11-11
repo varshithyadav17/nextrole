@@ -1,5 +1,5 @@
 /** Shared, dependency-free Web Crypto protocol. No platform bypass credential is used. */
-export type BridgeUser={userId:string;email:string;displayName:string;fullName:string|null};
+export type BridgeUser={userId:string;email:string;displayName:string;fullName:string|null;setupPending?:boolean};
 export type BridgeConfig={secret:string;issuer:string;audience:string};
 const encoder=new TextEncoder();
 export const SESSION_SECONDS=24*60*60;
@@ -27,8 +27,8 @@ export async function verifySession(config:BridgeConfig,token:string|null,now=Ma
  try{if(!token||token.length>4096)return null;const [version,payload,signature,...extra]=token.split('.');if(version!=='v1'||extra.length||!await verifyProof(config,'session-v1',payload,signature))return null;
   const p=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(unbase64(payload)));
   if(p.typ!=='nextrole-session'||p.iss!==config.issuer||p.aud!==config.audience||!Number.isSafeInteger(p.exp)||!Number.isSafeInteger(p.iat)||p.iat>now+30||p.exp<=now||p.exp-p.iat!==SESSION_SECONDS||!validUser(p.user))return null;
-  return {userId:p.user.userId,email:p.user.email,fullName:p.user.fullName,displayName:p.user.fullName||p.user.email};
+  return {userId:p.user.userId,email:p.user.email,fullName:p.user.fullName,displayName:p.user.fullName||p.user.email,...(p.user.setupPending===true?{setupPending:true}:{})};
  }catch{return null;}
 }
-export function safeReturnPath(value:string){try{const u=new URL(value,'https://nextrole.local');if(!value.startsWith('/')||value.startsWith('//')||u.origin!=='https://nextrole.local'||/^\/(?:callback|login|auth|signin-with-chatgpt|signout-with-chatgpt)(?:\/|$)/.test(u.pathname))return '/';return u.pathname+u.search+u.hash;}catch{return '/';}}
+export function safeReturnPath(value:string){try{const u=new URL(value,'https://nextrole.local');if(!value.startsWith('/')||value.startsWith('//')||u.origin!=='https://nextrole.local'||/^\/(?:callback|login|signup|auth|signin-with-chatgpt|signout-with-chatgpt)(?:\/|$)/.test(u.pathname))return '/';return u.pathname+u.search+u.hash;}catch{return '/';}}
 export function exchangeValue(code:string,verifier:string,redirectUri:string){return [code,verifier,redirectUri].join('\n');}

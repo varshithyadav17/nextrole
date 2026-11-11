@@ -13,6 +13,7 @@ try{
  const auth=await load(backend,'app/chatgpt-auth.ts'),session=await load(backend,'lib/bridge/session.ts'),handlers=await load(backend,'lib/render-handlers.ts');
  check(!await auth.getChatGPTUser(),'Render ignores fabricated native identity and Site bypass headers.');
  check((await handlers.currentSession()).status===401,'Render session introspection rejects an unsigned browser.');
+ const legacyEntry=await handlers.signIn(new Request(process.env.NEXTROLE_APP_ORIGIN+'/signin-with-chatgpt?return_to=%2Faccount'));check(legacyEntry.status===303&&legacyEntry.headers.get('Location')===process.env.NEXTROLE_APP_ORIGIN+'/login?return_to=%2Faccount','Old sign-in links return to the normal login form without opening ChatGPT authentication.');
  const token=await session.issueSession(auth.serverConfig(),{userId:'render-fixture',email:'test@example.test',displayName:'Fixture',fullName:null});jar.set(auth.SESSION_COOKIE,token);
  globalThis.fetch=async(url,init)=>{calls++;last={url:String(url),init};return Response.json({state:{role:'host'}});};
  const own=await (await handlers.currentSession()).json();check(own.user.userId==='render-fixture'&&own.role==='host','Render verifies the signed identity and obtains the role from the authorized data service.');
@@ -20,6 +21,12 @@ try{
  const before=calls;check((await handlers.dataRequest(new Request('https://render.example/api/community',{method:'POST',headers:{origin:'https://evil.example'},body:'{}'}),'/api/community')).status===403&&calls===before,'Render canonical URL handling preserves cross-origin write rejection.');
  check((await handlers.dataRequest(new Request('https://render.example/api/community',{method:'POST',headers:{origin:process.env.NEXTROLE_APP_ORIGIN},body:'{}'}),'/api/community')).ok,'Render accepts a valid frontend-origin request with a verified session.');
  const front=await load(frontend,'app/chatgpt-auth.ts'),{renderProxy,renderOrigin}=await load(frontend,'lib/render-proxy.ts');
+ globalThis.fetch=async()=>Response.json({googleReady:true,googleOnly:false});
+ check((await front.getSignInOptions()).googleReady&&!(await front.getSignInOptions()).serviceUnavailable,'Configured Google sign-in remains available through the Render frontend.');
+ globalThis.fetch=async()=>Response.json({error:'Waking up'},{status:503});
+ check((await front.getSignInOptions()).serviceUnavailable,'A temporarily unavailable auth service is retryable, not reported as missing Google configuration.');
+ globalThis.fetch=async()=>Response.json({unexpected:true});
+ check((await front.getSignInOptions()).serviceUnavailable,'An invalid auth-options response cannot silently disable configured Google sign-in.');
  delete process.env.NEXTROLE_BRIDGE_SECRET;
  globalThis.fetch=async(url,init)=>{last={url:String(url),init};return Response.json({user:{userId:'render-fixture',email:'test@example.test',displayName:'Fixture',fullName:null},role:'host'});};
  check((await front.getChatGPTUser()).userId==='render-fixture','The frontend reads its own verified identity through Render without a signing secret.');
