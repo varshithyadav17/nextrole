@@ -1,4 +1,4 @@
-import {PDFDocument} from 'pdf-lib';
+import {PDFDocument,PDFName,PDFDict} from 'pdf-lib';
 export async function verifyAdminAnalytics({database,put,check}){
  const community=await import('../app/api/community/route.ts'),host=await import('../app/api/host/route.ts'),pdf=await import('../app/api/host/report/route.ts');
  const {indiaDay,shiftDay}=await import('../lib/product.ts');
@@ -43,5 +43,9 @@ export async function verifyAdminAnalytics({database,put,check}){
  check(response.ok&&response.headers.get('Content-Type')==='application/pdf'&&/^attachment; filename="NextRole_all_/.test(response.headers.get('Content-Disposition')),'The authenticated report uses the standard NextRole PDF filename.');
  const bytes=new Uint8Array(await response.arrayBuffer()),document=await PDFDocument.load(bytes);
  check(document.getPageCount()>=7&&document.getTitle()==='NextRole / Product analytics','The full report includes all sections, appendices and the regular analytics title.');
+ check(document.getPages().every(page=>{const x=document.context.lookup(page.node.Resources().get(PDFName.of('XObject')));return x instanceof PDFDict&&x.entries().some(([,ref])=>{const image=document.context.lookup(ref);return image.dict?.get(PDFName.of('Subtype'))?.toString()==='/Image'&&image.dict.get(PDFName.of('Width'))?.asNumber()===128;});}),'Every report page, including table continuations, contains the app logo.');
+ const embedded=document.getPages()[0].node.Resources().lookup(PDFName.of('Font'),PDFDict).entries().map(([,ref])=>document.context.lookup(ref).get(PDFName.of('BaseFont'))?.toString()||'');
+ check(embedded.some(name=>name.includes('NotoSans')),'Reports embed the professional report font rather than relying on a reader font substitution.');
+
  user('analytics-owner',true);check((await pdf.GET(new Request('https://nextrole.test/api/host/report?section=unknown'))).status===400,'Report sections are bounded to supported values.');
 }

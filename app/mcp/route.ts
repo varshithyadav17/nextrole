@@ -14,6 +14,7 @@ import {issueAnalyticsUpload} from '../../lib/analytics-import-upload';
 import {PublicError} from '../../lib/errors';
 import {z} from 'zod';
 import {hostMetrics} from '../../lib/host-metrics';
+import {adminReportDetails} from '../../lib/admin-report-data';
 import {getChatGPTUser} from '../chatgpt-auth';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'no-store'};
@@ -59,8 +60,9 @@ export async function POST(request:Request){
    const sources=await rows<{id:string;success:number;count:number;checked_at:string}>('SELECT id,success,count,checked_at,error FROM source_runs');
    const progress=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_sweep');let sourceProgress=null;try{const state=progress?JSON.parse(progress.value):null;sourceProgress=state?{checked:state.cursor,total:SOURCES.length,complete:state.complete&&state.registry===SOURCE_REGISTRY,startedAt:state.startedAt}:null;}catch{}
    const privateFiles=await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files');const automation=await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state');
-   const imported=await readImportedReport(),owner=await getChatGPTUser(),combined=owner&&imported?await hostMetrics(30,owner.userId):null;
-   value={ok:true,combinedAnalytics:combined?{sourceInfo:combined.sourceInfo,active:combined.active,profiles:combined.analytics.coverage.profiles,ratings:combined.ratings,retention:combined.analytics.retention,generatedAt:combined.generatedAt}:null,importedAnalytics:imported?importedSummary(imported):null,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
+   const imported=await readImportedReport(),owner=await getChatGPTUser(),combined=owner?await hostMetrics(30,owner.userId):null;
+   const analyticsReport=combined&&owner?{...combined,detail:await adminReportDetails(combined,owner.userId)}:null;
+   value={ok:true,analyticsReport,combinedAnalytics:combined?{sourceInfo:combined.sourceInfo,active:combined.active,profiles:combined.analytics.coverage.profiles,ratings:combined.ratings,retention:combined.analytics.retention,generatedAt:combined.generatedAt}:null,importedAnalytics:imported?importedSummary(imported):null,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
   }
   return result({content:[{type:'text',text:JSON.stringify(value)}]});
  }catch(error){return result({isError:true,content:[{type:'text',text:name==='nextrole_import_analytics'?(error instanceof PublicError?error.message:error instanceof z.ZodError?'Invalid import data.':'The import could not complete. Previously accepted pages are preserved; inspect import status and retry.'):'The source update could not complete. Saved student data is preserved. Try again or inspect source health.'}]});}

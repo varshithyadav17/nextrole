@@ -32,9 +32,16 @@ export async function verifyCombinedAnalytics({database,check}){
   const beforeNext=report.ratings.average;await rating('combined-review-two',5,'Another app response');const next=await hostMetrics(90,owner);
   check(next.ratings.count===report.ratings.count+1&&next.ratings.average!==beforeNext,'Later feedback updates the combined rating without reimporting the workbook.');
   check(next.sourceInfo.origin==='Database backup'&&next.sourceInfo.fileName==='NextRole_Activity_Backup.xlsx'&&!JSON.stringify(next).includes('private-test-placeholder'),'Totals use neutral backup labels without exposing password columns.');
-  const pdf=await PDFDocument.load(await buildAdminPDF(next,'all'));check(pdf.getTitle()==='NextRole / Product analytics','Exported reports use the regular NextRole analytics title.');
+  const {adminReportDetails}=await import('../lib/admin-report-data.ts');const detail=await adminReportDetails(next,owner);
+  check(detail.audience.profiles===next.sourceInfo.profileRecords&&detail.audience.segments.reduce((n,r)=>n+r.profiles,0)===next.sourceInfo.profileRecords,'Role segments cover the same combined profile population without double counting accounts.');
+  check(detail.audience.segments.reduce((n,r)=>n+r.active,0)===next.analytics.comparison.current.students,'Role-segment activity reconciles to the period active total.');
+  check(detail.feedback.written===next.sourceInfo.writtenResponses&&detail.feedback.ages.reduce((n,r)=>n+r.count,0)===next.backlog.n,'Written response and backlog-age populations reconcile with the dashboard, including undated records.');
+  check(detail.catalogue.total===detail.catalogue.open+detail.catalogue.unknown&&detail.catalogue.deadlineKnown<=detail.catalogue.total,'Catalogue coverage uses deduplicated vacancy denominators.');
+  check(!/"(?:user_id|email|password|message)":/.test(JSON.stringify(detail)),'Report detail returns aggregate groups and no identity or message fields.');
+  const detailed={...next,detail};
+  const pdf=await PDFDocument.load(await buildAdminPDF(detailed,'all'));check(pdf.getTitle()==='NextRole / Product analytics','Exported reports use the regular NextRole analytics title.');
   const replay=await hostMetrics(90,owner);check(replay.sourceInfo.profileRecords===next.sourceInfo.profileRecords&&replay.ratings.count===next.ratings.count,'Refreshing the dashboard never inserts another copy of the baseline.');
-  if(process.env.NEXTROLE_COMBINED_QA_REPORT)writeFileSync(process.env.NEXTROLE_COMBINED_QA_REPORT,JSON.stringify(next),{flag:'wx'});
+  if(process.env.NEXTROLE_COMBINED_QA_REPORT)writeFileSync(process.env.NEXTROLE_COMBINED_QA_REPORT,JSON.stringify(detailed),{flag:'wx'});
   await database.prepare('INSERT INTO email_accounts(email,user_id,password_hash,user_data,created_at) VALUES(?,?,?,?,?)').bind('linked-count@example.test',actor,'isolated-unusable-test-hash',JSON.stringify({userId:actor,email:'linked-count@example.test',displayName:'Fixture'}),stamp).run();
   const linked=await hostMetrics(90,owner);check(linked.sourceInfo.profileRecords===next.sourceInfo.profileRecords,'Adding another sign-in method for an existing account never counts it twice.');
   await database.prepare('INSERT INTO email_accounts(email,user_id,password_hash,user_data,created_at) VALUES(?,?,?,?,?)').bind('signup-count@example.test','email:combined-signup','isolated-unusable-test-hash',JSON.stringify({userId:'email:combined-signup',email:'signup-count@example.test',displayName:'Fixture'}),stamp).run();

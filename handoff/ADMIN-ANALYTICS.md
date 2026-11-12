@@ -40,8 +40,13 @@ The minute ledger expires after 48 hours; daily aggregates and feature events af
 
 - Download report: an actual PDF generated with vector charts, data tables, definitions, coverage and daily appendix. More exports provides a section PDF, summary CSV and full aggregate JSON.
 - Live PDF endpoint independently verifies owner access, rate-limits report generation and responds with private/no-store headers. It omits private feedback text, identities and résumés.
-- `lib/admin-demo.ts` is a pure synthetic aggregate fixture. It never writes database rows. Demo views, filenames, PDF metadata and every PDF page carry synthetic labels.
-- Portfolio numbers, including the 973 illustrative profiles, are not actual campus adoption. Report images in the README are exports from this fixture, not browser screenshots or production evidence.
-- `/demo/admin` can export its synthetic report entirely in the browser. It has no live-data switch and cannot send support replies.
 
-Run `node --experimental-strip-types scripts/export-demo-report.mjs` to reproduce the synthetic sample report. Standard type checks and the isolated `scripts/verify-app.mjs` suite cover metric denominators, time idempotency, opt-out, deletion, identity boundaries and PDF authorization. Synthetic concurrency checks do not certify production capacity. Real browser/device QA is still required.
+The report uses embedded Noto Sans fonts and the existing NextRole logo/name on every page. The white A4 layout uses consistent colors for activity, retention, ratings and workflow stages. Charts are vector graphics; tables wrap complete labels and repeat headers when they continue onto another page.
+
+The full PDF includes scorecards, dated activity/time trends, profile composition, retention heatmaps, feature and assistant workflows, application reach, feedback, support, catalogue quality, source health, delivery, role segments and exact analytical appendices. Comparisons require complete matching windows. Empty cohorts and unavailable measurements stay blank rather than becoming zero outcomes.
+
+`adminReportDetails` reads aggregate-only audience, segment, written-feedback, timing and catalogue detail for PDF exports. It does not write data or return identities, messages or credentials. The owner-only status tool also returns this same report snapshot in `analyticsReport`, allowing authorized offline reproduction of an export.
+
+The admin workspace has one All data view. The legacy demo URL redirects to the authenticated admin page. Isolated regression fixtures remain test-only.
+
+For an authorized offline export, keep the owner status response private and run `node --experimental-strip-types scripts/export-admin-report.mjs --snapshot /private/status.json --out /private/NextRole_Analytics.pdf`. This uses `analyticsReport` from the same owner-checked reporting calculations; it is not an independent source of metrics.
