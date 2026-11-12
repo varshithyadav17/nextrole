@@ -39,7 +39,7 @@ export async function hostInbox(filters:{page:number;kind:string;status:string;c
  if(filters.q){where.push("(subject LIKE ? ESCAPE '\\' OR message LIKE ? ESCAPE '\\' OR needs LIKE ? ESCAPE '\\' OR difficulty LIKE ? ESCAPE '\\')");const q='%'+filters.q.replace(/[\\%_]/g,'\\$&')+'%';params.push(q,q,q,q);}
  const suffix=where.length?' WHERE '+where.join(' AND '):'',count=await one<{n:number}>('SELECT COUNT(*) as n FROM feedback'+suffix,...params),liveCount=count?.n||0,offset=filters.page*25;
  const baseline=await analyticsBaseline(),query=filters.q.toLowerCase(),source=baseline&&filters.kind==='all'?baselineFeedback(baseline).filter(r=>(filters.status==='all'||r.status===filters.status)&&(filters.category==='all'||r.category===filters.category)&&(!query||[r.subject,r.message,r.needs,r.difficulty,r.source.name].some(v=>v.toLowerCase().includes(query)))):[];
- const items:AdminFeedbackItem[]=offset<liveCount?await rows('SELECT '+feedbackColumns+' FROM feedback'+suffix+' ORDER BY created_at DESC,id DESC LIMIT 26 OFFSET ?',...params,offset):[];
+ const items:AdminFeedbackItem[]=offset<liveCount?await rows('SELECT '+feedbackColumns+",COALESCE((SELECT NULLIF(TRIM(json_extract(p.data,'$.name')),'') FROM profiles p WHERE p.user_id=feedback.user_id),'') as authorName FROM feedback"+suffix+' ORDER BY created_at DESC,id DESC LIMIT 26 OFFSET ?',...params,offset):[];
  if(items.length<26)items.push(...source.slice(Math.max(0,offset-liveCount),Math.max(0,offset-liveCount)+26-items.length));
  return {items:items.slice(0,25),hasMore:offset+25<liveCount+source.length,page:filters.page};
 }

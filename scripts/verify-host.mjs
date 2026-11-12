@@ -42,6 +42,7 @@ export async function verifyHost({database,put,GET,check,job,defaultProfile}){
  check(!!helpId,'General help reaches the host inbox.');
  let inbox=await (await ownerGet('?view=inbox&kind=help&q=PM+test+help')).json();
  check(inbox.items.some(f=>f.id===helpId)&&!JSON.stringify(inbox).includes('feedback-a@'),'Host feedback contains submitted content without exposing account email or unrelated private data.');
+ check(inbox.items.find(f=>f.id===helpId)?.authorName==='Feedback student'&&!inbox.items.some(f=>'user_id' in f||'email' in f),'Only the owner inbox receives saved profile names, without account identifiers or email fields.');
  const review={id:helpId,status:'reviewing',priority:'high',reply:'Thanks. We are reviewing the filter.'};
  check((await ownerSave(review,false)).status===403,'A student cannot review or reply to a host ticket.');
  check((await ownerSave(review)).ok,'The owner can prioritize a query and reply in the app.');

@@ -7,7 +7,8 @@ export type BaselineActivity={user:string;day:string;features:string[];minutes:n
 export type AnalyticsBaseline={id:string;importedAt:string;versions:number;source:ImportedSourceReport;activity:BaselineActivity[];days:Map<string,Set<string>>;firstDay:string|null};
 export type CombinedSourceInfo={label:string;origin:string;fileName:string;importId:string;canonicalSource:string;versions:number;sourceProfiles:number;appAccounts:number;profileRecords:number;writtenResponses:number;observedThrough:string|null;quality:string[];definitions:string[]};
 export type ImportedAdminFeedback={id:string;kind:'imported';rating:number|null;category:string;subject:string;message:string;needs:string;difficulty:string;status:string;priority:string;created_at:null;updated_at:string;source:{origin:string;fileName:string;name:string;originalStatus:string}};
-export type AdminFeedbackItem=FeedbackRow|ImportedAdminFeedback;
+export type LiveAdminFeedback=FeedbackRow&{authorName?:string};
+export type AdminFeedbackItem=LiveAdminFeedback|ImportedAdminFeedback;
 let cached:AnalyticsBaseline|null=null;
 const text=(v:unknown)=>v==null?'':String(v).trim();
 const present=(v:unknown)=>v!==undefined&&v!==null&&v!==''&&v!==false&&v!==0;
