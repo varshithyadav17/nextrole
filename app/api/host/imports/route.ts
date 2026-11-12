@@ -12,8 +12,8 @@ export async function GET(request:Request){
   const report=await readImportedReport(input.id);
   if(!report)return respond({imports:await listAnalyticsImports(),report:null});
   if(input.view==='original'){if(!input.source)throw new PublicError('Choose a source workbook.');return downloadImportedSource(report.id,input.source);}
-  if(input.view==='raw')return new Response(JSON.stringify({id:report.id,rows:await readImportedRows(report.id)}),{headers:{'Content-Type':'application/json','Content-Disposition':'attachment; filename="NextRole_private_source_rows.json"','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
-  if(input.view==='json')return new Response(JSON.stringify(report,null,2),{headers:{'Content-Type':'application/json','Content-Disposition':'attachment; filename="NextRole_imported_analytics.json"','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
+  if(input.view==='raw')return new Response(JSON.stringify({id:report.id,rows:await readImportedRows(report.id)}),{headers:{'Content-Type':'application/json','Content-Disposition':'attachment; filename="NextRole_Database_Records.json"','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
+  if(input.view==='json')return new Response(JSON.stringify(report,null,2),{headers:{'Content-Type':'application/json','Content-Disposition':'attachment; filename="NextRole_Backup_Summary.json"','Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});
   if(input.view==='summary')return respond({imports:await listAnalyticsImports(),report:importedSummary(report)});
   const source=report.sources.find(s=>s.sha256===input.source);if(!source)throw new PublicError('Choose a source workbook.');
   const records=input.view==='people'?source.people:source.feedback,query=input.q.toLowerCase(),filtered=query?records.filter(r=>Object.values(r).some(v=>typeof v==='string'&&v.toLowerCase().includes(query))):records;

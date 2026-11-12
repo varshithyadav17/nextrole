@@ -34,14 +34,14 @@ export async function verifyAdminAnalytics({database,put,check}){
  check(result.analytics.cohorts.every(c=>c.cells.length===5),'Cohorts expose maturity for all five observation weeks.');
  check(!result.analytics.comparison.previousComplete,'Insufficient historical coverage suppresses misleading previous-period comparisons.');
  check(result.analytics.journey.visited>=result.analytics.journey.viewed&&result.analytics.journey.viewed>=result.analytics.journey.opened&&result.analytics.journey.opened>=result.analytics.journey.applied,'Ordered journey counts are monotonically decreasing.');
- const demo=await (await get('?mode=demo&days=30')).json();
- check(demo.analytics.dataMode==='demo'&&demo.analytics.demoLabel.includes('SYNTHETIC')&&demo.operations===null,'Demo data is labelled and never mixed with live operational data.');
- check((await get('?mode=demo','a-student',false)).status===403,'The private demo API still requires owner authorization.');
+ const legacyMode=await (await get('?mode=demo&days=30')).json();
+ check(legacyMode.analytics.dataMode==='live'&&legacyMode.analytics.coverage.profiles===result.analytics.coverage.profiles&&legacyMode.ratings.count===result.ratings.count,'An old demo-mode URL returns the same current analytics without a demo dataset.');
+ check((await get('?mode=demo','a-student',false)).status===403,'Legacy query parameters never bypass owner authorization.');
  user(null);check((await pdf.GET(new Request('https://nextrole.test/api/host/report'))).status===401,'Anonymous users cannot download real analytics PDFs.');
  user('a-student');check((await pdf.GET(new Request('https://nextrole.test/api/host/report?mode=demo'))).status===403,'Students cannot use the private admin report endpoint.');
  user('analytics-owner',true);const response=await pdf.GET(new Request('https://nextrole.test/api/host/report?mode=demo&days=30'));
- check(response.ok&&response.headers.get('Content-Type')==='application/pdf'&&response.headers.get('Content-Disposition').includes('SYNTHETIC-DEMO'),'The authenticated report is a direct PDF download with a synthetic filename.');
+ check(response.ok&&response.headers.get('Content-Type')==='application/pdf'&&/^attachment; filename="NextRole_all_/.test(response.headers.get('Content-Disposition')),'The authenticated report uses the standard NextRole PDF filename.');
  const bytes=new Uint8Array(await response.arrayBuffer()),document=await PDFDocument.load(bytes);
- check(document.getPageCount()>=7&&document.getTitle().includes('SYNTHETIC DEMO'),'The full report includes all sections, appendices and a synthetic title.');
+ check(document.getPageCount()>=7&&document.getTitle()==='NextRole / Product analytics','The full report includes all sections, appendices and the regular analytics title.');
  user('analytics-owner',true);check((await pdf.GET(new Request('https://nextrole.test/api/host/report?section=unknown'))).status===400,'Report sections are bounded to supported values.');
 }

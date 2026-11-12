@@ -64,7 +64,7 @@ export async function verifyAnalyticsImports({database,bucket,check}){
   globalThis.__nextroleTestUser={userId:'import-owner',email:'import-owner@example.test',displayName:'Owner'};
   const summary=await (await get()).json();check(summary.report.sources[0].people===undefined&&summary.report.sources[0].feedback===undefined,'Summary responses omit individual profiles and reviews.');
   const people=await (await get('people',{q:'u1@example.test'})).json();check(people.total===1&&people.items[0].id==='U1'&&!JSON.stringify(people).includes('placeholder'),'Owner user search returns normalized, password-free records.');
-  const original=await get('original');check(original.ok&&sha(Buffer.from(await original.arrayBuffer()))===sources[0].sha256,'Private original workbook exports preserve exact source bytes.');
+  const original=await get('original');check(original.headers.get('Content-Disposition').includes('NextRole_Activity_Backup.xlsx'),'Backup downloads use a neutral filename.');check(original.ok&&sha(Buffer.from(await original.arrayBuffer()))===sources[0].sha256,'Private original workbook exports preserve exact source bytes.');
   const backup=await (await get('raw')).json();check(backup.rows.length===all.length&&JSON.stringify(backup).includes('private-test-placeholder'),'Only the explicit private raw backup preserves all source columns.');
   const {verifyCombinedAnalytics}=await import('./verify-combined-analytics.mjs');await verifyCombinedAnalytics({database,check});
   // Optional private end-to-end fixture. Never commit workbook data or generated packets.

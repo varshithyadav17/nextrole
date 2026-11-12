@@ -7,7 +7,6 @@ import {feedbackColumns} from '../../../lib/product';
 import {FEEDBACK_CATEGORIES} from '../../../lib/community-types';
 import {requestJSON} from '../../../lib/request-json';
 import {allowRequest} from '../../../lib/rate-limit';
-import {demoAdminReport} from '../../../lib/admin-demo';
 export const dynamic='force-dynamic';
 const respond=(d:unknown,s=200)=>Response.json(d,{status:s,headers:{'Cache-Control':'no-store'}});
 export async function GET(request:Request){
@@ -16,7 +15,6 @@ export async function GET(request:Request){
   const p=new URL(request.url).searchParams;
   if(p.get('view')==='inbox')return respond(await hostInbox(z.object({page:z.coerce.number().int().min(0).max(10000),kind:z.enum(['all','apply','monthly','help','idea']),status:z.enum(['all','new','reviewing','planned','resolved']),category:z.enum(['all',...FEEDBACK_CATEGORIES]),q:z.string().trim().max(100)}).parse({page:p.get('page')||0,kind:p.get('kind')||'all',status:p.get('status')||'all',category:p.get('category')||'all',q:p.get('q')||''})));
   const days=z.coerce.number().refine(n=>[7,30,90].includes(n)).parse(p.get('days')||30);
-  if(p.get('mode')==='demo')return respond(demoAdminReport(days));
   return respond(await hostMetrics(days,user.userId));
  }catch(e){return respond({error:e instanceof z.ZodError?'Choose a valid host view and date range.':'The host dashboard is temporarily unavailable. Please try again.'},e instanceof z.ZodError?400:503);}
 }

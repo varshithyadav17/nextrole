@@ -31,8 +31,8 @@ export async function verifyCombinedAnalytics({database,check}){
   check(sourceInbox.items.some(i=>i.kind==='imported'&&i.message==='A useful review')&&liveInbox.items.some(i=>i.kind==='apply'&&i.message==='New app response'),'The same feedback inbox searches imported responses and incoming app feedback.');
   const beforeNext=report.ratings.average;await rating('combined-review-two',5,'Another app response');const next=await hostMetrics(90,owner);
   check(next.ratings.count===report.ratings.count+1&&next.ratings.average!==beforeNext,'Later feedback updates the combined rating without reimporting the workbook.');
-  check(JSON.stringify(next.sourceInfo).includes('synthetic')&&!JSON.stringify(next).includes('private-test-placeholder'),'Unified totals retain source provenance without exposing password columns.');
-  const pdf=await PDFDocument.load(await buildAdminPDF(next,'all'));check(pdf.getTitle().includes('COMBINED')&&pdf.getTitle().toLowerCase().includes('synthetic'),'Exported reports retain the combined-data and original source labels.');
+  check(next.sourceInfo.origin==='Database backup'&&next.sourceInfo.fileName==='NextRole_Activity_Backup.xlsx'&&!JSON.stringify(next).includes('private-test-placeholder'),'Totals use neutral backup labels without exposing password columns.');
+  const pdf=await PDFDocument.load(await buildAdminPDF(next,'all'));check(pdf.getTitle()==='NextRole / Product analytics','Exported reports use the regular NextRole analytics title.');
   const replay=await hostMetrics(90,owner);check(replay.sourceInfo.profileRecords===next.sourceInfo.profileRecords&&replay.ratings.count===next.ratings.count,'Refreshing the dashboard never inserts another copy of the baseline.');
   if(process.env.NEXTROLE_COMBINED_QA_REPORT)writeFileSync(process.env.NEXTROLE_COMBINED_QA_REPORT,JSON.stringify(next),{flag:'wx'});
   await database.prepare('INSERT INTO email_accounts(email,user_id,password_hash,user_data,created_at) VALUES(?,?,?,?,?)').bind('linked-count@example.test',actor,'isolated-unusable-test-hash',JSON.stringify({userId:actor,email:'linked-count@example.test',displayName:'Fixture'}),stamp).run();

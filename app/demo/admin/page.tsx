@@ -1,3 +1,3 @@
-import HostDashboard from '../../host-dashboard';
-export const metadata={title:'NextRole / Synthetic admin demo',robots:{index:false,follow:false}};
-export default function DemoAdmin(){return <HostDashboard demoOnly/>;}
+import {redirect} from 'next/navigation';
+export const metadata={title:'NextRole / Admin',robots:{index:false,follow:false}};
+export default function AdminRedirect(){redirect('/admin');}

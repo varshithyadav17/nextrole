@@ -8,17 +8,16 @@
 
 NextRole helps students and early-career candidates discover relevant openings, prepare a truthful résumé with ScoutX, and keep their applications moving. Its separate admin workspace closes the product loop: understand adoption, diagnose drop-offs, listen to students and decide what to improve.
 
-[Open NextRole](https://nextrole-job-radar.ivorypine64.chatgpt.site) · [Explore the synthetic admin demo](https://nextrole-job-radar.ivorypine64.chatgpt.site/demo/admin) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
+[Open NextRole](https://nextrole-scout.vercel.app) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
 
 > **Browser-reviewed frontend:** Jobs, Saved and page-specific Scout actions now follow the approved design composition. Desktop/mobile review fixed menu layering, wrapping, row spacing and focus behavior. [Design QA and evidence](design-qa.md) document the scoped pass, synthetic fixtures and remaining real-device/provider checks. [Release notes](handoff/FIDELITY-REVIEW.md) separate native publication from the unresolved Vercel team authorization.
 
-> **Portfolio data disclosure:** the public admin demonstration and report images below use synthetic, illustrative data. The example 973 profiles are not a real campus adoption claim. Live admin analytics use actual recorded activity and are owner-only.
 
 ## The product problem
 
 Students lose time repeatedly checking career pages, discovering ineligible roles, preparing the same information and remembering what they applied for. A larger feed alone does not solve that problem. NextRole prioritizes clear eligibility evidence, persistent choices and an actionable application workflow.
 
-The product hypothesis is that reliable relevance and a simpler preparation/tracking loop help candidates act on suitable opportunities and return when they need to. That hypothesis needs real pilot evidence; feature availability and demo charts do not prove product-market fit.
+The product hypothesis is that reliable relevance and a simpler preparation/tracking loop help candidates act on suitable opportunities and return when they need to. That hypothesis needs real pilot evidence; feature availability alone does not prove product-market fit.
 
 ## What a student can do
 
@@ -44,18 +43,6 @@ The host opens a dedicated `/admin` experience instead of a personal job feed. S
 | Operations | Source health, refresh age, delivery backlog, email readiness, retained records and analytics cleanup | Is the experience dependable enough to expand? |
 
 The dashboard offers an actual PDF report, a PDF for each section, summary CSV and full aggregate JSON. Reports include definitions, observation coverage and exact daily tables. Private messages and student identities do not appear in analytics reports.
-
-### Exported report previews
-
-These are rendered pages from the actual PDF exporter using the synthetic fixture. They are **report previews, not browser screenshots or evidence of production adoption**. Browser screenshots should be captured from the demo after real device QA.
-
-![Synthetic NextRole analytics report: overview](docs/images/admin-report-overview-demo.png)
-
-| Retention report | Feature adoption report |
-| --- | --- |
-| ![Synthetic retention report](docs/images/admin-report-retention-demo.png) | ![Synthetic feature report](docs/images/admin-report-features-demo.png) |
-
-[Download the synthetic sample PDF](output/pdf/NextRole_Synthetic_Demo_Analytics.pdf)
 
 ## How a product manager would measure it
 
@@ -108,10 +95,9 @@ pnpm dev
 pnpm typecheck
 node --experimental-strip-types scripts/verify-app.mjs
 node --experimental-strip-types scripts/verify-app.mjs --scale
-node --experimental-strip-types scripts/export-demo-report.mjs
 ```
 
-`/demo/admin` works with synthetic data and no student/provider credentials. Live APIs require real identity and configured storage. Native hosting uses the repository's existing Sites build integration. To prepare a conventional frontend or the Render service:
+Admin analytics require owner identity and configured storage. The workspace has one All data view with automatic refresh and private database backups. Native hosting uses the repository's existing Sites build integration. To prepare a conventional frontend or the Render service:
 
 ```bash
 node scripts/prepare-vercel.mjs --out /absolute/empty/frontend
@@ -130,7 +116,7 @@ Real Google sign-in, real browser/device accessibility, campus concurrency, prov
 
 ## Source map
 
-- `app/host-dashboard.tsx`, `app/admin.css`: dedicated analytics workspace and synthetic demo.
+- `app/host-dashboard.tsx`, `app/admin.css`: dedicated owner analytics workspace.
 - `lib/admin-analytics.ts`, `lib/host-metrics.ts`: aggregate queries and coverage.
 - `app/use-active-time.ts`, `lib/activity.ts`, migration `0015`: active-time estimate and atomic deduplication.
 - `lib/admin-pdf.ts`: vector PDF report and methodology appendix.

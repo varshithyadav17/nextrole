@@ -3,6 +3,7 @@ import {z} from 'zod';
 import {db,one,rows} from './store';
 import {PublicError} from './errors';
 import {analyzeImportedRows} from './imported-analytics-model';
+import {analyticsBackupFileName} from './analytics-labels';
 import type {ImportManifest,ImportRow,ImportedReport,ImportedSummary} from './imported-analytics-types';
 
 const hash=z.string().regex(/^[a-f0-9]{64}$/);
@@ -21,8 +22,8 @@ async function batchFor(id:string){const batch=await one<Batch>('SELECT * FROM a
 async function progress(id:string){const {batch,manifest}=await batchFor(id);const p=await one<{pages:number;sourceRows:number}>('SELECT COUNT(*) as pages,COALESCE(SUM(row_count),0) as sourceRows FROM analytics_import_pages WHERE import_id=?',id);return {id,state:batch.state,receivedPages:p?.pages||0,expectedPages:manifest.pages.length,sourceRows:p?.sourceRows||0,expectedRows:manifest.totalRows,sources:manifest.sources.map(s=>({sha256:s.sha256,fileName:s.fileName,origin:s.origin}))};}
 export function importedSummary(report:ImportedReport):ImportedSummary{return {...report,sources:report.sources.map(({people,feedback,...source})=>source)};}
 export async function readImportedRows(id:string){const result:ImportRow[]=[];for(let offset=0;;offset+=500){const page=await rows<{data:string}>('SELECT data FROM analytics_import_rows WHERE import_id=? ORDER BY source_sha,sheet,row_number LIMIT 500 OFFSET ?',id,offset);result.push(...page.map(r=>JSON.parse(r.data) as ImportRow));if(page.length<500)break;}return result;}
-export async function listAnalyticsImports(){return rows<{id:string;title:string;created_at:string;state:string}>('SELECT id,title,created_at,state FROM analytics_imports ORDER BY created_at DESC,id DESC LIMIT 50');}
-export async function readImportedReport(id?:string|null){const batch=id?await one<Batch>("SELECT * FROM analytics_imports WHERE id=? AND state='complete'",id):await one<Batch>("SELECT * FROM analytics_imports WHERE state='complete' ORDER BY created_at DESC,id DESC LIMIT 1");if(!batch?.report)return null;return JSON.parse(batch.report) as ImportedReport;}
+export async function listAnalyticsImports(){const imports=await rows<{id:string;title:string;created_at:string;state:string}>('SELECT id,title,created_at,state FROM analytics_imports ORDER BY created_at DESC,id DESC LIMIT 50');return imports.map(batch=>({...batch,title:'NextRole Database Backup'}));}
+export async function readImportedReport(id?:string|null){const batch=id?await one<Batch>("SELECT * FROM analytics_imports WHERE id=? AND state='complete'",id):await one<Batch>("SELECT * FROM analytics_imports WHERE state='complete' ORDER BY created_at DESC,id DESC LIMIT 1");if(!batch?.report)return null;const report=JSON.parse(batch.report) as ImportedReport;return {...report,title:'NextRole Database Backup',sources:report.sources.map(source=>({...source,fileName:analyticsBackupFileName(source),origin:'Database backup'}))};}
 
 /** Called only after the MCP route verifies the owner. No account or live event writes. */
 export async function importAnalytics(operation:string,payload:unknown){
@@ -69,4 +70,4 @@ export async function importAnalytics(operation:string,payload:unknown){
  await db().prepare("UPDATE analytics_imports SET state='complete',report=? WHERE id=? AND state='pending'").bind(JSON.stringify(report),id).run();
  return {ok:true,...await progress(id),summary:importedSummary(report)};
 }
-export async function downloadImportedSource(id:string,sha:string){hash.parse(id);hash.parse(sha);const {manifest}=await batchFor(id),source=manifest.sources.find(s=>s.sha256===sha);if(!source)throw new PublicError('Source workbook not found.',404);if(!env.BUCKET)throw new PublicError('Private file storage is unavailable.',503);const file=await env.BUCKET.get(objectKey(id,sha));if(!file)throw new PublicError('Source workbook not found.',404);return new Response(file.body,{headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(source.fileName)}`,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});}
+export async function downloadImportedSource(id:string,sha:string){hash.parse(id);hash.parse(sha);const {manifest}=await batchFor(id),source=manifest.sources.find(s=>s.sha256===sha);if(!source)throw new PublicError('Source workbook not found.',404);if(!env.BUCKET)throw new PublicError('Private file storage is unavailable.',503);const file=await env.BUCKET.get(objectKey(id,sha));if(!file)throw new PublicError('Source workbook not found.',404);return new Response(file.body,{headers:{'Content-Type':'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','Content-Disposition':`attachment; filename*=UTF-8''${encodeURIComponent(analyticsBackupFileName(source))}`,'Cache-Control':'private, no-store','X-Content-Type-Options':'nosniff'}});}
