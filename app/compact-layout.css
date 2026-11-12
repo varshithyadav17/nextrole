@@ -129,3 +129,34 @@
  .app-shell .workspace{margin:0;width:100%}.app-shell .main-content{padding:0}
  .app-shell .scout-page-heading h1,.app-shell .scout-jobs-hero h1{font-size:30px}
 }
+
+/* Keep the first-run header inside the same content gutter as its fields.
+   The illustration participates in layout instead of covering heading text. */
+.app-shell .profile-form.onboarding{width:100%;max-width:760px;min-width:0;margin:32px auto 40px;padding:0;border:0;background:transparent;overflow:visible}
+.app-shell .profile-form.onboarding .onboarding-intro{display:grid;grid-template-columns:minmax(0,1fr) 172px;grid-template-areas:'label scout' 'title scout' 'summary scout';column-gap:24px;min-height:0;padding:8px 30px 24px}
+.app-shell .onboarding .onboarding-intro>.eyebrow{grid-area:label;min-width:0}
+.app-shell .onboarding .onboarding-intro>h1{grid-area:title;min-width:0;max-width:100%}
+.app-shell .onboarding .onboarding-intro>p{grid-area:summary;min-width:0}
+.app-shell .onboarding .scout-onboarding-moment{grid-area:scout;position:static;inset:auto;width:172px;max-width:100%;margin:0;align-self:center;justify-self:end}
+.app-shell .onboarding>.form-hint{margin:0 30px 12px}
+.app-shell .onboarding>.setup-steps{flex-wrap:wrap;padding-left:30px;padding-right:30px;gap:10px 20px}
+.app-shell .onboarding>.form-footer{padding-left:30px;padding-right:30px}
+.app-shell .onboarding .profile-fields,.app-shell .onboarding .choice{min-width:0}
+.app-shell .onboarding .choice{white-space:normal;overflow-wrap:anywhere}
+@media(max-width:1000px){
+ .app-shell .profile-form.onboarding .onboarding-intro{grid-template-columns:minmax(0,1fr) 128px;column-gap:20px}
+ .app-shell .onboarding .scout-onboarding-moment{width:128px}
+}
+@media(max-width:760px){
+ .app-shell .profile-form.onboarding{margin-top:24px}
+ .app-shell .profile-form.onboarding .onboarding-intro{padding-left:22px;padding-right:22px}
+ .app-shell .onboarding>.form-hint{margin-left:22px;margin-right:22px}
+ .app-shell .onboarding>.setup-steps,.app-shell .onboarding>.form-footer{padding-left:22px;padding-right:22px}
+}
+@media(max-width:600px){
+ .app-shell .profile-form.onboarding .onboarding-intro{grid-template-columns:minmax(0,1fr) 88px;grid-template-areas:'label scout' 'title title' 'summary summary';padding-left:19px;padding-right:19px;column-gap:14px}
+ .app-shell .onboarding .onboarding-intro>.eyebrow{align-self:center}
+ .app-shell .onboarding .scout-onboarding-moment{width:88px}
+ .app-shell .onboarding>.form-hint{margin-left:19px;margin-right:19px}
+ .app-shell .onboarding>.setup-steps,.app-shell .onboarding>.form-footer{padding-left:19px;padding-right:19px}
+}
