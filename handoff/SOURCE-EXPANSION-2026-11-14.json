@@ -1,0 +1,959 @@
+{
+  "checkedAt": "2026-11-13T21:17:09.146Z",
+  "schedule": {
+    "times": [
+      "10:00",
+      "18:00"
+    ],
+    "timezone": "Asia/Kolkata"
+  },
+  "previousCompanies": 20,
+  "previousSources": 22,
+  "addedCompanies": 31,
+  "configuredCompanies": 51,
+  "configuredSources": 53,
+  "verification": "Read-only checks through the actual production feed adapters. No database or student credentials used. Counts describe public feeds at check time, not eligible graduate roles.",
+  "permissionReferences": {
+    "greenhouse": "https://docs.greenhouse.io/job-board.html",
+    "lever": "https://github.com/lever/postings-api",
+    "ashby": "https://developers.ashbyhq.com/docs/public-job-posting-api"
+  },
+  "results": [
+    {
+      "source": {
+        "id": "groww",
+        "company": "Groww",
+        "provider": "greenhouse",
+        "token": "groww",
+        "careerUrl": "https://job-boards.greenhouse.io/groww"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/groww/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:25.657Z",
+      "ok": true,
+      "jobs": 9,
+      "india": 9,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "inmobi",
+        "company": "InMobi",
+        "provider": "greenhouse",
+        "token": "inmobi",
+        "careerUrl": "https://job-boards.greenhouse.io/inmobi"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/inmobi/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:25.667Z",
+      "ok": true,
+      "jobs": 74,
+      "india": 41,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "devrev",
+        "company": "DevRev",
+        "provider": "greenhouse",
+        "token": "devrev",
+        "careerUrl": "https://job-boards.greenhouse.io/devrev"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/devrev/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:25.668Z",
+      "ok": true,
+      "jobs": 38,
+      "india": 18,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "sumologic",
+        "company": "Sumo Logic",
+        "provider": "greenhouse",
+        "token": "sumologic",
+        "careerUrl": "https://job-boards.greenhouse.io/sumologic"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/sumologic/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:25.669Z",
+      "ok": true,
+      "jobs": 23,
+      "india": 12,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "gitlab",
+        "company": "GitLab",
+        "provider": "greenhouse",
+        "token": "gitlab",
+        "careerUrl": "https://job-boards.greenhouse.io/gitlab"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/gitlab/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.190Z",
+      "ok": true,
+      "jobs": 250,
+      "india": 35,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "twilio",
+        "company": "Twilio",
+        "provider": "greenhouse",
+        "token": "twilio",
+        "careerUrl": "https://job-boards.greenhouse.io/twilio"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/twilio/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.190Z",
+      "ok": true,
+      "jobs": 115,
+      "india": 11,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "enterpret",
+        "company": "Enterpret",
+        "provider": "greenhouse",
+        "token": "enterpret",
+        "careerUrl": "https://job-boards.greenhouse.io/enterpret"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/enterpret/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.191Z",
+      "ok": true,
+      "jobs": 14,
+      "india": 7,
+      "indiaInternships": 2,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "fourkites",
+        "company": "FourKites",
+        "provider": "greenhouse",
+        "token": "fourkites",
+        "careerUrl": "https://job-boards.greenhouse.io/fourkites"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/fourkites/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.191Z",
+      "ok": true,
+      "jobs": 12,
+      "india": 4,
+      "indiaInternships": 1,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "sigmoid",
+        "company": "Sigmoid",
+        "provider": "greenhouse",
+        "token": "sigmoid",
+        "careerUrl": "https://job-boards.greenhouse.io/sigmoid"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/sigmoid/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.823Z",
+      "ok": true,
+      "jobs": 39,
+      "india": 34,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "emergentlabsinc",
+        "company": "Emergent Labs",
+        "provider": "greenhouse",
+        "token": "emergentlabsinc",
+        "careerUrl": "https://job-boards.greenhouse.io/emergentlabsinc"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/emergentlabsinc/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.824Z",
+      "ok": true,
+      "jobs": 49,
+      "india": 43,
+      "indiaInternships": 2,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "phonepe",
+        "company": "PhonePe",
+        "provider": "greenhouse",
+        "token": "phonepe",
+        "careerUrl": "https://job-boards.greenhouse.io/phonepe"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/phonepe/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.825Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "postman",
+        "company": "Postman",
+        "provider": "greenhouse",
+        "token": "postman",
+        "careerUrl": "https://job-boards.greenhouse.io/postman"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/postman/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.825Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "rubrik",
+        "company": "Rubrik",
+        "provider": "greenhouse",
+        "token": "rubrik",
+        "careerUrl": "https://job-boards.greenhouse.io/rubrik"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/rubrik/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.964Z",
+      "ok": true,
+      "jobs": 178,
+      "india": 34,
+      "indiaInternships": 3,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "fivetran",
+        "company": "Fivetran",
+        "provider": "greenhouse",
+        "token": "fivetran",
+        "careerUrl": "https://job-boards.greenhouse.io/fivetran"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/fivetran/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.964Z",
+      "ok": true,
+      "jobs": 188,
+      "india": 20,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "netradyne",
+        "company": "Netradyne",
+        "provider": "greenhouse",
+        "token": "netradyne",
+        "careerUrl": "https://job-boards.greenhouse.io/netradyne"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/netradyne/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.964Z",
+      "ok": true,
+      "jobs": 43,
+      "india": 28,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "mongodb",
+        "company": "MongoDB",
+        "provider": "greenhouse",
+        "token": "mongodb",
+        "careerUrl": "https://job-boards.greenhouse.io/mongodb"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/mongodb/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:34.965Z",
+      "ok": true,
+      "jobs": 391,
+      "india": 73,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "druva",
+        "company": "Druva",
+        "provider": "greenhouse",
+        "token": "druva",
+        "careerUrl": "https://job-boards.greenhouse.io/druva"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/druva/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:36.026Z",
+      "ok": true,
+      "jobs": 24,
+      "india": 10,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "stripe",
+        "company": "Stripe",
+        "provider": "greenhouse",
+        "token": "stripe",
+        "careerUrl": "https://job-boards.greenhouse.io/stripe"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:36.027Z",
+      "ok": true,
+      "jobs": 787,
+      "india": 42,
+      "indiaInternships": 1,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "okta",
+        "company": "Okta",
+        "provider": "greenhouse",
+        "token": "okta",
+        "careerUrl": "https://job-boards.greenhouse.io/okta"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/okta/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:36.027Z",
+      "ok": true,
+      "jobs": 363,
+      "india": 100,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "netskope",
+        "company": "Netskope",
+        "provider": "greenhouse",
+        "token": "netskope",
+        "careerUrl": "https://job-boards.greenhouse.io/netskope"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/netskope/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:36.027Z",
+      "ok": true,
+      "jobs": 122,
+      "india": 19,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "databricks",
+        "company": "Databricks",
+        "provider": "greenhouse",
+        "token": "databricks",
+        "careerUrl": "https://job-boards.greenhouse.io/databricks"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/databricks/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:37.210Z",
+      "ok": false,
+      "error": "JSON size limit exceeded.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "elastic",
+        "company": "Elastic",
+        "provider": "greenhouse",
+        "token": "elastic",
+        "careerUrl": "https://job-boards.greenhouse.io/elastic"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/elastic/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:37.210Z",
+      "ok": true,
+      "jobs": 400,
+      "india": 19,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "cloudflare",
+        "company": "Cloudflare",
+        "provider": "greenhouse",
+        "token": "cloudflare",
+        "careerUrl": "https://job-boards.greenhouse.io/cloudflare"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:37.210Z",
+      "ok": false,
+      "error": "JSON size limit exceeded.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "suki",
+        "company": "Suki",
+        "provider": "greenhouse",
+        "token": "suki",
+        "careerUrl": "https://job-boards.greenhouse.io/suki"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/suki/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:37.210Z",
+      "ok": true,
+      "jobs": 11,
+      "india": 5,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "chargebee",
+        "company": "Chargebee",
+        "provider": "greenhouse",
+        "token": "chargebee",
+        "careerUrl": "https://job-boards.greenhouse.io/chargebee"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/chargebee/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:38.079Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "clevertap",
+        "company": "CleverTap",
+        "provider": "greenhouse",
+        "token": "clevertap",
+        "careerUrl": "https://job-boards.greenhouse.io/clevertap"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/clevertap/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:38.080Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "harness",
+        "company": "Harness",
+        "provider": "greenhouse",
+        "token": "harness",
+        "careerUrl": "https://job-boards.greenhouse.io/harness"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/harness/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:38.081Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "tekion",
+        "company": "Tekion",
+        "provider": "greenhouse",
+        "token": "tekion",
+        "careerUrl": "https://job-boards.greenhouse.io/tekion"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/tekion/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:38.081Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "rippling",
+        "company": "Rippling",
+        "provider": "greenhouse",
+        "token": "rippling",
+        "careerUrl": "https://job-boards.greenhouse.io/rippling"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/rippling/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:46.118Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "nutanix",
+        "company": "Nutanix",
+        "provider": "greenhouse",
+        "token": "nutanix",
+        "careerUrl": "https://job-boards.greenhouse.io/nutanix"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/nutanix/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:46.119Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "confluent",
+        "company": "Confluent",
+        "provider": "greenhouse",
+        "token": "confluent",
+        "careerUrl": "https://job-boards.greenhouse.io/confluent"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/confluent/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:46.119Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "airbnb",
+        "company": "Airbnb",
+        "provider": "greenhouse",
+        "token": "airbnb",
+        "careerUrl": "https://job-boards.greenhouse.io/airbnb"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/airbnb/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:46.119Z",
+      "ok": true,
+      "jobs": 214,
+      "india": 14,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "zscaler",
+        "company": "Zscaler",
+        "provider": "greenhouse",
+        "token": "zscaler",
+        "careerUrl": "https://job-boards.greenhouse.io/zscaler"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/zscaler/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:54.807Z",
+      "ok": true,
+      "jobs": 374,
+      "india": 78,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "hackerrank",
+        "company": "HackerRank",
+        "provider": "greenhouse",
+        "token": "hackerrank",
+        "careerUrl": "https://job-boards.greenhouse.io/hackerrank"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/hackerrank/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:54.808Z",
+      "ok": true,
+      "jobs": 31,
+      "india": 18,
+      "indiaInternships": 2,
+      "indiaEntryLevel": 1,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "hackerearth",
+        "company": "HackerEarth",
+        "provider": "greenhouse",
+        "token": "hackerearth",
+        "careerUrl": "https://job-boards.greenhouse.io/hackerearth"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/hackerearth/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:54.808Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "sprinklr",
+        "company": "Sprinklr",
+        "provider": "greenhouse",
+        "token": "sprinklr",
+        "careerUrl": "https://job-boards.greenhouse.io/sprinklr"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/sprinklr/jobs?content=true",
+      "checkedAt": "2026-11-13T21:13:54.808Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "fampay",
+        "company": "Fam",
+        "provider": "lever",
+        "token": "fampay",
+        "careerUrl": "https://jobs.lever.co/fampay"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/fampay?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:14:02.697Z",
+      "ok": true,
+      "jobs": 18,
+      "india": 18,
+      "indiaInternships": 2,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "mindtickle",
+        "company": "Mindtickle",
+        "provider": "lever",
+        "token": "mindtickle",
+        "careerUrl": "https://jobs.lever.co/mindtickle"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/mindtickle?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:14:02.698Z",
+      "ok": true,
+      "jobs": 20,
+      "india": 17,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 1,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "whatfix",
+        "company": "Whatfix",
+        "provider": "lever",
+        "token": "whatfix",
+        "careerUrl": "https://jobs.lever.co/whatfix"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/whatfix?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:14:02.698Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "leap",
+        "company": "Leap",
+        "provider": "lever",
+        "token": "leap",
+        "careerUrl": "https://jobs.lever.co/leap"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/leap?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:14:02.698Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "merklescience",
+        "company": "Merkle Science",
+        "provider": "lever",
+        "token": "merklescience",
+        "careerUrl": "https://jobs.lever.co/merklescience"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/merklescience?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:14:10.832Z",
+      "ok": true,
+      "jobs": 24,
+      "india": 7,
+      "indiaInternships": 2,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "atlan",
+        "company": "Atlan",
+        "provider": "ashby",
+        "token": "atlan",
+        "careerUrl": "https://jobs.ashbyhq.com/atlan"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/atlan",
+      "checkedAt": "2026-11-13T21:14:10.833Z",
+      "ok": true,
+      "jobs": 7,
+      "india": 3,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "composio",
+        "company": "Composio",
+        "provider": "ashby",
+        "token": "composio",
+        "careerUrl": "https://jobs.ashbyhq.com/composio"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/composio",
+      "checkedAt": "2026-11-13T21:14:10.833Z",
+      "ok": true,
+      "jobs": 31,
+      "india": 4,
+      "indiaInternships": 1,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "ema",
+        "company": "Ema",
+        "provider": "ashby",
+        "token": "ema",
+        "careerUrl": "https://jobs.ashbyhq.com/ema"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/ema",
+      "checkedAt": "2026-11-13T21:14:10.834Z",
+      "ok": true,
+      "jobs": 38,
+      "india": 15,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "rupeek",
+        "company": "Rupeek",
+        "provider": "ashby",
+        "token": "rupeek",
+        "careerUrl": "https://jobs.ashbyhq.com/rupeek"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/rupeek",
+      "checkedAt": "2026-11-13T21:14:19.097Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "truefoundry",
+        "company": "TrueFoundry",
+        "provider": "ashby",
+        "token": "truefoundry",
+        "careerUrl": "https://jobs.ashbyhq.com/truefoundry"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/truefoundry",
+      "checkedAt": "2026-11-13T21:14:19.098Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "portkey",
+        "company": "Portkey AI",
+        "provider": "ashby",
+        "token": "portkey",
+        "careerUrl": "https://jobs.ashbyhq.com/portkey"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/portkey",
+      "checkedAt": "2026-11-13T21:14:19.098Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "unifyapps",
+        "company": "UnifyApps",
+        "provider": "ashby",
+        "token": "unifyapps",
+        "careerUrl": "https://jobs.ashbyhq.com/unifyapps"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/unifyapps",
+      "checkedAt": "2026-11-13T21:14:19.098Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "coinbase",
+        "company": "Coinbase",
+        "provider": "greenhouse",
+        "token": "coinbase",
+        "careerUrl": "https://job-boards.greenhouse.io/coinbase"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/coinbase/jobs?content=true",
+      "checkedAt": "2026-11-13T21:15:32.393Z",
+      "ok": true,
+      "jobs": 265,
+      "india": 10,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    },
+    {
+      "source": {
+        "id": "innovaccer",
+        "company": "Innovaccer",
+        "provider": "greenhouse",
+        "token": "innovaccer",
+        "careerUrl": "https://job-boards.greenhouse.io/innovaccer"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/innovaccer/jobs?content=true",
+      "checkedAt": "2026-11-13T21:15:32.404Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "gupshup",
+        "company": "Gupshup",
+        "provider": "greenhouse",
+        "token": "gupshup",
+        "careerUrl": "https://job-boards.greenhouse.io/gupshup"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/gupshup/jobs?content=true",
+      "checkedAt": "2026-11-13T21:15:32.406Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "amagi",
+        "company": "Amagi",
+        "provider": "greenhouse",
+        "token": "amagi",
+        "careerUrl": "https://job-boards.greenhouse.io/amagi"
+      },
+      "feedUrl": "https://boards-api.greenhouse.io/v1/boards/amagi/jobs?content=true",
+      "checkedAt": "2026-11-13T21:15:32.407Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "clevertap",
+        "company": "CleverTap",
+        "provider": "lever",
+        "token": "clevertap",
+        "careerUrl": "https://jobs.lever.co/clevertap"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/clevertap?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:15:41.357Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "uniphore",
+        "company": "Uniphore",
+        "provider": "lever",
+        "token": "uniphore",
+        "careerUrl": "https://jobs.lever.co/uniphore"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/uniphore?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:15:41.359Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "icertis",
+        "company": "Icertis",
+        "provider": "lever",
+        "token": "icertis",
+        "careerUrl": "https://jobs.lever.co/icertis"
+      },
+      "feedUrl": "https://api.lever.co/v0/postings/icertis?mode=json&limit=100&skip=0",
+      "checkedAt": "2026-11-13T21:15:41.362Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "appsmith",
+        "company": "Appsmith",
+        "provider": "ashby",
+        "token": "appsmith",
+        "careerUrl": "https://jobs.ashbyhq.com/appsmith"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/appsmith",
+      "checkedAt": "2026-11-13T21:15:41.363Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "tooljet",
+        "company": "ToolJet",
+        "provider": "ashby",
+        "token": "tooljet",
+        "careerUrl": "https://jobs.ashbyhq.com/tooljet"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/tooljet",
+      "checkedAt": "2026-11-13T21:15:49.340Z",
+      "ok": false,
+      "error": "The source is temporarily unavailable.",
+      "eligibleForRegistration": false
+    },
+    {
+      "source": {
+        "id": "spotdraft",
+        "company": "SpotDraft",
+        "provider": "ashby",
+        "token": "spotdraft",
+        "careerUrl": "https://jobs.ashbyhq.com/spotdraft"
+      },
+      "feedUrl": "https://api.ashbyhq.com/posting-api/job-board/spotdraft",
+      "checkedAt": "2026-11-13T21:15:49.341Z",
+      "ok": true,
+      "jobs": 17,
+      "india": 12,
+      "indiaInternships": 0,
+      "indiaEntryLevel": 0,
+      "descriptionMissing": 0,
+      "eligibleForRegistration": true
+    }
+  ]
+}

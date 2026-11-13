@@ -116,9 +116,10 @@ try{
  const routeURL=new URL(radarHref(route),'https://nextrole.test');check(JSON.stringify(readRadarLocation(routeURL.search,routeURL.pathname))===JSON.stringify(route),'Shareable job pages must preserve tab, query, filters, sort, details and pagination.');
  const invalidRoute=readRadarLocation('?tab=bad&mode=bad&sort=bad&view=bad&limit=-200&job='+encodeURIComponent('javascript:alert(1)'));
  check(invalidRoute.tab==='discover'&&invalidRoute.mode==='All arrangements'&&invalidRoute.visibleCount===20&&new URL(radarHref(invalidRoute),'https://nextrole.test').origin==='https://nextrole.test','Invalid URL values must restore the animated discovery default and remain same-origin.');
- check(nextReminderCheck('2026-10-16T04:30:00.000Z')==='2026-10-16T08:30:00.000Z','A 10 AM IST request must show the 2 PM IST delivery check.');
- check(nextReminderCheck('2026-10-16T14:30:00.000Z')==='2026-10-17T03:30:00.000Z','A request after 7 PM IST must show next-day 9 AM IST.');
- check(nextReminderCheck('2026-10-16T13:30:00.000Z')==='2026-10-16T13:30:00.000Z','A request exactly at a scheduled check must retain that check.');
+ check(nextReminderCheck('2026-10-16T04:30:00.000Z')==='2026-10-16T04:30:00.000Z','A request exactly at 10 AM IST retains that shared check.');
+ check(nextReminderCheck('2026-10-16T04:30:00.001Z')==='2026-10-16T12:30:00.000Z','A request after 10 AM IST uses the 6 PM IST shared check.');
+ check(nextReminderCheck('2026-10-16T12:30:00.001Z')==='2026-10-17T04:30:00.000Z','A request after 6 PM IST uses next-day 10 AM IST.');
+ check(nextReminderCheck('2026-10-16T12:30:00.000Z')==='2026-10-16T12:30:00.000Z','A request exactly at 6 PM IST retains that check.');
  await database.prepare('INSERT INTO notifications(id,user_id,job_key,title,body,type,created_at) VALUES(?,?,?,?,?,?,?)').bind('notice-one','student-one',job.key,'One','Update','match',new Date().toISOString()).run();
  await database.prepare('INSERT INTO notifications(id,user_id,job_key,title,body,type,created_at) VALUES(?,?,?,?,?,?,?)').bind('notice-two','student-two',job.key,'Two','Update','match',new Date().toISOString()).run();
  check((await put({action:'read',noticeId:'notice-one'})).ok,'Opening a single notification must mark it read.');

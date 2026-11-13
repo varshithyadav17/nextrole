@@ -1,3 +1,9 @@
+# Current source coverage — 14 November 2026
+
+The live expansion adds 31 verified public employer feeds to the retained base: 51 distinct companies across 52 employer boards, plus Jobicy. Checkpoints and original IDs/order are preserved. The shared owner-authorized refresh runs at 10:00 and 18:00 IST; public feed ingestion and matching do not use student AI keys. See handoff/SOURCE-EXPANSION-2026-11-14.json for exact endpoints, India-location counts, checks and excluded candidates. These counts are source coverage, not a claim that every role accepts freshers or 2027 graduates.
+
+The sections below preserve earlier release history.
+
 # Current Scout source coverage — 18 October 2026
 
 The current registry has 21 employer ATS boards plus Jobicy. Zeta (Lever token zeta) was verified with 24 postings, 21 India locations, on 18 October before being appended; live counts can change. Existing IDs/order remain intact. This is configured coverage, not every job platform. Deliberate companion capture reads one embedded JobPosting from an individual LinkedIn/Unstop/ATS page and saves it privately as unverified. It does not establish ongoing platform ingestion or inclusion in shared-source emails.

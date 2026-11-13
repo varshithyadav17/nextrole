@@ -2,9 +2,9 @@
 
 The public app's unattended writer is an owner-authorized Site MCP connection. It does not use student API keys or LLM calls.
 
-The configured catalogue now contains 21 Greenhouse, Lever and Ashby boards plus one Jobicy public job-board source in this release. Zeta was appended after the retained Jobicy entry without changing prior IDs/order. Source progress is registry-derived; append new boards without reordering existing entries so saved cursors continue safely. Lever pagination and Ashby listed-only filtering are handled in lib/job-feeds.ts. LinkedIn, Unstop and company-web searches are external navigation and are not part of unattended import. Explicit companion JobPosting capture creates a private unverified import. See SOURCE-COVERAGE.md.
+As of 14 November 2026, the configured catalogue contains 52 employer ATS boards covering 51 companies, plus one Jobicy public job-board feed. See handoff/SOURCE-EXPANSION-2026-11-14.json for the 31 added feeds, live adapter checks and excluded candidates. Zeta was appended after the retained Jobicy entry without changing prior IDs/order. Source progress is registry-derived; append new boards without reordering existing entries so saved cursors continue safely. Lever pagination and Ashby listed-only filtering are handled in lib/job-feeds.ts. LinkedIn, Unstop and company-web searches are external navigation and are not part of unattended import. Explicit companion JobPosting capture creates a private unverified import. See SOURCE-COVERAGE.md.
 
-The linked schedule retains 09:00, 14:00 and 19:00 Asia/Kolkata. Use the existing linked automation; do not create another.
+The existing linked automation checks the shared catalogue at 10:00 and 18:00 Asia/Kolkata. It collects once into D1, then matches stored openings to student preferences; it does not scrape separately per student. Open vacancies remain discoverable even when published before the current day. Use the existing linked automation; do not create another.
 
 ## Supported writer
 

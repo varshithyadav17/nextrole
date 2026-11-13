@@ -16,6 +16,7 @@ import {z} from 'zod';
 import {hostMetrics} from '../../lib/host-metrics';
 import {adminReportDetails} from '../../lib/admin-report-data';
 import {getChatGPTUser} from '../chatgpt-auth';
+import {SHARED_REFRESH_TIMES,SHARED_REFRESH_TIMEZONE} from '../../lib/refresh-schedule';
 export const dynamic='force-dynamic';
 const headers={'Cache-Control':'no-store'};
 const tools=[
@@ -52,7 +53,7 @@ export async function POST(request:Request){
    const search=sources.sourcesPending?{pending:false,deferred:true}:await advanceDiscovery();
    const delivery=await deliveryStatus();
    value={...sources,search,details,alerts,push,delivery,cleanup,importUpload:await issueAnalyticsUpload(),workPending:search.pending||cleanup.pending||!!sources.sourcesPending||details.pending||delivery.alertsPending||!!delivery.push?.due};
-   await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('schedule',JSON.stringify({enabled:true,times:['09:00','14:00','19:00'],timezone:'Asia/Kolkata',transport:'owner-mcp'})).run();
+   await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('schedule',JSON.stringify({enabled:true,times:SHARED_REFRESH_TIMES,timezone:SHARED_REFRESH_TIMEZONE,transport:'owner-mcp'})).run();
   }else{
    const SOURCES=await loadSources(),SOURCE_REGISTRY=sourceFingerprint(SOURCES);
    const last=await one<{value:string}>('SELECT value FROM meta WHERE key=?','last_sync');

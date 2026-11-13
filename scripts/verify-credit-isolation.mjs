@@ -1,5 +1,6 @@
 // Uses the isolated test database and synthetic keys; never contacts a real provider.
 export async function verifyCreditIsolation({database,put,GET,check,job,raw,source,SOURCES,keys,goodFit,aiResponse}){
+ const {syncJobs}=await import('../lib/sync.ts');
  const originalFetch=globalThis.fetch;
  const globals=['OPENAI_API_KEY','GEMINI_API_KEY','GROQ_API_KEY'];
  const previous=globals.map(name=>[name,globalThis.__nextroleTestEnv[name]]);
@@ -27,12 +28,12 @@ export async function verifyCreditIsolation({database,put,GET,check,job,raw,sour
  try{
   await database.prepare("DELETE FROM meta WHERE key LIKE 'jobicy_state:%'").run();
   await database.prepare('DELETE FROM meta WHERE key IN (?,?)').bind('source_sweep','last_sync_attempt').run();
-  let refresh;
-  for(let pass=0;pass<SOURCES.length*2;pass++){
-   const response=await put({action:'refresh'},'credits-none');
-   check(response.ok,'An account without AI keys can refresh employer sources.');
-   refresh=await response.json();if(!refresh.sourcesPending)break;
-  }
+  const response=await put({action:'refresh'},'credits-none');
+  check(response.ok,'An account without AI keys can refresh employer sources.');
+  let refresh=await response.json();
+  // The shared collector resumes large registries without exhausting a student's
+  // unchanged 12-request allowance. Its owner-only MCP boundary is tested separately.
+  for(let pass=0;refresh.sourcesPending&&pass<SOURCES.length*2;pass++)refresh=await syncJobs();
   check(!refresh.sourcesPending&&sourceRequests===SOURCES.length&&providerRequests.length===0,'A complete vacancy refresh must use documented job feeds only, with no AI provider calls.');
   const warmed=sourceRequests;
   const parallelRefreshes=await Promise.all(Array.from({length:20},(_,i)=>put({action:'refresh'},'credits-browse-'+i)));
