@@ -15,7 +15,7 @@ import {advanceSmartRecruiters} from './smartrecruiters-sync';
 import {PAGED_COMPANY_PROVIDERS,verifyCompanyJob} from './company-feeds';
 import {advanceCompanySource} from './company-sync';
 type SourceSweep={startedAt:string;cursor:number;imported:number;successful:number;failures:string[];complete:boolean;registry?:string;done?:string[];work?:Record<string,{company:string;checked:number;total:number}>};
-type Retrieved={source:Source;jobs:Job[]|null;checkedAt:string;window?:{complete:boolean;imported:number;checked?:number;total?:number};skipReason?:string};
+type Retrieved={source:Source;jobs:Job[]|null;checkedAt:string;window?:{complete:boolean;imported:number;checked?:number;total?:number};skipReason?:string;retryAt?:string};
 function registryParts(value:string|undefined){return new Map((value||'').split('|').filter(Boolean).map(part=>[part.split(':')[0],part.replace(/:+$/,'')]));}
 export async function syncJobs(force=false,options:{owner?:boolean}={}){
  const SOURCES=await loadSources(),SOURCE_REGISTRY=sourceFingerprint(SOURCES),owner=options.owner===true;
@@ -24,7 +24,7 @@ export async function syncJobs(force=false,options:{owner?:boolean}={}){
  const saved=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_sweep');let run:SourceSweep|undefined;try{run=saved?JSON.parse(saved.value):undefined;}catch{}
  if(!force&&run?.complete&&run.registry===SOURCE_REGISTRY&&attempt&&Date.now()-Date.parse(attempt.value)<5*60000)return{cached:true,checkedAt:last?.value||null,sourcesPending:false,message:'The job sources were checked recently.'};
  const lease=await acquireLease('sync_lock',owner?90000:60000);if(!lease)return{cached:true,checkedAt:last?.value||null,sourcesPending:true,message:'Another refresh is running. Your saved choices are safe.'};
- let imported=0,successful=0;const started=Date.now(),failures:string[]=[];
+ let imported=0,successful=0;const started=Date.now(),failures:string[]=[],deferred:string[]=[];
  try{
   const current=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_sweep');try{run=current?JSON.parse(current.value):undefined;}catch{run=undefined;}
   const recent=await one<{value:string}>('SELECT value FROM meta WHERE key=?','last_sync_attempt');
@@ -35,14 +35,16 @@ export async function syncJobs(force=false,options:{owner?:boolean}={}){
    run={startedAt:new Date().toISOString(),cursor:retained.length,done:retained,work:{},imported:0,successful:retained.length,failures:[],complete:false,registry:SOURCE_REGISTRY};
    await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('last_sync_attempt',run.startedAt).run();
   }
-  const done=new Set(run.done||SOURCES.slice(0,run.cursor).map(s=>s.id)),work=run.work||{},pending=SOURCES.filter(s=>!done.has(s.id)),group=pending.slice(0,force?SOURCES.length:owner?8:2);
+  const done=new Set(run.done||SOURCES.slice(0,run.cursor).map(s=>s.id)),work=run.work||{};
+  if(run.registry&&run.registry!==SOURCE_REGISTRY){const old=registryParts(run.registry),next=registryParts(SOURCE_REGISTRY);for(const source of SOURCES)if(old.get(source.id)!==next.get(source.id)){if(done.delete(source.id)){const health=await one<{success:number}>('SELECT success FROM source_runs WHERE id=?',source.id);if(health?.success)run.successful=Math.max(0,run.successful-1);}delete work[source.id];}}
+  const pending=SOURCES.filter(s=>!done.has(s.id)),group=pending.slice(0,force?SOURCES.length:owner?8:2);
   // An older saved prefix is migrated in place. Appended companies do not restart it.
   if(!force&&!owner){if(group[0]?.provider==='jobicy')group.splice(1);else if(group[1]?.provider==='jobicy')group.splice(1);}
   for(let offset=0;offset<group.length;offset+=2){
    if(!force&&offset&&Date.now()-started>(owner?35000:25000))break;
    const timings=new Map<string,number>(),part=group.slice(offset,offset+2);
    const settled=await Promise.allSettled(part.map(async(source):Promise<Retrieved>=>{const t=Date.now();try{
-    const retry=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_retry:'+source.id);if((!force||source.provider==='jobicy')&&retry&&Date.parse(retry.value)>Date.now())return{source,jobs:null,checkedAt:new Date().toISOString(),skipReason:'retry-after'};
+    const retry=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_retry:'+source.id);if((!force||source.provider==='jobicy')&&retry&&Date.parse(retry.value)>Date.now())return{source,jobs:null,checkedAt:new Date().toISOString(),skipReason:'retry-after',retryAt:retry.value};
     if(source.provider==='jobicy')return{source,jobs:null,checkedAt:new Date().toISOString(),window:await advanceJobicy(source)};
     if(source.provider==='smartrecruiters')return{source,jobs:null,checkedAt:new Date().toISOString(),window:await advanceSmartRecruiters(source,run!.startedAt)};
     if(PAGED_COMPANY_PROVIDERS.includes(source.provider as any))return{source,jobs:null,checkedAt:new Date().toISOString(),window:await advanceCompanySource(source,run!.startedAt)};
@@ -50,19 +52,21 @@ export async function syncJobs(force=false,options:{owner?:boolean}={}){
    }finally{timings.set(source.id,Date.now()-t);}}));
    for(let i=0;i<settled.length;i++){const item=settled[i],source=part[i],duration=timings.get(source.id)||0;
     if(item.status==='rejected'){
-     if(item.reason instanceof SourceFetchError&&[429,503].includes(item.reason.status))await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('source_retry:'+source.id,new Date(Date.now()+item.reason.retryAfterMs).toISOString()).run();
-     const error=item.reason instanceof JobicyError?item.reason.message+' Retry after '+item.reason.retryAt:'The feed was unavailable or incomplete. Previous jobs were preserved.';failures.push(source.company+': '+error);done.add(source.id);delete work[source.id];
+     const transient=item.reason instanceof SourceFetchError&&[429,503].includes(item.reason.status)||['AbortError','TimeoutError'].includes(item.reason?.name);let resume=false;
+     if(transient&&PAGED_COMPANY_PROVIDERS.includes(source.provider as any)){const saved=await one<{value:string}>('SELECT value FROM meta WHERE key=?','company_snapshot_v1:'+source.id);try{const state=saved?JSON.parse(saved.value):null;if(state&&!state.complete&&state.cursor?.offset>0){resume=true;work[source.id]={company:source.company,checked:state.seen?.length||0,total:state.total||0};}}catch{}}
+     if(transient){const retryAt=new Date(Date.now()+(item.reason instanceof SourceFetchError?item.reason.retryAfterMs:60000)).toISOString();await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('source_retry:'+source.id,retryAt).run();if(resume)deferred.push(retryAt);}
+     const error=item.reason instanceof JobicyError?item.reason.message+' Retry after '+item.reason.retryAt:item.reason instanceof SourceFetchError?'The public feed returned HTTP '+item.reason.status+'. Previous jobs were preserved.':transient?'The public feed timed out. Its saved checkpoint and previous jobs were preserved.':'The feed was unavailable or incomplete. Previous jobs were preserved.';failures.push(source.company+': '+error);if(!resume){done.add(source.id);delete work[source.id];}
      await db().prepare('INSERT INTO source_runs(id,checked_at,success,count,error) VALUES(?,?,0,0,?) ON CONFLICT(id) DO UPDATE SET checked_at=excluded.checked_at,success=0,error=excluded.error').bind(source.id,new Date().toISOString(),error).run();await recordSourceObservation(source,'failed',duration,{},item.reason instanceof SourceFetchError?'http-'+item.reason.status:'invalid-or-unavailable');continue;
     }
-    if(item.value.window){const window=item.value.window;imported+=window.imported;if(window.complete){done.add(source.id);delete work[source.id];successful++;}else work[source.id]={company:source.company,checked:window.checked||0,total:window.total||0};continue;}
-    if(item.value.jobs===null){done.add(source.id);delete work[source.id];if(item.value.skipReason!=='source-poll-window')failures.push(source.company+': The source is cooling down. Previous listings were preserved.');await recordSourceObservation(source,'cooldown',duration,{},item.value.skipReason||'retry-after');continue;}
+    if(item.value.window){const window=item.value.window;imported+=window.imported;await db().prepare('DELETE FROM meta WHERE key=?').bind('source_retry:'+source.id).run();if(window.complete){done.add(source.id);delete work[source.id];successful++;run.failures=run.failures.filter(f=>!f.startsWith(source.company+':'));}else work[source.id]={company:source.company,checked:window.checked||0,total:window.total||0};continue;}
+    if(item.value.jobs===null){if(item.value.retryAt&&work[source.id])deferred.push(item.value.retryAt);else{done.add(source.id);delete work[source.id];if(item.value.skipReason!=='source-poll-window')failures.push(source.company+': The source is cooling down. Previous listings were preserved.');}await recordSourceObservation(source,'cooldown',duration,{},item.value.skipReason||'retry-after');continue;}
     await db().prepare('DELETE FROM meta WHERE key=?').bind('source_retry:'+source.id).run();await ingestCompleteSource(source,item.value.jobs,run.startedAt,item.value.checkedAt,duration);imported+=item.value.jobs.length;successful++;done.add(source.id);delete work[source.id];
    }
   }
-  run.done=SOURCES.filter(s=>done.has(s.id)).map(s=>s.id);run.work=work;run.cursor=run.done.length;run.imported+=imported;run.successful+=successful;run.failures.push(...failures);run.complete=run.cursor>=SOURCES.length;run.registry=SOURCE_REGISTRY;
+  run.done=SOURCES.filter(s=>done.has(s.id)).map(s=>s.id);run.work=work;run.cursor=run.done.length;run.imported+=imported;run.successful+=successful;run.failures=[...new Set([...run.failures,...failures])];run.complete=run.cursor>=SOURCES.length;run.registry=SOURCE_REGISTRY;
   const checkpoint=db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('source_sweep',JSON.stringify(run));
   if(run.complete){const writes=[checkpoint,db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('last_sync_attempt',new Date().toISOString()),db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('alerts_target',run.startedAt)];if(run.successful)writes.push(db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('last_sync',run.startedAt));await db().batch(writes);await pruneDiscoveryData();}else await checkpoint.run();
-  return{cached:false,checkedAt:run.complete&&run.successful?run.startedAt:last?.value||null,imported,sources:successful,totalSources:SOURCES.length,sourceProgress:{checked:run.cursor,total:SOURCES.length},sourceWork:Object.values(work),sourcesPending:!run.complete,failures:run.failures,notifications:0};
+  return{cached:false,checkedAt:run.complete&&run.successful?run.startedAt:last?.value||null,imported,sources:successful,totalSources:SOURCES.length,sourceProgress:{checked:run.cursor,total:SOURCES.length},sourceWork:Object.values(work),sourcesPending:!run.complete,failures:run.failures,nextSourceRetryAt:deferred.sort()[0]||null,notifications:0};
  }finally{await releaseLease(lease);}
 }
 async function ingestCompleteSource(source:Source,jobs:Job[],sweepAt:string,checkedAt:string,duration:number){

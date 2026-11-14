@@ -36,7 +36,7 @@ export async function companyPage(source:Source,cursor:CompanyCursor,signal:Abor
   if(!d.jobs.length&&offset<n)throw new Error('Incomplete Amazon index');return{records,total:n,next:offset+d.jobs.length<n?offset+d.jobs.length:null,cursor,completeSnapshot:false};
  }
  if(source.provider==='microsoft'){
-  const u=new URL(sourceFeedUrl(source));u.searchParams.set('start',String(offset));const d=await publicJSON(u.toString(),signal),data=d.data,n=total(data?.count);if(d.status!==200||!Array.isArray(data.positions)||data.positions.length>50)throw new Error('Invalid Microsoft public index');if(!data.positions.length&&offset<n)throw new Error('Incomplete Microsoft index');return{records:data.positions,total:n,next:offset+data.positions.length<n?offset+data.positions.length:null,cursor,completeSnapshot:false};
+  const u=new URL(sourceFeedUrl(source));u.searchParams.set('start',String(offset));const d=await publicJSON(u.toString(),signal),data=d.data,n=total(data?.count);if(d.status!==200||!Array.isArray(data.positions)||data.positions.length>50)throw new Error('Invalid Microsoft public index');if(!data.positions.length&&offset<n)throw new Error('Incomplete Microsoft index');const records=data.positions.slice(0,5);return{records,total:n,next:offset+records.length<n?offset+records.length:null,cursor,completeSnapshot:false};
  }
  if(source.provider==='workday'){
   const feed=sourceFeedUrl(source),search=async(facets:Record<string,string[]>)=>publicJSON(feed,signal,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({appliedFacets:facets,limit:12,offset,searchText:''})});
@@ -44,8 +44,10 @@ export async function companyPage(source:Source,cursor:CompanyCursor,signal:Abor
   if(source.country==='IN'&&!facets){d=await search({});if(d.total===0)return{records:[],total:0,next:null,cursor:{...cursor,facets:{}},completeSnapshot:true};const options=(d.facets||[]).flatMap((f:any)=>(f.values||[]).filter((v:any)=>v.descriptor==='India').map((v:any)=>({key:f.facetParameter,id:v.id})));
    if(!options.length||!options.every((x:any)=>typeof x.key==='string'&&typeof x.id==='string'))throw new Error('This Workday board has no verifiable India facet');facets={[options[0].key]:[options[0].id]};d=await search(facets);
   }else d=await search(facets||{});
-  const n=total(d.total);if(!Array.isArray(d.jobPostings)||d.jobPostings.length>12||!d.jobPostings.length&&offset<n)throw new Error('Incomplete Workday public index');
-  const records=d.jobPostings.map((r:any)=>({...r,__path:workdayPath(r.externalPath)}));return{records,total:n,next:offset+records.length<n?offset+records.length:null,cursor:{...cursor,facets},completeSnapshot:true};
+  // CXS reports total=0 on later pages even while returning valid postings.
+  // Carry the verified first-page count rather than treating page two as EOF.
+  const n=offset>0&&d.total===0&&cursor.total!==undefined?total(cursor.total):total(d.total);if(offset>0&&d.total===0&&cursor.total===undefined)throw new Error('Workday pagination needs its first-page total');if(!Array.isArray(d.jobPostings)||d.jobPostings.length>12||!d.jobPostings.length&&offset<n)throw new Error('Incomplete Workday public index');
+  const records=d.jobPostings.map((r:any)=>({...r,__path:workdayPath(r.externalPath)}));return{records,total:n,next:offset+records.length<n?offset+records.length:null,cursor:{...cursor,facets,total:n},completeSnapshot:true};
  }
  if(source.provider==='oracle'){
   const finder='findReqs;siteNumber='+source.token+',limit=12,offset='+offset+(source.country==='IN'?',locationId='+source.locationId+',location=India':'');if(source.country==='IN'&&!source.locationId)throw new Error('An exact India location ID is required');

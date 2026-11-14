@@ -25,6 +25,8 @@ Nium, Arista Networks and Exotel are useful additions outside the original 260. 
 
 Large sources save public requisition IDs and page offsets after validated batches. The owner refresh can advance up to eight sources per call, with two concurrent reads and a time budget. A large pending source does not prevent the other sources in the batch from advancing. Old prefix cursors are migrated without forcing a new sweep.
 
+Workday CXS can report `total: 0` on subsequent pages while continuing to return jobs; the importer carries the verified first-page total. Microsoft details use smaller batches and retain their existing cursor. Transient failures after successful pages respect Retry-After and resume saved work. A parser revision revalidates only its affected source, preserving the rest of the sweep.
+
 The shared catalogue is collected independently of students' preferences. India scope, experience, graduation, location and arrangement checks remain explicit. Unknown requirements stay in Needs review. The Companies view includes configured employers even when the chosen student scope has zero matches.
 
 Non-2xx responses and invalid or incomplete snapshots retain existing jobs. Rate limits honor a cooldown. Search-window providers cannot close jobs merely because a later search omitted them. Only a consistent complete snapshot or explicit individual verification can mark an opening closed. Student decisions, notes and application history are never rewritten by the importer.

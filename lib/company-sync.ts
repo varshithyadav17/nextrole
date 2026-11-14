@@ -9,7 +9,8 @@ type State={version:1;identity:string;runId:string;startedAt:string;cursor:Compa
 export async function advanceCompanySource(source:Source,sweepAt:string){
  const started=Date.now(),now=new Date().toISOString(),signal=AbortSignal.timeout(28000),key='company_snapshot_v1:'+source.id,identity=sourceFingerprint([source]);
  const stored=await one<{value:string}>('SELECT value FROM meta WHERE key=?',key);let state:State|undefined;try{state=stored?JSON.parse(stored.value):undefined;}catch{}
- if(!state||state.version!==1||state.identity!==identity||state.complete&&state.runId!==sweepAt||Date.now()-Date.parse(state.startedAt)>6*3600000)state={version:1,identity,runId:sweepAt,startedAt:now,cursor:{offset:0},seen:[],imported:[],total:null,consistent:true,complete:false,duration:0};
+ const compatible=state?.identity===identity||source.provider==='microsoft'&&state?.identity===identity.replace(/:pcsx5$/,'');
+ if(!state||state.version!==1||!compatible||state.complete&&state.runId!==sweepAt||Date.now()-Date.parse(state.startedAt)>6*3600000)state={version:1,identity,runId:sweepAt,startedAt:now,cursor:{offset:0},seen:[],imported:[],total:null,consistent:true,complete:false,duration:0};else state.identity=identity;
  if(state.complete)return{complete:true,imported:0,checked:state.imported.length,total:state.total||0};
  if(!Array.isArray(state.seen)||!Array.isArray(state.imported)||state.seen.length>10000||state.imported.length>10000)throw new Error('Invalid company feed checkpoint');state.runId=sweepAt;
  const page=await companyPage(source,state.cursor,signal);if(state.total!==null&&state.total!==page.total)state.consistent=false;state.total=page.total;

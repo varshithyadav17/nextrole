@@ -17,7 +17,7 @@ const definition=z.object({
 });
 type RegisteredSource=Source&{policyUrl:string;reviewedAt:string};
 const KEY='source_registry_v1';
-export function sourceFingerprint(sources:Source[]){return sources.map(s=>[s.id,s.provider,s.token,s.host||'',s.site||'',s.region||'',s.country||'',s.locationId||''].join(':')).join('|');}
+export function sourceFingerprint(sources:Source[]){return sources.map(s=>[s.id,s.provider,s.token,s.host||'',s.site||'',s.region||'',s.country||'',s.locationId||'',...(s.provider==='workday'?['cxs2']:s.provider==='microsoft'?['pcsx5']:[])].join(':')).join('|');}
 export async function loadSources():Promise<Source[]>{
  const row=await env.DB!.prepare('SELECT value FROM meta WHERE key=?').bind(KEY).first<{value:string}>();
  if(!row)return SOURCES;
