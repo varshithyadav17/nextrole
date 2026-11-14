@@ -10,15 +10,17 @@ const check=(value,message)=>{assert.ok(value,message);checks++;};
 const exists=async file=>access(file).then(()=>true,()=>false);
 async function fixture(name){
  const directory=path.join(temporary,name);await mkdir(path.join(directory,'scripts'),{recursive:true});
- for(const file of ['scripts/prepare-render.mjs','package.json','pnpm-lock.yaml','pnpm-workspace.yaml','tsconfig.json','lib/bridge/session.ts','lib/google-oidc.ts','lib/http-json.ts']){await mkdir(path.dirname(path.join(directory,file)),{recursive:true});await cp(path.join(root,file),path.join(directory,file));}
+ for(const file of ['scripts/prepare-render.mjs','package.json','pnpm-lock.yaml','pnpm-workspace.yaml','tsconfig.json','lib/bridge/session.ts','lib/google-oidc.ts','lib/http-json.ts','lib/password.ts']){await mkdir(path.dirname(path.join(directory,file)),{recursive:true});await cp(path.join(root,file),path.join(directory,file));}
  await cp(path.join(root,'deploy'),path.join(directory,'deploy'),{recursive:true});
  await mkdir(path.join(directory,'app/api/example'),{recursive:true});await writeFile(path.join(directory,'app/api/example/route.ts'),'export async function GET(){return Response.json({ok:true});}\n');
+ await mkdir(path.join(directory,'app/api/market'),{recursive:true});await cp(path.join(root,'app/api/market/route.ts'),path.join(directory,'app/api/market/route.ts'));
  return directory;
 }
 function generate(directory,out){return spawnSync(process.execPath,[path.join(directory,'scripts/prepare-render.mjs'),'--out',out],{cwd:directory,encoding:'utf8',timeout:15000});}
 try{
  const directory=await fixture('project'),out=path.join(directory,'.deploy/render');
  let result=generate(directory,out);check(result.status===0,'First deployment generates the backend: '+result.stderr);
+ check((await readFile(path.join(out,'app/api/market/route.ts'),'utf8')).includes('dataRequest(r,"/api/market")'),'The Render gateway must generate the authenticated market-search proxy route.');
  await mkdir(path.join(out,'app/api/removed'),{recursive:true});await writeFile(path.join(out,'app/api/removed/route.ts'),'stale route');
  await mkdir(path.join(out,'node_modules'),{recursive:true});await writeFile(path.join(out,'node_modules/cache-probe'),'dependency cache');
  await mkdir(path.join(out,'.next/cache'),{recursive:true});await writeFile(path.join(out,'.next/cache/probe'),'compiler cache');

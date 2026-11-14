@@ -2,6 +2,8 @@ import {db} from './store';
 import {matchJob} from './matching';
 import {withExperienceRequirements} from './experience';
 import type {Job,JobView,Profile} from './types';
+import {publicJobChunk,type PublicJobRow} from './catalogue-cache';
+import {PublicError} from './errors';
 
 type MetadataRow={ref:number;data:string;legacy_description:string|null;first_seen:string;last_checked:string;active:number;status:string|null;stage:string|null;note:string|null;updated_at:string|null;remind_at:string|null};
 export type ScannedJob={ref:number;job:JobView};
@@ -13,12 +15,26 @@ function view(row:MetadataRow,profile:Profile):ScannedJob{
  const job=withExperienceRequirements({...JSON.parse(row.data),description:row.legacy_description||'',...(row.legacy_description&&row.legacy_description.length>=35000?{evidenceComplete:false}:{}),firstSeen:row.first_seen,lastChecked:row.last_checked,active:!!row.active} as Job);
  return {ref:row.ref,job:{...job,description:'',match:matchJob(job,profile),status:row.status==='new'?null:row.status as JobView['status'],stage:row.stage,note:row.note||'',statusAt:row.updated_at,remindAt:row.remind_at}};
 }
-export async function* scanJobs(userId:string,profile:Profile,trackedOnly=false):AsyncGenerator<ScannedJob>{
+export async function* scanJobs(userId:string,profile:Profile,trackedOnly=false,sharedRevision?:string):AsyncGenerator<ScannedJob>{
+ if(sharedRevision!==undefined&&!trackedOnly){
+  // Overlay private choices freshly. They must never enter the shared cache.
+  const states=await db().prepare('SELECT job_key,status,stage,note,updated_at,remind_at FROM user_jobs WHERE user_id=? LIMIT 20001').bind(userId).all<{job_key:string;status:string|null;stage:string|null;note:string|null;updated_at:string|null;remind_at:string|null}>();
+  if(states.results.length>20000)throw new PublicError('Your tracking history exceeds the current safe catalogue budget. Your data is retained.',503);
+  const personal=new Map(states.results.map(r=>[r.job_key,r]));let after=0;
+  for(;;){
+   const part=await publicJobChunk(sharedRevision,after,async()=>(await db().prepare("SELECT j.rowid as ref,j.job_key,json_remove(j.data,'$.description') as data,CASE WHEN (COALESCE(json_extract(j.data,'$.experienceRequirements.version'),0)<3 OR COALESCE(json_extract(j.data,'$.eligibility.version'),0)<2) THEN json_extract(j.data,'$.description') ELSE NULL END as legacy_description,j.first_seen,j.last_checked,j.active FROM jobs j WHERE j.rowid>? AND j.active=1 AND "+preferred+' ORDER BY j.rowid LIMIT 250').bind(after).all<PublicJobRow>()).results);
+   for(const row of part){after=row.ref;const state=personal.get(row.job_key);yield view({...row,status:state?.status||null,stage:state?.stage||null,note:state?.note||null,updated_at:state?.updated_at||null,remind_at:state?.remind_at||null},profile);}
+   if(part.length<250)break;
+  }
+  const retained=await db().prepare('SELECT j.rowid as ref,'+columns+" FROM jobs j JOIN user_jobs u ON u.job_key=j.job_key AND u.user_id=? WHERE j.active=0 AND (u.status IN ('interested','applied','dismissed') OR length(u.note)>0) AND "+preferred+' ORDER BY j.rowid').bind(userId).all<MetadataRow>();
+  for(const row of retained.results)yield view(row,profile);
+ }else{
  let after=0;
  for(;;){
   const result=await db().prepare('SELECT j.rowid as ref,'+columns+' FROM jobs j LEFT JOIN user_jobs u ON u.job_key=j.job_key AND u.user_id=? WHERE j.rowid>? AND '+(trackedOnly?"(u.status IN ('interested','applied','dismissed') OR length(u.note)>0)":visible)+' AND '+preferred+' ORDER BY j.rowid LIMIT 250').bind(userId,after).all<MetadataRow>();
   for(const row of result.results){after=row.ref;yield view(row,profile);}
   if(result.results.length<250)break;
+ }
  }
  const personal=await db().prepare("SELECT -j.rowid as ref,json_remove(j.data,'$.description') as data,CASE WHEN COALESCE(json_extract(j.data,'$.eligibility.version'),0)<2 THEN json_extract(j.data,'$.description') ELSE NULL END as legacy_description,j.created_at as first_seen,COALESCE(json_extract(j.data,'$.lastChecked'),'') as last_checked,COALESCE(json_extract(j.data,'$.active'),1) as active,u.status,u.stage,u.note,u.updated_at,u.remind_at FROM imported_jobs j LEFT JOIN user_jobs u ON u.user_id=j.user_id AND u.job_key=j.job_key WHERE j.user_id=?"+(trackedOnly?" AND (u.status IN ('interested','applied','dismissed') OR length(u.note)>0)":'')+' ORDER BY j.rowid').bind(userId).all<MetadataRow>();
  for(const row of personal.results)yield view(row,profile);

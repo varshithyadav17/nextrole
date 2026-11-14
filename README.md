@@ -22,6 +22,14 @@ The product hypothesis is that reliable relevance and a simpler preparation/trac
 
 Compatibility is an internal estimate, not an employer ATS result. Source coverage is limited to configured feeds and supported discovery/import workflows; the product does not claim access to every job board or universal automatic application submission.
 
+## Discovery and caching
+
+The shared job catalogue refreshes at 10 a.m. and 6 p.m. IST. Public vacancy metadata is cached with catalogue revisions, bounded memory and the Cloudflare Cache API; an optional Redis REST adapter can be connected through backend secrets. Each student’s preferences, notes and tracking remain private and current.
+
+**Search the web** uses the requesting student’s OpenAI or Gemini search connection to find sourced leads beyond connected employers. Provider charges apply. Results are cached privately for six hours, require eligibility review and enter Saved only after a separate action. Ordinary browsing and scheduled source refreshes do not need student AI keys.
+
+[Architecture, HLD/LLD, cache keys, failure handling and scaling gates](handoff/SCALING-ARCHITECTURE.md). Redis is integration-ready; an owner Redis instance is not configured. Registered-user counts are not evidence of concurrent production capacity.
+
 ## Employer coverage
 
 Job imports and employer targets are separate. The original supplied list contains 260 distinct employer brands; the directory also includes additional targets. A brand is shown as checked only after its source completes a successful import. Empty personal search results do not hide configured companies.
@@ -123,6 +131,14 @@ Real Google sign-in, real browser/device accessibility, campus concurrency, prov
 - `scripts/verify-*.mjs`, `handoff/`: executable evidence and operational handoff.
 
 NextRole is a product case study in making a narrow job-search loop useful, measurable and understandable before claiming large-scale impact.
+
+## Discovery and caching
+
+The shared job catalogue refreshes at 10 a.m. and 6 p.m. IST. Public vacancy metadata is cached with catalogue revisions, bounded memory and the Cloudflare Cache API; an optional Redis REST adapter can be connected through backend secrets. Each student’s preferences, notes and tracking remain private and current.
+
+**Search the web** uses the requesting student’s OpenAI or Gemini search connection to find sourced leads beyond connected employers. Provider charges apply. Results are cached privately for six hours, require eligibility review and enter Saved only after a separate action. Ordinary browsing and scheduled source refreshes do not need student AI keys.
+
+[Architecture, HLD/LLD, cache keys, failure handling and scaling gates](handoff/SCALING-ARCHITECTURE.md). Redis is integration-ready; an owner Redis instance is not configured. Registered-user counts are not evidence of concurrent production capacity.
 
 ## Employer coverage
 

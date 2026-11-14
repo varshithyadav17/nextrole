@@ -6,6 +6,7 @@ import {routeAI} from './ai-router';
 import type {JobView,Profile} from './types';
 import {PublicError} from './errors';
 import {MAX_CATALOGUE_ROWS} from './catalogue';
+import {one} from './store';
 const validator=z.object({summary:z.string().max(1200),jobIds:z.array(z.string().max(200)).max(20)});
 const schema={type:'object',properties:{summary:{type:'string'},jobIds:{type:'array',items:{type:'string'}}},required:['summary','jobIds'],additionalProperties:false};
 function keywordWords(query:string){return query.toLowerCase().split(/[^a-z0-9+#]+/).filter(w=>w.length>2||['ai','ml','ux','ui'].includes(w)).filter(w=>!['the','and','for','with','want','find','show','jobs','job','looking','openings','roles','role','please'].includes(w));}
@@ -15,7 +16,8 @@ function keywordResults(candidates:JobView[],query:string){
 }
 async function collectCandidates(userId:string,profile:Profile,filters:SearchFilters,limit:number,query?:string){
  const selected:{job:JobView;rank:number}[]=[],words=query===undefined?null:keywordWords(query);let scanned=0,total=0;
- for await(const {job} of scanJobs(userId,profile)){
+ const revision=(await one<{value:string}>("SELECT value FROM meta WHERE key='catalogue_revision'"))?.value||'0';
+ for await(const {job} of scanJobs(userId,profile,false,revision)){
   if(++scanned>MAX_CATALOGUE_ROWS)throw new PublicError('The catalogue exceeds the current safe search budget. Ask the host to review capacity.',503);
   if(!candidateJobs([job],filters).length)continue;total++;
   const rank=words?words.reduce((sum,word)=>sum+Number((job.title+' '+job.company+' '+job.location+' '+job.skills.join(' ')).toLowerCase().includes(word)),0):0;

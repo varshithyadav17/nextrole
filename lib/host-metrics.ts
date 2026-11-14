@@ -1,4 +1,5 @@
 import {mailStatus} from './digests';
+import {catalogueCacheStatus} from './catalogue-cache';
 import {env} from 'cloudflare:workers';
 import {one,rows} from './store';
 import {indiaDay,shiftDay,feedbackColumns} from './product';
@@ -29,7 +30,7 @@ export async function recordedHostMetrics(days:number,hostId:string){
  const ratingCount=ratings.reduce((n,r)=>n+r.n,0),average=ratingCount?ratings.reduce((n,r)=>n+r.rating*r.n,0)/ratingCount:null;
  const cleanup=await productCleanupStatus(),analytics=await adminAnalytics(days,hostId);
  const totalOpen=await one<{n:number;oldest:string|null}>("SELECT COUNT(*) as n,MIN(created_at) as oldest FROM feedback WHERE status<>'resolved' AND user_id<>?",hostId);
- return {analytics,applicationValue,days,start,today,timezone:'Asia/Kolkata',generatedAt:new Date().toISOString(),trackingSince:tracking?.value||null,active,features:features.map(f=>({...f,label:FEATURE_LABELS[f.kind]||f.kind})),daily:Array.from({length:days},(_,i)=>{const day=shiftDay(start,i);return daily.find(d=>d.day===day)||{day,active:0,applyClicks:0,applied:0};}),activation,retention,ratings:{distribution:ratings,count:ratingCount,average,positive:ratings.filter(r=>r.rating>=4).reduce((n,r)=>n+r.n,0)},voices,themes,backlog:totalOpen,operations:{email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,...await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files')},automation:await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state'),cleanup,discovery:await discoveryMetrics(),sources:sourceRuns,lastSync:sync?.value||null,delivery:health,records:counts}};
+ return {analytics,applicationValue,days,start,today,timezone:'Asia/Kolkata',generatedAt:new Date().toISOString(),trackingSince:tracking?.value||null,active,features:features.map(f=>({...f,label:FEATURE_LABELS[f.kind]||f.kind})),daily:Array.from({length:days},(_,i)=>{const day=shiftDay(start,i);return daily.find(d=>d.day===day)||{day,active:0,applyClicks:0,applied:0};}),activation,retention,ratings:{distribution:ratings,count:ratingCount,average,positive:ratings.filter(r=>r.rating>=4).reduce((n,r)=>n+r.n,0)},voices,themes,backlog:totalOpen,operations:{catalogueCache:catalogueCacheStatus(),email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,...await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files')},automation:await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state'),cleanup,discovery:await discoveryMetrics(),sources:sourceRuns,lastSync:sync?.value||null,delivery:health,records:counts}};
 }
 export type RecordedHostMetrics=Awaited<ReturnType<typeof recordedHostMetrics>>;
 export async function hostMetrics(days:number,hostId:string){return combineHostMetrics(await recordedHostMetrics(days,hostId),hostId);}

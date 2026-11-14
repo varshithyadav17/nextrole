@@ -1,5 +1,5 @@
 import {db,one} from './store';
-export async function allowRequest(userId:string,kind:'write'|'external'|'feedback'|'telemetry'|'catalogue'|'bridge',limit:number){
+export async function allowRequest(userId:string,kind:'write'|'external'|'feedback'|'telemetry'|'catalogue'|'bridge'|'market',limit:number){
  const key='request_count:'+new Date().toISOString().slice(0,16)+':'+kind+':'+userId;
  const r=await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=CAST(meta.value AS INTEGER)+1 WHERE CAST(meta.value AS INTEGER)<?').bind(key,'1',limit).run();
  return !!r.meta.changes;

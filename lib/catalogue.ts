@@ -23,7 +23,7 @@ async function catalogueState(userId:string){
  const profile:Profile={...defaultProfile,...(state?.profile?JSON.parse(state.profile):{})};
  const {name:_,alerts:__,reminders:___,completed:____,...preferences}=profile;void _;void __;void ___;void ____;
  const generation=await digest(JSON.stringify([2,state?.catalogue||'0',state?.registry||'',state?.workspace||'0',state?.reset_at||'',preferences]));
- return {profile,generation};
+ return {profile,generation,sharedRevision:state?.catalogue||'0'};
 }
 
 export function inCatalogue(job:JobView,filter:CatalogueFilters){
@@ -35,11 +35,11 @@ export function inCatalogue(job:JobView,filter:CatalogueFilters){
  const query=filter.query.toLowerCase().trim();return !query||(job.title+' '+job.company+' '+job.location+' '+job.skills.join(' ')).toLowerCase().includes(query);
 }
 function companyCounts(company:string):CompanyCounts{return {company,scopes:{'for-you':{total:0,roles:{}},review:{total:0,roles:{}},all:{total:0,roles:{}}}};}
-async function build(userId:string,profile:Profile,filter:CatalogueFilters){
+async function build(userId:string,profile:Profile,filter:CatalogueFilters,sharedRevision:string){
  const now=Date.now(),ranked:Ranked[]=[],companies=new Map((await loadSources()).filter(source=>source.provider!=='jobicy').map(source=>[source.company,companyCounts(source.company)])),employers=new Set<string>();
  const summary:CatalogueSummary={counts:{discover:0,interested:0,applications:0,archive:0},quality:{visibleOpenings:0,employers:0,fresh:0,staleOrUnverified:0,incomplete:0,forYou:0,needsReview:0},companies:[],scanned:0};
  const roles=[...new Set([...ROLE_CATEGORIES,...profile.roles])];let expires=now+5*60000;
- for await(const {ref,job} of scanJobs(userId,profile)){
+ for await(const {ref,job} of scanJobs(userId,profile,false,sharedRevision)){
   if(++summary.scanned>MAX_CATALOGUE_ROWS)throw new PublicError('The catalogue exceeds the current safe ranking budget. Your saved data is retained; ask the host to review catalogue capacity.',503);
   const checked=Date.parse(job.lastChecked),deadline=job.deadline?Date.parse(job.deadline):Infinity;
   for(const boundary of [checked+FRESHNESS_WINDOW_MS+1,checked-5*60000,deadline])if(Number.isFinite(boundary)&&boundary>now)expires=Math.min(expires,boundary);
@@ -67,7 +67,7 @@ async function build(userId:string,profile:Profile,filter:CatalogueFilters){
  return {data:{refs:ranked.map(job=>job.ref),summary},expires};
 }
 export async function cataloguePage(userId:string,input:unknown):Promise<CataloguePage>{
- const parsed=catalogueRequest.parse(input),{cursor,limit,...filters}=parsed,queryHash=await digest(JSON.stringify(filters)),{profile,generation:stamp}=await catalogueState(userId);
+ const parsed=catalogueRequest.parse(input),{cursor,limit,...filters}=parsed,queryHash=await digest(JSON.stringify(filters)),{profile,generation:stamp,sharedRevision}=await catalogueState(userId);
  let snapshot=await one<Snapshot>('SELECT id,query_hash,generation,data,expires_at FROM catalogue_snapshots WHERE user_id=?',userId),cached=true,offset=0;
  if(cursor){const match=/^([a-f0-9-]{36})\.(\d{1,5})$/.exec(cursor);if(!match)throw new PublicError('Invalid page cursor.',400);offset=Number(match[2]);if(offset>MAX_CATALOGUE_ROWS||offset%20!==0)throw new PublicError('Invalid page cursor.',400);
   if(!snapshot||snapshot.id!==match[1]||snapshot.query_hash!==queryHash||snapshot.generation!==stamp||Date.parse(snapshot.expires_at)<=Date.now())throw new PublicError('Your catalogue changed. Reload the current results before continuing.',409);
@@ -77,7 +77,7 @@ export async function cataloguePage(userId:string,input:unknown):Promise<Catalog
   try{
    workspaceLease=await acquireLease('byok_mutation:'+userId,90000);
    if(!workspaceLease)throw new PublicError('Another workspace change is being saved. Please try loading the catalogue again in a moment.',409);
-   const result=await build(userId,profile,filters);
+   const result=await build(userId,profile,filters,sharedRevision);
    if((await catalogueState(userId)).generation!==stamp||result.expires<=Date.now())throw new PublicError('Your catalogue changed during preparation. Reload to use the current results.',409);
    const id=crypto.randomUUID(),expiresAt=new Date(result.expires).toISOString(),data=JSON.stringify(result.data);
    // Fence the write in SQLite too: an expired holder must not recreate data after a clear.

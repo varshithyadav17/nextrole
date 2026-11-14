@@ -18,5 +18,7 @@ declare namespace Cloudflare {
     NEXTROLE_BRIDGE_ISSUER?: string;
     NEXTROLE_VERCEL_ORIGIN?: string;
     SERPAPI_API_KEY?: string;
+    UPSTASH_REDIS_REST_URL?: string;
+    UPSTASH_REDIS_REST_TOKEN?: string;
   }
 }

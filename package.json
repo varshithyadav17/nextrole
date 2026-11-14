@@ -14,8 +14,9 @@
     "typecheck": "tsc --noEmit --incremental false",
     "test": "node --experimental-strip-types scripts/verify-app.mjs",
     "test:scale": "node --experimental-strip-types scripts/verify-app.mjs --scale",
-    "verify": "pnpm typecheck && pnpm test:scale && pnpm build",
-    "db:generate": "drizzle-kit generate"
+    "verify": "pnpm typecheck && pnpm test:scalability && pnpm test:scale && pnpm build",
+    "db:generate": "drizzle-kit generate",
+    "test:scalability": "node --experimental-strip-types scripts/verify-scalability.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

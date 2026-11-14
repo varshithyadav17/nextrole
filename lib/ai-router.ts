@@ -2,12 +2,14 @@ import {z} from 'zod';
 import {boundedJSON} from './http-json';
 import {db,one} from './store';
 import {connectionState,digest,getAIOverview,openKey,storedSlots,type StoredSlot} from './keyring';
+import {requestGrounded} from './grounded-search';
 export type PDFInput={name:string;data:string;sha256:string};
 export type ChatTurn={role:'user'|'assistant';text:string};
 export type Attempt={slot:number;provider:string;status:string};
-type Routed<T>={ok:true;data:T;provider:string;model:string;slot:number;cached:boolean;attempts:Attempt[]}|{ok:false;message:string;attempts:Attempt[]};
+type Routed<T>={ok:true;data:T;provider:string;model:string;slot:number;cached:boolean;attempts:Attempt[];cacheId?:string}|{ok:false;message:string;attempts:Attempt[]};
 async function reserve(key:string,limit:number){if(limit<=0)return false;const r=await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=CAST(meta.value AS INTEGER)+1 WHERE CAST(meta.value AS INTEGER)<?').bind(key,'1',limit).run();return !!r.meta.changes;}
-async function requestSlot(slot:StoredSlot,key:string,instructions:string,payload:unknown,schema:unknown,pdf?:PDFInput,chat?:ChatTurn[]){
+async function requestSlot(slot:StoredSlot,key:string,instructions:string,payload:unknown,schema:unknown,pdf?:PDFInput,chat?:ChatTurn[],webSearch=false){
+ if(webSearch)return requestGrounded(slot,key,instructions,payload);
  const openai=slot.provider==='openai',gemini=slot.provider==='gemini';
  const endpoint=openai?'https://api.openai.com/v1/responses':gemini?'https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(slot.model)+':generateContent':'https://api.groq.com/openai/v1/chat/completions';
  const format={type:'json_schema',name:'nextrole_result',strict:true,schema};
@@ -28,18 +30,21 @@ async function requestSlot(slot:StoredSlot,key:string,instructions:string,payloa
  }
  if(openai&&(result?.output||[]).flatMap((o:any)=>o.content||[]).some((c:any)=>c.type==='refusal')||!openai&&!gemini&&result?.choices?.[0]?.message?.refusal||gemini&&result?.promptFeedback?.blockReason)return {ok:false as const,state:'declined',retryable:false,message:'The provider declined this request. Use the employer details and profile matching.',cooldown:null};
  const text=openai?(result?.output||[]).flatMap((o:any)=>o.content||[]).find((c:any)=>c.type==='output_text')?.text:gemini?result?.candidates?.[0]?.content?.parts?.filter((p:any)=>!p.thought).map((p:any)=>p.text||'').join(''):result?.choices?.[0]?.message?.content;
- return {ok:true as const,text};
+ return {ok:true as const,text,grounding:null};
 }
-export async function routeAI<T>(userId:string,task:string,instructions:string,payload:unknown,jsonSchema:unknown,validator:z.ZodType<T>,normalize?:(data:T)=>T,pdf?:PDFInput,conversation?:ChatTurn[]):Promise<Routed<T>>{
+export async function routeAI<T>(userId:string,task:string,instructions:string,payload:unknown,jsonSchema:unknown,validator:z.ZodType<T>,normalize?:(data:T)=>T,pdf?:PDFInput,conversation?:ChatTurn[],options?:{webSearch:true}):Promise<Routed<T>>{
+ const webSearch=!!options?.webSearch,cacheAge=webSearch?6*3600000:7*86400000;
+ if(webSearch&&(pdf||conversation))throw new Error('Web discovery accepts only public job-search preferences.');
  const chat=conversation===undefined?undefined:z.array(z.object({role:z.enum(['user','assistant']),text:z.string().min(1).max(6000)})).min(1).max(24).parse(conversation);
  if(pdf&&chat)throw new Error('Choose either PDF reading or conversation.');
  const attempts:Attempt[]=[];const overview=await getAIOverview(userId);
- const all=(await storedSlots(userId)).filter(s=>s.enabled);const candidates=overview.autoFallback?all:all.slice(0,1),slots=pdf?candidates.filter(s=>s.provider==='openai'||s.provider==='gemini'):candidates;
+ const all=(await storedSlots(userId)).filter(s=>s.enabled);const candidates=overview.autoFallback?all:all.slice(0,1),slots=pdf||webSearch?candidates.filter(s=>s.provider==='openai'||s.provider==='gemini'):candidates;
+ if(webSearch&&!slots.length)return {ok:false,message:'Web search needs an enabled OpenAI or Gemini connection that supports search tools. Add one in AI Connections; ordinary job search remains available.',attempts};
  if(pdf&&(!/^[a-f0-9]{64}$/.test(pdf.sha256)||pdf.data.length>5600000||!pdf.data))throw new Error('Invalid private PDF input.');
  if(pdf&&!slots.length)return {ok:false,message:'Original-PDF reading needs an enabled OpenAI or Gemini connection. Make one your first enabled slot or enable fallback in AI Connections.',attempts};
  if(!overview.storageReady||!slots.length)return {ok:false,message:'Add your own API connection in Preferences → AI Connections, or continue with profile matching.',attempts};
- const entries=await Promise.all(slots.map(async slot=>({slot,id:userId+':byok:'+await digest(JSON.stringify({v:1,task,provider:slot.provider,model:slot.model,fingerprint:slot.fingerprint,payload,...(pdf?{pdf:pdf.sha256}:{}),...(chat?{conversation:chat}:{})}))})));
- for(const {slot,id} of entries){const cached=await one<{data:string}>('SELECT data FROM analyses WHERE id=? AND created_at>=?',id,new Date(Date.now()-7*86400000).toISOString());if(cached){try{const parsed=validator.parse(JSON.parse(cached.data));return {ok:true,data:normalize?normalize(parsed):parsed,provider:slot.provider,model:slot.model,slot:slot.slot,cached:true,attempts};}catch{}}if(!['invalid_key','needs_attention'].includes(slot.status)&&(!slot.cooldown_until||Date.parse(slot.cooldown_until)<=Date.now()))break;}
+ const entries=await Promise.all(slots.map(async slot=>({slot,id:userId+':byok:'+await digest(JSON.stringify({v:1,task,provider:slot.provider,model:slot.model,fingerprint:slot.fingerprint,payload,...(webSearch?{webSearch:true}:{}),...(pdf?{pdf:pdf.sha256}:{}),...(chat?{conversation:chat}:{})}))})));
+ for(const {slot,id} of entries){const cached=await one<{data:string}>('SELECT data FROM analyses WHERE id=? AND created_at>=?',id,new Date(Date.now()-cacheAge).toISOString());if(cached){try{const parsed=validator.parse(JSON.parse(cached.data));return {ok:true,data:normalize?normalize(parsed):parsed,provider:slot.provider,model:slot.model,slot:slot.slot,cached:true,attempts,...(webSearch?{cacheId:id}:{})};}catch{}}if(!['invalid_key','needs_attention'].includes(slot.status)&&(!slot.cooldown_until||Date.parse(slot.cooldown_until)<=Date.now()))break;}
  const eligible=entries.filter(({slot})=>!['invalid_key','needs_attention'].includes(slot.status)&&(!slot.cooldown_until||Date.parse(slot.cooldown_until)<=Date.now()));
  if(!eligible.length)return {ok:false,message:'Your enabled connections need attention or have reached their provider limits. Replace or update them in AI Connections. Profile matching still works.',attempts:slots.map(s=>({slot:s.slot,provider:s.provider,status:s.status}))};
  const lease=crypto.randomUUID();const now=Date.now();
@@ -55,16 +60,16 @@ export async function routeAI<T>(userId:string,task:string,instructions:string,p
   for(const {slot,id} of eligible){
    const active=await one<{fingerprint:string;enabled:number}>('SELECT fingerprint,enabled FROM api_slots WHERE user_id=? AND slot=?',userId,slot.slot);
    if(!active?.enabled||active.fingerprint!==slot.fingerprint)continue;
-   if(attempts.length){const cached=await one<{data:string}>('SELECT data FROM analyses WHERE id=? AND created_at>=?',id,new Date(Date.now()-7*86400000).toISOString());if(cached){try{const parsed=validator.parse(JSON.parse(cached.data));return {ok:true,data:normalize?normalize(parsed):parsed,provider:slot.provider,model:slot.model,slot:slot.slot,cached:true,attempts};}catch{}}}
+   if(attempts.length){const cached=await one<{data:string}>('SELECT data FROM analyses WHERE id=? AND created_at>=?',id,new Date(Date.now()-cacheAge).toISOString());if(cached){try{const parsed=validator.parse(JSON.parse(cached.data));return {ok:true,data:normalize?normalize(parsed):parsed,provider:slot.provider,model:slot.model,slot:slot.slot,cached:true,attempts,...(webSearch?{cacheId:id}:{})};}catch{}}}
    let result:Awaited<ReturnType<typeof requestSlot>>;
-   try{const key=await openKey(userId,slot.slot,slot.ciphertext);result=await requestSlot(slot,key,instructions,payload,jsonSchema,pdf,chat);}catch{result={ok:false,state:'unavailable',retryable:true,message:'This connection could not complete the request. Try again later or reconnect it.',cooldown:new Date(Date.now()+60000).toISOString()};}
+   try{const key=await openKey(userId,slot.slot,slot.ciphertext);result=await requestSlot(slot,key,instructions,payload,jsonSchema,pdf,chat,webSearch);}catch{result={ok:false,state:'unavailable',retryable:!webSearch,message:webSearch?'The search request ended without a confirmed result. No automatic repeat was made; the provider may have charged for it.':'This connection could not complete the request. Try again later or reconnect it.',cooldown:new Date(Date.now()+60000).toISOString()};}
    if(!result.ok){attempts.push({slot:slot.slot,provider:slot.provider,status:result.state});await connectionState(userId,slot.slot,result.state,result.message,result.cooldown,slot.fingerprint,slot.model);if(!result.retryable)return {ok:false,message:result.message,attempts};continue;}
-   let parsed:T;try{parsed=validator.parse(JSON.parse(result.text||''));if(normalize)parsed=normalize(parsed);}catch{attempts.push({slot:slot.slot,provider:slot.provider,status:'invalid_response'});await connectionState(userId,slot.slot,'needs_attention','The model returned an unusable response. Check the selected model.',null,slot.fingerprint,slot.model);return {ok:false,message:'The AI response could not be verified. Your job feed and tracking remain available.',attempts};}
+   let parsed:T;try{const raw=JSON.parse((result.text||'').trim().replace(/^```(?:json)?\s*/i,'').replace(/\s*```$/,''));parsed=validator.parse(webSearch?{...raw,...result.grounding}:raw);if(normalize)parsed=normalize(parsed);}catch{attempts.push({slot:slot.slot,provider:slot.provider,status:'invalid_response'});await connectionState(userId,slot.slot,webSearch?'unavailable':'needs_attention','The model returned an unusable response. Check the selected model.',null,slot.fingerprint,slot.model);return {ok:false,message:'The AI response could not be verified. Your job feed and tracking remain available.',attempts};}
    await connectionState(userId,slot.slot,'ready','Last AI request succeeded.',null,slot.fingerprint,slot.model);
    await db().prepare('INSERT OR REPLACE INTO analyses(id,user_id,job_key,data,created_at) VALUES(?,?,?,?,?)').bind(id,userId,task,JSON.stringify(parsed),new Date().toISOString()).run();
    await db().prepare('DELETE FROM analyses WHERE user_id=? AND id NOT IN (SELECT id FROM analyses WHERE user_id=? ORDER BY created_at DESC,id DESC LIMIT 200)').bind(userId,userId).run();
    await db().prepare("DELETE FROM meta WHERE (key LIKE 'byok_count:%' AND substr(key,12,10)<?) OR (key LIKE 'byok_minute:%' AND substr(key,13,10)<?)").bind(new Date(Date.now()-7*86400000).toISOString().slice(0,10),new Date(Date.now()-86400000).toISOString().slice(0,10)).run();
-   return {ok:true,data:parsed,provider:slot.provider,model:slot.model,slot:slot.slot,cached:false,attempts};
+   return {ok:true,data:parsed,provider:slot.provider,model:slot.model,slot:slot.slot,cached:false,attempts,...(webSearch?{cacheId:id}:{})};
   }
   return {ok:false,message:'All enabled AI connections are unavailable or have reached their limits. Update them in AI Connections; profile matching and tracking still work.',attempts};
  }finally{await db().prepare('DELETE FROM meta WHERE key=? AND value=?').bind('byok_lock:'+userId,now+':'+lease).run();}
