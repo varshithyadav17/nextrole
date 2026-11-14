@@ -24,7 +24,7 @@ export async function verifyImports({database,put,check,defaultProfile,raw}){
   check(sources.length===before+1&&sources.at(-1).id===custom.id,'Appended boards keep the existing registry order and IDs.');
   check(new URL(sourceFeedUrl(custom)).hostname==='boards-api.greenhouse.io','A custom source still uses its documented provider endpoint.');
   check((await callSource(definition)).status===409,'Duplicate board registration is rejected.');
-  globalThis.fetch=async input=>{const u=new URL(String(input));return Response.json(u.hostname==='api.lever.co'?[]:{jobs:u.pathname.includes('/'+definition.token+'/')?[{...raw,id:77201,internal_job_id:77201}]:[],meta:{total:u.pathname.includes('/'+definition.token+'/')?1:0}});};
+  globalThis.fetch=async input=>{const u=new URL(String(input));if(u.hostname==='api.smartrecruiters.com')return Response.json({content:[],totalFound:0,offset:Number(u.searchParams.get('offset')||0)});return Response.json(u.hostname==='api.lever.co'?[]:{jobs:u.pathname.includes('/'+definition.token+'/')?[{...raw,id:77201,internal_job_id:77201}]:[],meta:{total:u.pathname.includes('/'+definition.token+'/')?1:0}});};
   await syncJobs(true);
   check((await getData('source-student','Student')).sources.some(s=>s.id===custom.id&&s.run?.success),'The actual ingestion and workspace paths use configured sources.');
   globalThis.fetch=async()=>new Response('busy',{status:429,headers:{'Retry-After':'1200'}});

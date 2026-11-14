@@ -5,34 +5,37 @@ import type {Source} from './types';
 import {isSafeJobUrl} from './matching';
 import {acquireLease,releaseLease} from './lease';
 import {PublicError} from './errors';
+import {EMPLOYER_PROVIDERS,validSourceAddress} from './extended-feeds';
 
 const definition=z.object({
- company:z.string().trim().min(2).max(100),provider:z.enum(['greenhouse','lever','ashby']),
+ company:z.string().trim().min(2).max(100),provider:z.enum(EMPLOYER_PROVIDERS),
  token:z.string().trim().regex(/^[a-zA-Z0-9_-]{1,100}$/),
  careerUrl:z.string().url().max(2048).refine(isSafeJobUrl),
  policyUrl:z.string().url().max(2048).refine(isSafeJobUrl),
  permissionConfirmed:z.literal(true),
+ host:z.string().max(200).optional(),site:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/).optional(),region:z.enum(['de','com']).optional(),
 });
 type RegisteredSource=Source&{policyUrl:string;reviewedAt:string};
 const KEY='source_registry_v1';
-export function sourceFingerprint(sources:Source[]){return sources.map(s=>s.id+':'+s.provider+':'+s.token).join('|');}
+export function sourceFingerprint(sources:Source[]){return sources.map(s=>[s.id,s.provider,s.token,s.host||'',s.site||'',s.region||''].join(':')).join('|');}
 export async function loadSources():Promise<Source[]>{
  const row=await env.DB!.prepare('SELECT value FROM meta WHERE key=?').bind(KEY).first<{value:string}>();
  if(!row)return SOURCES;
  const stored=z.array(definition.omit({permissionConfirmed:true}).extend({id:z.string().regex(/^custom-[a-f0-9]{24}$/),reviewedAt:z.string().datetime()})).max(80).safeParse(JSON.parse(row.value));
- if(!stored.success)throw new PublicError('Source configuration needs the host’s attention. Previous listings are preserved.',503);
+ if(!stored.success||stored.data.some(s=>!validSourceAddress(s)))throw new PublicError('Source configuration needs the host’s attention. Previous listings are preserved.',503);
  return [...SOURCES,...stored.data];
 }
 export async function registerSource(input:unknown){
  const source=definition.parse(input);
+ if(!validSourceAddress({...source,id:'pending'}))throw new PublicError('Check the employer host and board/site identifier. Only supported public provider addresses are allowed.');
  const lease=await acquireLease('source_registry_write',30000);
  if(!lease)throw new PublicError('Another source change is being saved. Please try again.',409);
  try{
   const sources=await loadSources();
-  if(sources.some(s=>s.provider===source.provider&&s.token===source.token))throw new PublicError('This employer board is already connected.',409);
+  if(sources.some(s=>s.provider===source.provider&&s.token.toLowerCase()===source.token.toLowerCase()&&(s.host||'')===(source.host||'')&&(s.site||'')===(source.site||'')&&(s.region||'de')===(source.region||'de')))throw new PublicError('This employer board is already connected.',409);
   const extra=sources.slice(SOURCES.length) as RegisteredSource[];
   if(extra.length>=80)throw new PublicError('The current source budget supports 80 additional boards. Review capacity before expanding it.');
-  const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(source.provider+':'+source.token));
+  const bytes=await crypto.subtle.digest('SHA-256',new TextEncoder().encode([source.provider,source.token.toLowerCase(),source.host||'',source.site||'',source.region||'de'].join(':')));
   const id='custom-'+Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('').slice(0,24);
   const {permissionConfirmed:_,...fields}=source;void _;
   const created={...fields,id,reviewedAt:new Date().toISOString()};

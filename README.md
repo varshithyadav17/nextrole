@@ -125,3 +125,13 @@ Real Google sign-in, real browser/device accessibility, campus concurrency, prov
 - `scripts/verify-*.mjs`, `handoff/`: executable evidence and operational handoff.
 
 NextRole is a product case study in making a narrow job-search loop useful, measurable and understandable before claiming large-scale impact.
+
+## Employer coverage
+
+The source registry configures 70 feeds representing 68 employers plus Jobicy. India-focused SmartRecruiters collection now includes Freshworks, Bosch, NielsenIQ, Dr Reddy’s Laboratories and Ramboll. Large indexes collect full descriptions in saved batches; absent postings are closed only after the complete index is revalidated. Existing student decisions, notes and application history retain their original keys.
+
+The searchable Sources directory includes 466 employer targets and all 58 requested platforms. A target is separate from a connected feed. Read-only career-page discovery records identified boards, access limits and connector reviews; owner maintenance resumes eight employer checks per call. Additional connections require a validated public feed and access review. A platform name does not imply its jobs are being imported.
+
+Configuration: [employer targets](data/employers.json), [platform inventory](data/platforms.json), [connected feeds](lib/sources.ts). Adapters cover Greenhouse, Lever, Ashby, SmartRecruiters, Workable, Recruitee, Personio, Breezy, Teamtailor RSS, Rippling, Workday and Oracle. Portal-specific recipes must pass validation before connection; credentials and collection permissions vary. Teamtailor RSS is a windowed discovery source, so absence does not close a job or confirm availability. Recruitee’s Careers Site API requires its designated token from 10 February 2027; this project does not bypass that requirement.
+
+Shared maintenance uses the existing owner-authorized connection and 10:00 / 18:00 Asia/Kolkata schedule. It does not spend student AI credits, submit applications or enable email subscriptions. A successful build is distinct from source health; the owner status tool reports live refresh progress, listing counts, failed feeds and delivery backlog.

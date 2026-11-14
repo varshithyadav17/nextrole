@@ -1,4 +1,5 @@
-import {boundedJSON} from './http-json';
+import {boundedJSON,boundedText} from './http-json';
+import {EXTENDED_PROVIDERS,extendedBoard,extendedFeed,postingFields,readExtended} from './extended-feeds';
 import {extractSkills,inferMode,isSafeJobUrl,jobKey,plainText} from './matching';
 import {extractExperience} from './experience';
 import {extractEligibility} from './eligibility';
@@ -53,14 +54,31 @@ export function normalizeJobicy(raw:Record<string,unknown>,source:Source,now:str
  return job;
 }
 /** Provider contracts live here; boards are configuration, never arbitrary fetch URLs. */
-export const SOURCE_ADAPTERS={
+export function normalizeExtended(raw:Record<string,unknown>,source:Source,now:string):Job|null{
+ const p=postingFields(raw,source),country=p.raw.country;if(country==='IN'&&!/\bIndia\b/i.test(p.fields.location))p.fields.location+=' · India';
+ const job=base(p.raw,source,now,p.fields);if(job&&!job.description.trim())job.evidenceComplete=false;
+ if(job&&source.provider==='teamtailor'){job.availability='unknown';job.evidenceComplete=false;}
+ return job;
+}
+type Adapter={label:string;normalize:(raw:Record<string,unknown>,source:Source,now:string)=>Job|null;board:(token:string,source?:Source)=>string;feed:(token:string,source?:Source)=>string;documentation:string};
+function extra(label:string,documentation:string):Adapter{return {label,normalize:normalizeExtended,board:(_t,s)=>{if(!s)throw new Error('Source address required');return extendedBoard(s);},feed:(_t,s)=>{if(!s)throw new Error('Source address required');return extendedFeed(s);},documentation};}
+export const SOURCE_ADAPTERS:Record<Source['provider'],Adapter>={
  greenhouse:{label:'Greenhouse',normalize:normalizeGreenhouse,board:(token:string)=>'https://job-boards.greenhouse.io/'+encodeURIComponent(token),feed:(token:string)=>'https://boards-api.greenhouse.io/v1/boards/'+encodeURIComponent(token)+'/jobs?content=true',documentation:'https://developers.greenhouse.io/job-board.html'},
  lever:{label:'Lever',normalize:normalizeLever,board:(token:string)=>'https://jobs.lever.co/'+encodeURIComponent(token),feed:(token:string)=>'https://api.lever.co/v0/postings/'+encodeURIComponent(token)+'?mode=json&limit=100&skip=0',documentation:'https://github.com/lever/postings-api'},
  ashby:{label:'Ashby',normalize:normalizeAshby,board:(token:string)=>'https://jobs.ashbyhq.com/'+encodeURIComponent(token),feed:(token:string)=>'https://api.ashbyhq.com/posting-api/job-board/'+encodeURIComponent(token),documentation:'https://developers.ashbyhq.com/docs/public-job-posting-api'},
  jobicy:{label:'Jobicy',normalize:normalizeJobicy,board:()=> 'https://jobicy.com/jobs',feed:(token:string)=>'https://jobicy.com/api/v2/remote-jobs?count=100'+(token==='anywhere'?'&geo=anywhere':''),documentation:'https://github.com/Jobicy/remote-jobs-api'},
-} satisfies Record<Source['provider'],{label:string;normalize:(raw:Record<string,unknown>,source:Source,now:string)=>Job|null;board:(token:string)=>string;feed:(token:string)=>string;documentation:string}>;
-export function sourceBoardUrl(source:Source){return SOURCE_ADAPTERS[source.provider].board(source.token);}
-export function sourceFeedUrl(source:Source){return SOURCE_ADAPTERS[source.provider].feed(source.token);}
+ smartrecruiters:extra('SmartRecruiters','https://developers.smartrecruiters.com/reference/v1listpostings'),
+ workable:extra('Workable','https://help.workable.com/hc/en-us/articles/115012771647'),
+ recruitee:extra('Recruitee','https://docs.recruitee.com/reference/authentication-1'),
+ personio:extra('Personio','https://developer.personio.de/docs/retrieving-open-job-positions'),
+ breezy:extra('Breezy HR','https://help.breezy.hr/en/articles/5297452'),
+ teamtailor:extra('Teamtailor RSS','https://support.teamtailor.com/'),
+ rippling:extra('Rippling','https://www.rippling.com/'),
+ workday:extra('Workday','https://www.workday.com/en-us/products/talent-management/recruiting.html'),
+ oracle:extra('Oracle Recruiting','https://docs.oracle.com/en/cloud/saas/human-resources/'),
+};
+export function sourceBoardUrl(source:Source){return SOURCE_ADAPTERS[source.provider].board(source.token,source);}
+export function sourceFeedUrl(source:Source){return SOURCE_ADAPTERS[source.provider].feed(source.token,source);}
 export class SourceFetchError extends Error{
  status:number;retryAfterMs:number;
  constructor(status:number,retryAfterMs:number){super('The source is temporarily unavailable.');this.status=status;this.retryAfterMs=retryAfterMs;}
@@ -96,6 +114,14 @@ export async function fetchSourceJobs(source:Source,now:string):Promise<Job[]>{
    if(seen.has(job.id))throw new Error('Feed repeated a posting across pages');seen.add(job.id);jobs.push(job);characters+=job.description.length;
    if(jobs.length>MAX_JOBS||characters>MAX_CHARACTERS)throw new Error('Feed exceeds safe memory budget');
   }
+ }
+ if(EXTENDED_PROVIDERS.includes(source.provider as any)){
+  const request=async(url:string,init?:RequestInit,text=false)=>{
+   const response=await fetch(url,{...init,signal,redirect:'manual',headers:{Accept:text?'application/xml,text/xml,application/rss+xml':'application/json',...init?.headers}});
+   if(!response.ok){const h=response.headers.get('retry-after'),seconds=h?Number(h):NaN;const wait=Number.isFinite(seconds)?seconds*1000:h?Date.parse(h)-Date.now():60000;await response.body?.cancel();throw new SourceFetchError(response.status,Math.min(86400000,Math.max(60000,wait||0)));}
+   return text?boundedText(response,8*1024*1024):boundedJSON(response,8*1024*1024);
+  };
+  append(await readExtended(source,request));return jobs;
  }
  if(source.provider==='jobicy'){
   let cursor:string|null=null;const cursors=new Set<string>();

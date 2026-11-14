@@ -1,0 +1,3730 @@
+[
+  {
+    "id": "employer-3735211729c3ac44",
+    "name": "Revvity",
+    "sector": "Life sciences and healthcare",
+    "careersUrl": "https://revvity.wd103.myworkdayjobs.com/External",
+    "origin": "Requested interview employer",
+    "priority": "P0"
+  },
+  {
+    "id": "employer-58ba0bb480a9dc8b",
+    "name": "6sense",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/6sense",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-f6e55eec16d25380",
+    "name": "Abnormal AI",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/abnormalsecurity",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-394b352c03f0a6a1",
+    "name": "Adalat AI",
+    "sector": "YC India startups",
+    "careersUrl": "https://adalat.ai/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-ee9021c84f33366b",
+    "name": "Adobe",
+    "sector": "Global technology",
+    "careersUrl": "https://careers.adobe.com",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-e65d5b0e65fc6c97",
+    "name": "AlgoTest",
+    "sector": "YC India startups",
+    "careersUrl": "https://algotest.in",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-f9d224fc94f51318",
+    "name": "AlgoUniversity",
+    "sector": "YC India startups",
+    "careersUrl": "http://algouniversity.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-cbc62794911ff31b",
+    "name": "Amazon",
+    "sector": "Global technology",
+    "careersUrl": "https://www.amazon.jobs/en",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-8d3aa1a6f227d714",
+    "name": "Apollo",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.apollofirst.xyz/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-158db8f6e9e36991",
+    "name": "Atlan",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://jobs.ashbyhq.com/atlan",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-651b2c67d5361363",
+    "name": "Atlassian",
+    "sector": "Global technology",
+    "careersUrl": "https://www.atlassian.com/company/careers/earlycareers",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-d26c7b380cdd0694",
+    "name": "Betterhalf",
+    "sector": "YC India startups",
+    "careersUrl": "https://betterhalf.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-468a971bd35bb6c2",
+    "name": "Binks",
+    "sector": "YC India startups",
+    "careersUrl": "https://getbinks.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-5723be71404e2c28",
+    "name": "BusinessOnBot",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.businessonbot.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-2fb41c42cec5d64a",
+    "name": "Cardboard",
+    "sector": "YC India startups",
+    "careersUrl": "https://cardboard.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-f29545218a2a959c",
+    "name": "Cityfurnish",
+    "sector": "YC India startups",
+    "careersUrl": "https://cityfurnish.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-38e06f8bf0ae827c",
+    "name": "ClickPe",
+    "sector": "YC India startups",
+    "careersUrl": "https://clickpe.ai/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-4e619a020b86764d",
+    "name": "Clinikally",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.clinikally.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-738e22f0acab814c",
+    "name": "Cloudflare",
+    "sector": "Global technology",
+    "careersUrl": "https://www.cloudflare.com/careers",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-faa9184b95b16d32",
+    "name": "Codingal",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.codingal.com/?utm_source=yc",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-64c1d2e9654377e5",
+    "name": "Composio",
+    "sector": "AI and analytics",
+    "careersUrl": "https://jobs.ashbyhq.com/composio",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-4f7791e6d3408b57",
+    "name": "Coulomb AI",
+    "sector": "YC India startups",
+    "careersUrl": "https://coulomb.ai/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-b48c9328a66ad7a5",
+    "name": "Coursera",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/coursera",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-2dc010636b9dce91",
+    "name": "Databricks",
+    "sector": "Global technology",
+    "careersUrl": "https://www.databricks.com/company/careers/open-positions",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-4d8bd97f03109ac1",
+    "name": "Datadog",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/datadog",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-43e29e0d7de8f466",
+    "name": "Delhivery",
+    "sector": "Commerce and logistics",
+    "careersUrl": "https://www.delhivery.com/about-us.html",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-64686f98a42da487",
+    "name": "Deliveroo",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/deliveroo",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-bf410c800bd8928c",
+    "name": "DevRev",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://job-boards.greenhouse.io/devrev",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-f8db95dc1a1b8dfa",
+    "name": "Druva",
+    "sector": "Global technology",
+    "careersUrl": "https://www.druva.com/why-druva/explore/careers/jobs",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-be6a999624b589e8",
+    "name": "Duolingo",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/duolingo",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-986051385feae5b9",
+    "name": "Elastic",
+    "sector": "Global technology",
+    "careersUrl": "https://jobs.elastic.co",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-8c15a763882d4862",
+    "name": "Ema",
+    "sector": "AI and analytics",
+    "careersUrl": "https://jobs.ashbyhq.com/ema",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-23d2d9bde590966f",
+    "name": "Emergent Labs",
+    "sector": "AI and analytics",
+    "careersUrl": "https://job-boards.greenhouse.io/emergentlabsinc",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-e53b1b201e156f43",
+    "name": "Enterpret",
+    "sector": "AI and analytics",
+    "careersUrl": "https://job-boards.greenhouse.io/enterpret",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-409397e0d8294a0f",
+    "name": "Explorex",
+    "sector": "YC India startups",
+    "careersUrl": "https://explorex.co",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-9f07749e9a8ba57a",
+    "name": "Fam (FamPay)",
+    "sector": "Early startups and education",
+    "careersUrl": "https://jobs.lever.co/fampay",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-b35a1639496c6390",
+    "name": "Fivetran",
+    "sector": "Global technology",
+    "careersUrl": "https://www.fivetran.com/careers",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-4e8c67d62118bf11",
+    "name": "Flipkart",
+    "sector": "Commerce and logistics",
+    "careersUrl": "https://www.flipkartcareers.com",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-06c3de2b3acda0c3",
+    "name": "FourKites",
+    "sector": "AI and analytics",
+    "careersUrl": "https://job-boards.greenhouse.io/fourkites",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-a80e4934a6f77731",
+    "name": "FrontPage",
+    "sector": "YC India startups",
+    "careersUrl": "https://front.page",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-9d96d9d5b1addd7e",
+    "name": "GitLab",
+    "sector": "Global technology",
+    "careersUrl": "https://job-boards.greenhouse.io/gitlab",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-9ba8bec5d58fb025",
+    "name": "Glean",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/gleanwork",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-bbdefa2950f49882",
+    "name": "Google",
+    "sector": "Global technology",
+    "careersUrl": "https://www.google.com/about/careers/applications/jobs/results",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-fe60d96e1353351b",
+    "name": "GroMo",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.gromo.in",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-b106c8916169d348",
+    "name": "Groww",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://job-boards.greenhouse.io/groww",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-49f756463ad9dcfb",
+    "name": "Harness",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/harnessinc",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-98d9014fb0107575",
+    "name": "Helloverify",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.helloverify.ae",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-c223b4a1ca759b62",
+    "name": "IMT Care",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.imt.care",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-92bc2e4121158762",
+    "name": "Infer",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.infer.so/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-3f11d9efa15ee73e",
+    "name": "InferEdge",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.inferedge.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-d79987051a2552ac",
+    "name": "Infinity",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.infinityapp.in/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-e289d3753df42b12",
+    "name": "Inito",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.inito.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-7f954e916e4c82f0",
+    "name": "InMobi",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://job-boards.greenhouse.io/inmobi",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-d0ff1b858684d7dd",
+    "name": "Jumio",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/jumio",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-d5bcbe0f27082cd8",
+    "name": "Kalam Labs",
+    "sector": "YC India startups",
+    "careersUrl": "http://www.kalamlabs.in",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-3d724cd5748bed20",
+    "name": "Kodo",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.kodo.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-eb557eef5d6a0f6f",
+    "name": "Lab0",
+    "sector": "YC India startups",
+    "careersUrl": "https://lab0.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-e8ee6b3466ed7144",
+    "name": "Landeed",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.landeed.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-7e25aba6713c025a",
+    "name": "Material Depot",
+    "sector": "YC India startups",
+    "careersUrl": "https://materialdepot.in/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-cdabb0dfad8b9c2d",
+    "name": "Merkle Science",
+    "sector": "AI and analytics",
+    "careersUrl": "https://jobs.lever.co/merklescience",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-9fbf261b62c1d7c0",
+    "name": "Microsoft",
+    "sector": "Global technology",
+    "careersUrl": "https://careers.microsoft.com",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-1cc9a79bdaf09793",
+    "name": "MongoDB",
+    "sector": "Global technology",
+    "careersUrl": "https://www.mongodb.com/company/careers/teams",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-2183e4aa92e1413e",
+    "name": "Morphle Labs",
+    "sector": "YC India startups",
+    "careersUrl": "https://morphlelabs.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-73560e9378461945",
+    "name": "Neodocs",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.neodocs.in",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-74762010307d013d",
+    "name": "Netradyne",
+    "sector": "AI and analytics",
+    "careersUrl": "https://www.netradyne.com/company/careers",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-82535cbd439cf3a5",
+    "name": "Netskope",
+    "sector": "Global technology",
+    "careersUrl": "https://www.netskope.com/company/careers/open-positions",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-65819e198c32566a",
+    "name": "Okta",
+    "sector": "Global technology",
+    "careersUrl": "https://www.okta.com/company/careers",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-731190d04917dc3d",
+    "name": "Optifye.ai",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.optifye.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-fdeaa85047ebbd76",
+    "name": "Paasa",
+    "sector": "YC India startups",
+    "careersUrl": "https://paasa.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-0f8ec60dd129da14",
+    "name": "PhonePe",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://www.phonepe.com/careers/job-openings",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-045ddeb7f631b771",
+    "name": "Postman",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://www.postman.com/company/careers/open-positions",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-b9c817aa741d43e4",
+    "name": "PrimeVault",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.primevault.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-9a280bb7b8bd88df",
+    "name": "Pure Storage",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/purestorage",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-be2b2cb5c77d782e",
+    "name": "Retape",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.retape.ai/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-482478d095fdd1dd",
+    "name": "Rivia.AI",
+    "sector": "YC India startups",
+    "careersUrl": "https://rivia.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-471b6340fee72439",
+    "name": "RocketSDR",
+    "sector": "YC India startups",
+    "careersUrl": "https://rocketsdr.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-4094a2b7125c7564",
+    "name": "Rubrik",
+    "sector": "Global technology",
+    "careersUrl": "https://www.rubrik.com/company/careers",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-392bd7073383a88f",
+    "name": "ShortLoop",
+    "sector": "YC India startups",
+    "careersUrl": "https://shortloop.dev/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-fa15bd82f01453ac",
+    "name": "Sigmoid",
+    "sector": "AI and analytics",
+    "careersUrl": "https://job-boards.greenhouse.io/sigmoid",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-2bed2032ed3d8300",
+    "name": "Stripe",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://stripe.com/careers/search",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-e5ba1146416c9c3b",
+    "name": "Suki",
+    "sector": "AI and analytics",
+    "careersUrl": "https://www.suki.ai/open-positions",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-be7d880835581698",
+    "name": "Sumo Logic",
+    "sector": "Global technology",
+    "careersUrl": "https://job-boards.greenhouse.io/sumologic",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-34de782f28c00430",
+    "name": "SuperKalam",
+    "sector": "YC India startups",
+    "careersUrl": "https://superkalam.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-e5f2f4ada0333086",
+    "name": "Swiggy",
+    "sector": "Commerce and logistics",
+    "careersUrl": "https://careers.swiggy.in/explore-jobs",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-b2390264a2e83edd",
+    "name": "Tekion",
+    "sector": "Global technology",
+    "careersUrl": "https://tekion.com/job-openings",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-89d01c9ba73cb5c4",
+    "name": "Twilio",
+    "sector": "Global technology",
+    "careersUrl": "https://job-boards.greenhouse.io/twilio",
+    "origin": "India expansion research",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-ce81348f60c6f3aa",
+    "name": "Vahan",
+    "sector": "YC India startups",
+    "careersUrl": "https://vahan.ai",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-82d048d26ee2fdd4",
+    "name": "Weekday",
+    "sector": "YC India startups",
+    "careersUrl": "https://weekday.works",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-2b0b43262c10d0e9",
+    "name": "Wifi Dabba, Inc",
+    "sector": "YC India startups",
+    "careersUrl": "https://dabba.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-104d5d493d11d73b",
+    "name": "Workato",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/workato",
+    "origin": "Validated employer feed",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-64c5f002fefc79d4",
+    "name": "xPay",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.xpaycheckout.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-252d313e86b38f69",
+    "name": "ZiffyHomes",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.ziffyhomes.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-4d748ebd71af03a7",
+    "name": "Accenture",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://www.accenture.com/in-en/careers",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0fb7124a0f14c68a",
+    "name": "ACKO",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-60cda8d4aae75994",
+    "name": "Aditya Birla Capital",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ab7d0a36ecbe10c2",
+    "name": "Airbnb",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/airbnb",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-36aa04f4333ebc94",
+    "name": "Airbus",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8703423b6f4bd3c4",
+    "name": "Airtel",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-fa1127852ed8507e",
+    "name": "AJIO",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a3c4d61dbebabbaf",
+    "name": "Akamai",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a95e8cdf764f23dd",
+    "name": "Amagi",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-240389f4b730bad4",
+    "name": "AMD",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-9c1085f1257f9110",
+    "name": "Analog Devices",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-fe47f9e7f7a18c6e",
+    "name": "Angel One",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6e4145a56961e12c",
+    "name": "Apollo 24/7",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3a7bd3e2360a3d29",
+    "name": "Apple",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5c57603a43d2bc97",
+    "name": "Applied Materials",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bae618521fefe1f5",
+    "name": "Appsmith",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7655250ab6b4fa73",
+    "name": "Arista Networks",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ddf7ff5ebd9d66ce",
+    "name": "Arm",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3cb882789f1a7e57",
+    "name": "ASML",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-320d597682ed208c",
+    "name": "Autodesk",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8b328f06bc5102f0",
+    "name": "Axis Bank",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://www.axis.bank.in/Careers",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c4b15eb44d7893e1",
+    "name": "Bain & Company",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b8361aa1117159ef",
+    "name": "Bajaj Auto",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-cd1025489027cbad",
+    "name": "Bank of America",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-409a55737b7ee85e",
+    "name": "BCG",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-73f59d852fb866a7",
+    "name": "BharatPe",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6bd81f7f06c17fb8",
+    "name": "BigBasket",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f6331990e2a29030",
+    "name": "Birlasoft",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-678ab690bad55a11",
+    "name": "Bizongo",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7e6578c2e34b5313",
+    "name": "BlackRock",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-40bd434c398a1eac",
+    "name": "Blinkit",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0fb9765e58d296e5",
+    "name": "Bloomberg",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-27df9ed9a477af0f",
+    "name": "BMW",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5af5350366de4360",
+    "name": "BNY",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-16f45b99abfda636",
+    "name": "Boeing",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f5ad9ee54e107d9f",
+    "name": "Booking.com",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-41ac60b7ace50fec",
+    "name": "BookMyShow",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-226a193ae269296d",
+    "name": "BP",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-373ac021a2c0bb2c",
+    "name": "Broadcom",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bf0986df1687b4ca",
+    "name": "BrowserStack",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-dff7b8c6dbd700b8",
+    "name": "Bueno Finance",
+    "sector": "YC India startups",
+    "careersUrl": "https://buenofinanceinc.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4f6b9e1c24d93d9a",
+    "name": "Cadence",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f55a85b2f2eb0790",
+    "name": "Capgemini",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2d98989fce6b63cb",
+    "name": "Capillary Technologies",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7a532f61cd993372",
+    "name": "CarDekho",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-99e829f578dd2b61",
+    "name": "CARS24",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3850d5a323b9c219",
+    "name": "Cartesian Consulting",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ac243cb0eef61df9",
+    "name": "Cashfree Payments",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://www.cashfree.com/",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f1111223887f55ca",
+    "name": "CGI",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b3e9dea15253218f",
+    "name": "Chargebee",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e73b79a0b10f8cdb",
+    "name": "Cisco",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2ad55da5b6ea629b",
+    "name": "Citi",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a0829d4140e316d6",
+    "name": "Classplus",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ef3dfd0f0e4ac3a3",
+    "name": "CleverTap",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-af320f15fe889be1",
+    "name": "CloudSEK",
+    "sector": "India employer target",
+    "careersUrl": "https://www.cloudsek.com/openings",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d67200d6eadbdbeb",
+    "name": "Coforge",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-86f73dfe7bb6a9e6",
+    "name": "Cognizant",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d5e300dea6e3c0fd",
+    "name": "Cohesity",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f80f21938e5248ec",
+    "name": "Coinbase",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/coinbase",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7e685407b94faa6d",
+    "name": "Collins Aerospace",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-21c211debb171fcf",
+    "name": "Confluent",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ad21acb889da17fe",
+    "name": "Continental",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2b409c1b64a4037d",
+    "name": "Course5 Intelligence",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-55d91a3561684b32",
+    "name": "CRED",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/cred",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-101958dadd6e2fb5",
+    "name": "CrowdStrike",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-50103bddc1ab02d4",
+    "name": "Dailyhunt",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0e5bbbac400ce5d6",
+    "name": "Darwinbox",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d0e2ece166bdef23",
+    "name": "Dell",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3e808ece8227f5d4",
+    "name": "Deloitte",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e67cecda755ba53b",
+    "name": "Dhan",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-714e8e366ad3cd6a",
+    "name": "Digit Insurance",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a24b074c802959ef",
+    "name": "Ditto Insurance",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3dc9871fc311e79c",
+    "name": "Dozee",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/dozee",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5e97c00643478c56",
+    "name": "Dream11",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-49c02101cf728b94",
+    "name": "Drivetrain",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/drivetrain",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-75170593d559f227",
+    "name": "Dropbox",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4f85d51320277acd",
+    "name": "Dyte",
+    "sector": "YC India startups",
+    "careersUrl": "https://dyte.io",
+    "origin": "Y Combinator India directory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-350a2212be39a86a",
+    "name": "EaseMyTrip",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-53f09aae59c46f49",
+    "name": "Eka Care",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0ecc5bb68c392da3",
+    "name": "Eka Software",
+    "sector": "Indian SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-71d574d7229ddb50",
+    "name": "ElasticRun",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a1ce7a1b010b368f",
+    "name": "EPAM",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-327c8e573a673780",
+    "name": "Eruditus",
+    "sector": "Indian SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b7679dfa95094e8a",
+    "name": "Eternal",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b7bea343b08cce2c",
+    "name": "EXL",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8ad914e76a1e5bb4",
+    "name": "Exotel",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bf4e1570f8a4a1cd",
+    "name": "Expedia",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2bdd94c004581aa9",
+    "name": "EY",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://www.ey.com/en_in/careers",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8b439d7c14a9c960",
+    "name": "Facets.cloud",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1c23a14c49f13b15",
+    "name": "Fam",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/fampay",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b7444991afa47266",
+    "name": "FarEye",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b4bdc848109722a3",
+    "name": "Fi",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1f1e28eb835e1483",
+    "name": "Fi Money",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b660bc57ecffd6db",
+    "name": "Fidelity International",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4d14d600aa1e5cce",
+    "name": "FinBox",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-412c236caf17c22f",
+    "name": "FirstCry",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-07c8ac82238f4385",
+    "name": "FlexiLoans",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-964e14697b438208",
+    "name": "Forma.ai",
+    "sector": "India employer target",
+    "careersUrl": "https://www.forma.ai/careers",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-da2f417984dfcd67",
+    "name": "Fortinet",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-60f4bf5ace62198c",
+    "name": "Fractal",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c634dff53e4688cc",
+    "name": "Fractal Analytics",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8ab95df603f7bade",
+    "name": "Freshworks",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://careers.smartrecruiters.com/Freshworks",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1538f41427da5dc9",
+    "name": "Games24x7",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e78186cbcdff45e1",
+    "name": "Genpact",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c0b0109d9439de57",
+    "name": "GitHub",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e776a070909341e9",
+    "name": "Glance",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a9a1855f9c7f6ee5",
+    "name": "Globant",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a98d6c8cbe188d67",
+    "name": "Gnani.ai",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8ce7350ba101c1a7",
+    "name": "Goibibo",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-249c31f34648311e",
+    "name": "greytHR",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-15c772885cfa4fa3",
+    "name": "Gupshup",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-08e80d0b56ab81ce",
+    "name": "HackerRank",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/hackerrank",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-cefaef1264bf044f",
+    "name": "Haptik",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-55969199c092e843",
+    "name": "Hasura",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e6f146354586d556",
+    "name": "HCLTech",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2a7703dff14a60c4",
+    "name": "HDFC Bank",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://www.hdfc.bank.in/careers",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bcf6ff597ae036d6",
+    "name": "Healthify",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-09ad5293fe1393ed",
+    "name": "Hevo Data",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/hevodata",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a6366b386dad23fa",
+    "name": "Hewlett Packard Enterprise",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-05f7bc22103a37e1",
+    "name": "Hexaware",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-99a684beca77b6b9",
+    "name": "HighRadius",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8417659f46b5b43b",
+    "name": "Honda",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8f21f4394b287e1d",
+    "name": "Housing.com",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-93969d193161ae6f",
+    "name": "HP",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b02d68728e8b1e38",
+    "name": "HyperVerge",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ac85892205b92e8c",
+    "name": "Hyundai",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-916a98f0fa2a39af",
+    "name": "IBM",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-9164bf2a7cd4c252",
+    "name": "IBM Consulting",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-07ad65c5afbab5fa",
+    "name": "Icertis",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-aec560fca089e6dc",
+    "name": "ICICI Bank",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://careers.icici.bank.in/",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e4652f96ee459978",
+    "name": "IDFC FIRST Bank",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1c8451fc44928269",
+    "name": "Impetus",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-096c4c5650accc3b",
+    "name": "Indium Software",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0d13ebe37fb89928",
+    "name": "INDmoney",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ab877737b6081bd1",
+    "name": "Infosys",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5c66907934d3c8ec",
+    "name": "Infra.Market",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f1248ff0098a5ab0",
+    "name": "Innovaccer",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ba04e960616b2649",
+    "name": "Instawork",
+    "sector": "India employer target",
+    "careersUrl": "https://www.instawork.com/careers",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-96eebba49dbbf422",
+    "name": "Intel",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-80daf15e57af2a31",
+    "name": "Intuit",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-052991739b72ac77",
+    "name": "ixigo",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-592495d901bfec9b",
+    "name": "Jio Platforms",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ed127d7b58daef02",
+    "name": "Juniper Networks",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1e9cc37678c0112d",
+    "name": "Jupiter",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e9e9c53385529d01",
+    "name": "Juspay",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d4ecef15e7f6e51d",
+    "name": "Karya",
+    "sector": "India employer target",
+    "careersUrl": "https://www.karya.in/join-us/careers/",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d5fe9bdd6568edf2",
+    "name": "Kearney",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0ce9aff717bb6e36",
+    "name": "Keka",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-dbf2bec1f34ec2c0",
+    "name": "Kissflow",
+    "sector": "Indian SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f2c4c1e0295ba17d",
+    "name": "Kotak Mahindra Bank",
+    "sector": "Fintech and banking",
+    "careersUrl": "https://www.kotak.bank.in/en/about-us/careers.html",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-344bff8b2788383a",
+    "name": "KPMG",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://kpmg.com/in/en/careers.html",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-dd204936df4d09a5",
+    "name": "KreditBee",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-17bd921b4ab173bc",
+    "name": "Krutrim",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c2d5c702d6121227",
+    "name": "Lam Research",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3d7c3fa5d60e445a",
+    "name": "LambdaTest",
+    "sector": "Indian SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-640985aa233106b2",
+    "name": "LatentView Analytics",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-53a5ed1f00937156",
+    "name": "LEAD Group",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-982aaad03b937087",
+    "name": "LeadSquared",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5ea813c5b10b6d62",
+    "name": "Leena AI",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f56c4534052df245",
+    "name": "Lendingkart",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a0272738be36f0f4",
+    "name": "Lenskart",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-84308bea454057aa",
+    "name": "LinkedIn",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d0fb8f3aea67f1ad",
+    "name": "LoginRadius",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-68bb2c9ee62a11ca",
+    "name": "London Stock Exchange Group",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7476d4280af27c31",
+    "name": "Loop Health",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-fe90ff6d017b5807",
+    "name": "LotusPay",
+    "sector": "YC India startups",
+    "careersUrl": "http://www.lotuspay.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e7704fe6001152e9",
+    "name": "Lowe's",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5ddf64ee7f1dcb35",
+    "name": "LTIMindtree",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://www.ltm.com/india-careers",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-07bfa0a148e6d106",
+    "name": "Mad Street Den",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c29a6b3cbecfdfe1",
+    "name": "Mahindra",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-06c08557f1013bb7",
+    "name": "MakeMyTrip",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-30a113eb01acb2a0",
+    "name": "Maruti Suzuki",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-07863e7a6a2154ba",
+    "name": "Mastercard",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bb3b260af7d86cbb",
+    "name": "MathCo",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-286a3c612017ad1d",
+    "name": "McKinsey",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7ae9124bce808847",
+    "name": "MediaTek",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8894283570d18338",
+    "name": "Meesho",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/meesho",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-db161cf21441ac58",
+    "name": "Mercedes-Benz Research and Development India",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ea3bd73e2b506e00",
+    "name": "Meta",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-37b5fecebce720fd",
+    "name": "Micron",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-32157155c9b853e5",
+    "name": "Mindtickle",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://jobs.lever.co/mindtickle",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2c52382cd4083d01",
+    "name": "MobiKwik",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ab02e5a9fb466b27",
+    "name": "MoEngage",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-95478675c93406ee",
+    "name": "Moglix",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bfb2f0821be1ad17",
+    "name": "Moj",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bdcdb05e1c4f202d",
+    "name": "Moneyview",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-57168a45a0190818",
+    "name": "Moody's",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c63ac00c4d11dcc9",
+    "name": "Mphasis",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-392691b843033551",
+    "name": "MPL",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-29a96166946cdecd",
+    "name": "Mu Sigma",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-000305c8f8d99edb",
+    "name": "Myntra",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-86980728287f8c2b",
+    "name": "Nagarro",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-fc1b192ed5829737",
+    "name": "Nasdaq",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-21305f1bcd615275",
+    "name": "Navi",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4230c5e0c01d05ab",
+    "name": "Netcore Cloud",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-13ed070478ef62c3",
+    "name": "Netflix",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c311195f24dd68c6",
+    "name": "Neysa",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-93da3e9f9f6a9e3e",
+    "name": "Niramai",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-432f89419deae08a",
+    "name": "Niyo",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d34d1901d9d377fd",
+    "name": "NoBroker",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b8373a434c8d54c7",
+    "name": "Northern Trust",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-31f61ed3e6e210c5",
+    "name": "Notion",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.ashbyhq.com/notion",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0167b7955b412522",
+    "name": "NTT DATA",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-55018e0e8e29f124",
+    "name": "Nutanix",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-8d4321d936320802",
+    "name": "NVIDIA",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e554f8d4f5662c24",
+    "name": "NXP",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-98932ea98ae9ca65",
+    "name": "Nykaa",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1ab8277fd36a7904",
+    "name": "Observe.AI",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a40d630d6beea27a",
+    "name": "OfBusiness",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-55a9f4f8994b1bbf",
+    "name": "Ola",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-57b453d25cb0c456",
+    "name": "Ola Cabs",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c5a35b507a49ca6f",
+    "name": "Ola Electric",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f0d51d73958ecb16",
+    "name": "OneCard",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a7d324a4b53ea387",
+    "name": "Optum",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-9202af6ce925b26a",
+    "name": "Oracle",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6bbc91349d6d5d1b",
+    "name": "OYO",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f446b610e3e745fa",
+    "name": "Palo Alto Networks",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-afe4d16f403a383f",
+    "name": "PayPal",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2b1da9c840074a35",
+    "name": "Paytm",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/paytm",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-74656000bd2deedd",
+    "name": "PayU",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1119b745290d4594",
+    "name": "PB Fintech",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-9cd325ff031be84b",
+    "name": "Perfios",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-cd7b931b56c0c22e",
+    "name": "Persistent Systems",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-02655199f145ac36",
+    "name": "PhysicsWallah",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2396041630017604",
+    "name": "Pine Labs",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ab221f244634fea5",
+    "name": "Plum Insurance",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bda3ff6d37d37c62",
+    "name": "Policybazaar",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f78b1bbdaafa735f",
+    "name": "Porter",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a674bfdc8fe31a82",
+    "name": "Portkey AI",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e9ebdcc61f120d47",
+    "name": "Practo",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-86d872c87ddd6b53",
+    "name": "Publicis Sapient",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e4ffb7bd879b89da",
+    "name": "PwC",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://www.pwc.in/careers.html",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f31639a23c744015",
+    "name": "Qualcomm",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-47644e4fcf07d505",
+    "name": "Quantiphi",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-323d72d4c4b15c43",
+    "name": "Qure.ai",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-55591700b38bdac9",
+    "name": "Rapido",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-49430b56695b2cbd",
+    "name": "RateGain",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3ad26c5abab876c9",
+    "name": "Razorpay",
+    "sector": "India employer target",
+    "careersUrl": "https://razorpay.com/careers/",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7d3b5c83009fadf7",
+    "name": "Red Hat",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2c180ced6e2f1297",
+    "name": "Reliance Retail",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-df8b569f6c83086c",
+    "name": "Rupeek",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-01f3c2eaed4a1fe7",
+    "name": "S&P Global",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-3ccbd9105a45d8fc",
+    "name": "Salesforce",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-968e2d5b08687bf4",
+    "name": "Samsung",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a9a59e4661805317",
+    "name": "Samsung Research India",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-551302f940070ad1",
+    "name": "Samsung Semiconductor",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7a9c94a8c201bcc2",
+    "name": "SAP",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ee1e31ffef7dbe64",
+    "name": "Sarvam",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.ashbyhq.com/sarvam",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0adaded410f9f967",
+    "name": "Scaler",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ffb301e28a65f304",
+    "name": "Scribe",
+    "sector": "YC India startups",
+    "careersUrl": "http://tryscribe.com/",
+    "origin": "Y Combinator India directory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-40a8db52d8f58ab1",
+    "name": "Seagate",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6171b6243aaf7ac8",
+    "name": "SentinelOne",
+    "sector": "Global technology",
+    "careersUrl": "https://job-boards.greenhouse.io/sentinellabs",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b5738c169b693bee",
+    "name": "ServiceNow",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-877a9574f2a75d6e",
+    "name": "Setu",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-560180651be608a1",
+    "name": "Shadowfax",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a1e482baf68db671",
+    "name": "ShareChat",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ce635c4eabff5e4f",
+    "name": "Shell",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-944272e65da4a1e4",
+    "name": "Shiprocket",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-be99abf06bcac798",
+    "name": "Shipsy",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0b5d7ed604761c95",
+    "name": "Signzy",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-a6712705614e88f0",
+    "name": "Simplilearn",
+    "sector": "Indian SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-c489831c8ebe543f",
+    "name": "SingleStore",
+    "sector": "India employer target",
+    "careersUrl": "https://www.singlestore.com/careers/",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-09ac7d151bb0210e",
+    "name": "Skild AI",
+    "sector": "India employer target",
+    "careersUrl": "https://www.skild.ai/career",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-03fdb065d956f3fb",
+    "name": "Slice",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-9422919493939888",
+    "name": "smallcase",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-de5a1adf4fedcce1",
+    "name": "Snowflake",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-21e5f85729796b6c",
+    "name": "Spinny",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-50b0085e2e91f6c6",
+    "name": "SpotDraft",
+    "sector": "SaaS and developer tools",
+    "careersUrl": "https://jobs.ashbyhq.com/spotdraft",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2b78da3dc866654e",
+    "name": "Spotify",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0863f7f42a7fece7",
+    "name": "Sprinto",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.lever.co/Sprinto",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-17bf1c1a46f256d3",
+    "name": "Standard Chartered",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6443b81321cec01c",
+    "name": "State Street",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4d7594e57f7d03f3",
+    "name": "Supabase",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.ashbyhq.com/supabase",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-2e92046b6f07f497",
+    "name": "Synopsys",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-34a04005bcaf206e",
+    "name": "Target",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-778165666b45a087",
+    "name": "Tata 1mg",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-809b9b2dfc5db249",
+    "name": "Tata Digital",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6018da2726264109",
+    "name": "Tata Motors",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-df46e9353ec96a8b",
+    "name": "Tata Neu",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-06b5472c16feae4c",
+    "name": "TCS",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://www.tcs.com/careers/india",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-22d9b4107d53fa7d",
+    "name": "Teachmint",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-08da0beb6bb316e4",
+    "name": "Tech Mahindra",
+    "sector": "IT services and consulting",
+    "careersUrl": "https://careers.techmahindra.com/",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b922b7e0ba4cfdb9",
+    "name": "Tesco",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-027de4294ac83002",
+    "name": "Testbook",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-00c2a5160ee4f5f9",
+    "name": "Texas Instruments",
+    "sector": "Global technology",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-926616585a6ca773",
+    "name": "Thomson Reuters",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-27b78f50b2d3d969",
+    "name": "Thoughtworks",
+    "sector": "Consulting, IT services and enterprise engineering",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5705fa1b2f3c3c45",
+    "name": "Tiger Analytics",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-530ea4d9178ebbea",
+    "name": "ToolJet",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-337b8d2c1e132acd",
+    "name": "Toyota",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-fed23f9c388b0990",
+    "name": "Tredence",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ead4f7d9cd0444c4",
+    "name": "TrueFoundry",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-24f6114c5bb25235",
+    "name": "TVS Motor",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-74c860f63661b29c",
+    "name": "Uber",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-69c082d5be5762a2",
+    "name": "Uber India",
+    "sector": "Indian product, fintech and consumer companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0d8d7b583f998888",
+    "name": "UBS",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-aa989db8f660dd71",
+    "name": "Udaan",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-41341a835454c055",
+    "name": "Unacademy",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e0b886e033135819",
+    "name": "Unicommerce",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-42b8372c89ffaa33",
+    "name": "UnifyApps",
+    "sector": "AI and analytics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e3b31ba0ed790b3f",
+    "name": "Uniphore",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b935fbeb80a523f8",
+    "name": "UnitedHealth Group",
+    "sector": "Banking, financial services and global capability centers",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-76cfec1c272a6aa7",
+    "name": "upGrad",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4ee0fa710885d606",
+    "name": "Upstox",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-bc48c2bdec9b1a7a",
+    "name": "Urban Company",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-1f1cfc1d441be41f",
+    "name": "UST",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-0625f52d9f229803",
+    "name": "Vedantu",
+    "sector": "Early startups and education",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-e759968ca9278b8d",
+    "name": "Visa",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-282fbedbd3f4cbe6",
+    "name": "VMware/Broadcom",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-aa59343f9ebb354f",
+    "name": "Volkswagen",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d7608852fa893609",
+    "name": "Volvo Group",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-dc962111a0471a71",
+    "name": "Walmart Global Tech",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-7fd2db56d36b30a5",
+    "name": "WebEngage",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-f3d1d74bf14c42c2",
+    "name": "Western Digital",
+    "sector": "Semiconductor, automotive and industrial",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-11f61ee7e833fac0",
+    "name": "Whatfix",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-56909d426257b476",
+    "name": "Wingify",
+    "sector": "Indian SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5d86d506f4f54726",
+    "name": "Wingman",
+    "sector": "YC India startups",
+    "careersUrl": "https://www.trywingman.com",
+    "origin": "Y Combinator India directory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5528a266f145e52b",
+    "name": "Wipro",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-ff77018032e0ed1a",
+    "name": "Yellow.ai",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-89edda3084a907d3",
+    "name": "Yubi",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d21800cafd9b39d7",
+    "name": "Zapier",
+    "sector": "India employer target",
+    "careersUrl": "https://jobs.ashbyhq.com/zapier",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6a50ccc096d5a7e8",
+    "name": "Zensar",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-9782b0ba6c878626",
+    "name": "Zepto",
+    "sector": "Commerce and logistics",
+    "careersUrl": "https://www.zeptonow.com/",
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-504fda550dee86c6",
+    "name": "Zerodha",
+    "sector": "Fintech and banking",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-5cc10d9143b2cff0",
+    "name": "Zeta",
+    "sector": "India employer target",
+    "careersUrl": "https://www.zeta.tech/us/careers/",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-6db1f33b4a97514c",
+    "name": "Zinnov",
+    "sector": "India employer target",
+    "careersUrl": "https://zinnov.com/careers/",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-cb2317426a5c336d",
+    "name": "Zoho",
+    "sector": "SaaS and developer tools",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4a3892e5bc960fe4",
+    "name": "Zomato",
+    "sector": "Commerce and logistics",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-d21bb537725d603e",
+    "name": "Zoom",
+    "sector": "Global big tech and product companies",
+    "careersUrl": null,
+    "origin": "Requested employer inventory",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-4da719f80462cedc",
+    "name": "ZS Associates",
+    "sector": "IT services and consulting",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-b1b40dcb8dfab37f",
+    "name": "Zscaler",
+    "sector": "India employer target",
+    "careersUrl": "https://job-boards.greenhouse.io/zscaler",
+    "origin": "Connected employer",
+    "priority": "P2"
+  },
+  {
+    "id": "employer-715edf8ba8729420",
+    "name": "ABB",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-cae750b28a962b23",
+    "name": "Addverb",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-cf593efd0ca5c39b",
+    "name": "Agnikul Cosmos",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-268ef950ed2a699c",
+    "name": "American Express",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-443537bf91392ec0",
+    "name": "Ather Energy",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-fac71c2144abba44",
+    "name": "Ati Motors",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-71f566aba763fb76",
+    "name": "Barclays",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-b23e0b28d8daff01",
+    "name": "Bellatrix Aerospace",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-0600c79833cc723f",
+    "name": "Bosch",
+    "sector": "Engineering and industry",
+    "careersUrl": "https://careers.smartrecruiters.com/BoschGroup",
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-80657d8d7608698a",
+    "name": "CynLr",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-4592ad23db1ff2ea",
+    "name": "Deutsche Bank",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-9f75781b2bc1a163",
+    "name": "Dhruva Space",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-592e7fa42b5cddc8",
+    "name": "Digantara",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-28236bb68000cb95",
+    "name": "Eaton",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-f17fab25e849fd72",
+    "name": "Exponent Energy",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-63eb27870526c72d",
+    "name": "Fidelity Investments",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-0ec60494c570f766",
+    "name": "GalaxEye",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-3dd7d25d7680a0d8",
+    "name": "GE Aerospace",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-bf35b3e3b9bb3050",
+    "name": "Goldman Sachs",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-7bbda4e0c2ae6d10",
+    "name": "Greaves Electric Mobility",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-4ce12df46f3acbae",
+    "name": "GreyOrange",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-59c1de0763e8bdc6",
+    "name": "Honeywell",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-ce749e840dcada0f",
+    "name": "HSBC",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-0c14cc42151f5cc0",
+    "name": "ideaForge",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-d7c3015270137585",
+    "name": "JPMorgan Chase",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-5fed6194d6ae5e06",
+    "name": "KPIT",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-d171259280e07c28",
+    "name": "Larsen & Toubro",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-ed62750a6f969504",
+    "name": "Log9 Materials",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-8768ced25e636edf",
+    "name": "Morgan Stanley",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-61d452998bdcae13",
+    "name": "NatWest",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-68c510ed48ada0d7",
+    "name": "NewSpace Research",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-39e2aa06b27fbea7",
+    "name": "Pixxel",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-0e357968efdabb54",
+    "name": "Schneider Electric",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-30e363d3e8c59f2c",
+    "name": "Siemens",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-af2522e6bb450f32",
+    "name": "Simple Energy",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-1721af9da0dad702",
+    "name": "Skyroot Aerospace",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-47efd87a1d6e0bf6",
+    "name": "Tata Elxsi",
+    "sector": "Engineering and industry",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-0a2fc68bce41e79c",
+    "name": "Ultraviolette",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-fc4e203925bd77c6",
+    "name": "Unbox Robotics",
+    "sector": "Deeptech and mobility",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-62fd6c7860342a31",
+    "name": "Wells Fargo",
+    "sector": "Global banking and GCCs",
+    "careersUrl": null,
+    "origin": "India expansion research",
+    "priority": "P3"
+  },
+  {
+    "id": "employer-6536fe31aebba942",
+    "name": "NielsenIQ",
+    "careersUrl": "https://careers.smartrecruiters.com/NielsenIQ",
+    "sector": "India employer target",
+    "origin": "Verified public SmartRecruiters board",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-cba90261ef8c8f44",
+    "name": "Dr Reddy’s Laboratories",
+    "careersUrl": "https://careers.smartrecruiters.com/DrReddysLaboratoriesLimited",
+    "sector": "India employer target",
+    "origin": "Verified public SmartRecruiters board",
+    "priority": "P1"
+  },
+  {
+    "id": "employer-f8b87a1f1782e62a",
+    "name": "Ramboll",
+    "careersUrl": "https://careers.smartrecruiters.com/Ramboll3",
+    "sector": "India employer target",
+    "origin": "Verified public SmartRecruiters board",
+    "priority": "P1"
+  }
+]

@@ -65,7 +65,7 @@ export async function verifyDiscovery({database,put,GET,check,defaultProfile,raw
   const duplicateB={...duplicateA,id:88002,internal_job_id:99002,absolute_url:'https://job-boards.greenhouse.io/shared/jobs/990001?utm_source=second'};
   let omitFirst=false,failSecond=false,distinct=false;
   const feed=async input=>{
-   const u=new URL(String(input));
+   const u=new URL(String(input));if(u.hostname==='api.smartrecruiters.com')return Response.json({content:[],totalFound:0,offset:Number(u.searchParams.get('offset')||0)});
    if(u.hostname==='jobicy.com')return Response.json({success:true,statusCode:200,jobCount:0,jobs:[],hasMore:false,nextCursor:null});
    if(u.hostname==='api.lever.co')return Response.json(u.pathname.endsWith('/lever-test-001')?leverRaw:u.pathname.includes('/'+lever.token)?[leverRaw]:[]);
    if(u.hostname==='api.ashbyhq.com')return Response.json({jobs:u.pathname.endsWith('/'+ashby.token)?[ashbyRaw]:[]});

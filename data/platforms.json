@@ -1,0 +1,408 @@
+[
+  {
+    "id": "greenhouse",
+    "name": "Greenhouse",
+    "accessTier": "A",
+    "priority": "P0",
+    "adapter": "greenhouse"
+  },
+  {
+    "id": "lever",
+    "name": "Lever",
+    "accessTier": "A",
+    "priority": "P0",
+    "adapter": "lever"
+  },
+  {
+    "id": "ashby",
+    "name": "Ashby",
+    "accessTier": "A",
+    "priority": "P0",
+    "adapter": "ashby"
+  },
+  {
+    "id": "smartrecruiters",
+    "name": "SmartRecruiters",
+    "accessTier": "A",
+    "priority": "P0",
+    "adapter": "smartrecruiters"
+  },
+  {
+    "id": "workable",
+    "name": "Workable",
+    "accessTier": "A/B",
+    "priority": "P0",
+    "adapter": "workable"
+  },
+  {
+    "id": "workday",
+    "name": "Workday Recruiting",
+    "accessTier": "B",
+    "priority": "P0",
+    "adapter": "workday"
+  },
+  {
+    "id": "sap-successfactors",
+    "name": "SAP SuccessFactors",
+    "accessTier": "B/C",
+    "priority": "P0",
+    "adapter": null
+  },
+  {
+    "id": "oracle",
+    "name": "Oracle Recruiting Cloud",
+    "accessTier": "B/C",
+    "priority": "P0",
+    "adapter": "oracle"
+  },
+  {
+    "id": "icims",
+    "name": "iCIMS",
+    "accessTier": "B/C",
+    "priority": "P0",
+    "adapter": null
+  },
+  {
+    "id": "darwinbox",
+    "name": "Darwinbox",
+    "accessTier": "B/C",
+    "priority": "P0",
+    "adapter": null
+  },
+  {
+    "id": "zoho-recruit",
+    "name": "Zoho Recruit",
+    "accessTier": "B",
+    "priority": "P0",
+    "adapter": null
+  },
+  {
+    "id": "freshteam",
+    "name": "Freshteam",
+    "accessTier": "B",
+    "priority": "P0",
+    "adapter": null
+  },
+  {
+    "id": "teamtailor",
+    "name": "Teamtailor",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": "teamtailor"
+  },
+  {
+    "id": "recruitee",
+    "name": "Recruitee",
+    "accessTier": "B",
+    "priority": "P1",
+    "adapter": "recruitee"
+  },
+  {
+    "id": "bamboohr",
+    "name": "BambooHR",
+    "accessTier": "B",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "jobvite",
+    "name": "Jobvite",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "taleo",
+    "name": "Taleo",
+    "accessTier": "B",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "adp-recruiting",
+    "name": "ADP Recruiting",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "dayforce",
+    "name": "Dayforce",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "ukg-recruiting",
+    "name": "UKG Recruiting",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "brassring",
+    "name": "BrassRing",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "phenom",
+    "name": "Phenom",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "avature",
+    "name": "Avature",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "eightfold-ai",
+    "name": "Eightfold AI",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "peoplestrong",
+    "name": "PeopleStrong",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "keka",
+    "name": "Keka",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "turbohire",
+    "name": "TurboHire",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "ripplehire",
+    "name": "RippleHire",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "hirepro",
+    "name": "HirePro",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "talview",
+    "name": "Talview",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": null
+  },
+  {
+    "id": "rippling",
+    "name": "Rippling Recruiting",
+    "accessTier": "B/C",
+    "priority": "P1",
+    "adapter": "rippling"
+  },
+  {
+    "id": "jazzhr",
+    "name": "JazzHR",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "breezy",
+    "name": "Breezy HR",
+    "accessTier": "B",
+    "priority": "P2",
+    "adapter": "breezy"
+  },
+  {
+    "id": "pinpoint",
+    "name": "Pinpoint",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "personio",
+    "name": "Personio",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": "personio"
+  },
+  {
+    "id": "manatal",
+    "name": "Manatal",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "recruiterflow",
+    "name": "Recruiterflow",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "bullhorn",
+    "name": "Bullhorn",
+    "accessTier": "C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "cats-ats",
+    "name": "CATS ATS",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "trakstar-hire",
+    "name": "Trakstar Hire",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "applicantstack",
+    "name": "ApplicantStack",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "paylocity",
+    "name": "Paylocity",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "paycom",
+    "name": "Paycom",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "hireology",
+    "name": "Hireology",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "cornerstone-recruiting",
+    "name": "Cornerstone Recruiting",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "join",
+    "name": "JOIN",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "factorial",
+    "name": "Factorial",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "fountain",
+    "name": "Fountain",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "talentreef",
+    "name": "TalentReef",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "workstream",
+    "name": "Workstream",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "applitrack",
+    "name": "AppliTrack",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "gem",
+    "name": "Gem",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "kula",
+    "name": "Kula",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "recruit-crm",
+    "name": "Recruit CRM",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "ceipal",
+    "name": "CEIPAL",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "oorwin",
+    "name": "Oorwin",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "vincere",
+    "name": "Vincere",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  },
+  {
+    "id": "recruitbpm",
+    "name": "RecruitBPM",
+    "accessTier": "B/C",
+    "priority": "P2",
+    "adapter": null
+  }
+]

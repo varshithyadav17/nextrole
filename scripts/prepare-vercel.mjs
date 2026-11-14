@@ -6,7 +6,7 @@ import {createRequire} from 'node:module';
 const root=path.resolve(import.meta.dirname,'..'),index=process.argv.indexOf('--out'),out=index>=0&&process.argv[index+1]?path.resolve(process.argv[index+1]):null;
 if(!out||out===root||out.startsWith(root+path.sep))throw new Error('Use --out with an empty absolute directory outside this checkout.');
 await mkdir(out,{recursive:true});if((await readdir(out)).length)throw new Error('The output directory must be empty.');
-for(const directory of ['app','lib','components','hooks','public']){
+for(const directory of ['app','lib','components','hooks','public','data']){
  try{await stat(path.join(root,directory));}catch{continue;}
  await cp(path.join(root,directory),path.join(out,directory),{recursive:true,filter:p=>!['api','mcp'].some(name=>p===path.join(root,'app',name)||p.startsWith(path.join(root,'app',name)+path.sep))});
 }

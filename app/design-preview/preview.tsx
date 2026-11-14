@@ -3,6 +3,8 @@
 import {useEffect,useState} from 'react';
 import Dashboard from '../dashboard';
 import {defaultProfile,type JobView} from '../../lib/types';
+import {directoryRows,platforms} from '../../lib/employer-directory';
+import {SOURCES} from '../../lib/sources';
 
 const now='2026-10-23T09:00:00.000Z';
 const user={userId:'local-design-fixture',displayName:'Example',email:'student@example.test'};
@@ -37,6 +39,7 @@ export default function DesignPreview(){
    const url=new URL(typeof input==='string'?input:input instanceof URL?input.href:input.url,window.location.origin);
    if(!url.pathname.startsWith('/api/'))return original(input,init);
    let body:Record<string,any>={};try{body=typeof init?.body==='string'?JSON.parse(init.body):{};}catch{}
+   if(url.pathname==='/api/sources'&&url.searchParams.get('view')==='directory'){const entries=directoryRows(SOURCES,{}),counts:Record<string,number>={};for(const e of entries)counts[e.state]=(counts[e.state]||0)+1;return result({entries,platformList:platforms,counts,total:entries.length,pending:false});}
    if(url.pathname==='/api/community')return result({state:community,items:[],hasMore:false});
    if(url.pathname==='/api/auth/options')return result({googleReady:false,linked:false});
    if(url.pathname==='/api/app'){

@@ -9,6 +9,7 @@ import {pruneTransientData,productCleanupStatus} from '../../lib/rate-limit';
 import {loadSources,sourceFingerprint} from '../../lib/source-registry';
 import {discoveryMetrics} from '../../lib/discovery-metrics';
 import {advanceDiscovery,discoveryStatus} from '../../lib/discovery-sync';
+import {advanceEmployerDirectory,employerDirectoryStatus} from '../../lib/employer-discovery';
 import {importAnalytics,importedSummary,readImportedReport} from '../../lib/analytics-import';
 import {issueAnalyticsUpload} from '../../lib/analytics-import-upload';
 import {PublicError} from '../../lib/errors';
@@ -51,8 +52,9 @@ export async function POST(request:Request){
    let details={checked:0,pending:false,failures:0},alerts={processed:0,notifications:0,pending:false,busy:false},push={processed:0,sent:0,pending:false,busy:false};
    if(sources.cached&&!sources.sourcesPending){details=await refreshSavedDetails();alerts=await processAlertBatch();push=await drainPushBatch();cleanup=await pruneTransientData();}
    const search=sources.sourcesPending?{pending:false,deferred:true}:await advanceDiscovery();
+   const employers=sources.sourcesPending?{pending:false,deferred:true}:await advanceEmployerDirectory();
    const delivery=await deliveryStatus();
-   value={...sources,search,details,alerts,push,delivery,cleanup,importUpload:await issueAnalyticsUpload(),workPending:search.pending||cleanup.pending||!!sources.sourcesPending||details.pending||delivery.alertsPending||!!delivery.push?.due};
+   value={...sources,search,employers,details,alerts,push,delivery,cleanup,importUpload:await issueAnalyticsUpload(),workPending:employers.pending||search.pending||cleanup.pending||!!sources.sourcesPending||details.pending||delivery.alertsPending||!!delivery.push?.due};
    await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind('schedule',JSON.stringify({enabled:true,times:SHARED_REFRESH_TIMES,timezone:SHARED_REFRESH_TIMEZONE,transport:'owner-mcp'})).run();
   }else{
    const SOURCES=await loadSources(),SOURCE_REGISTRY=sourceFingerprint(SOURCES);
@@ -63,7 +65,7 @@ export async function POST(request:Request){
    const privateFiles=await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files');const automation=await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state');
    const imported=await readImportedReport(),owner=await getChatGPTUser(),combined=owner?await hostMetrics(30,owner.userId):null;
    const analyticsReport=combined&&owner?{...combined,detail:await adminReportDetails(combined,owner.userId)}:null;
-   value={ok:true,analyticsReport,combinedAnalytics:combined?{sourceInfo:combined.sourceInfo,active:combined.active,profiles:combined.analytics.coverage.profiles,ratings:combined.ratings,retention:combined.analytics.retention,generatedAt:combined.generatedAt}:null,importedAnalytics:imported?importedSummary(imported):null,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
+   value={ok:true,analyticsReport,combinedAnalytics:combined?{sourceInfo:combined.sourceInfo,active:combined.active,profiles:combined.analytics.coverage.profiles,ratings:combined.ratings,retention:combined.analytics.retention,generatedAt:combined.generatedAt}:null,importedAnalytics:imported?importedSummary(imported):null,email:await mailStatus(),privateStorage:{ready:!!env.BUCKET,files:privateFiles?.files||0,bytes:privateFiles?.bytes||0},automation,lastSync:last?.value||null,activeListings:count?.n||0,discovery:await discoveryMetrics(),searchDiscovery:await discoveryStatus(true),employerDirectory:await employerDirectoryStatus(),sources,sourceProgress,delivery:await deliveryStatus(),cleanup:await productCleanupStatus()};
   }
   return result({content:[{type:'text',text:JSON.stringify(value)}]});
  }catch(error){return result({isError:true,content:[{type:'text',text:name==='nextrole_import_analytics'?(error instanceof PublicError?error.message:error instanceof z.ZodError?'Invalid import data.':'The import could not complete. Previously accepted pages are preserved; inspect import status and retry.'):'The source update could not complete. Saved student data is preserved. Try again or inspect source health.'}]});}

@@ -9,6 +9,7 @@ export async function verifyCreditIsolation({database,put,GET,check,job,raw,sour
  const providerRequests=[];
  globalThis.fetch=async(input,init)=>{
   const url=new URL(String(input));
+  if(url.hostname==='api.smartrecruiters.com'){sourceRequests++;return Response.json({content:[],totalFound:0,offset:Number(url.searchParams.get('offset')||0)});}
   if(['boards-api.greenhouse.io','api.lever.co','api.ashbyhq.com','jobicy.com'].includes(url.hostname)){
    sourceRequests++;
    const jobs=url.pathname.includes('/'+source.token+'/')?[raw]:[];

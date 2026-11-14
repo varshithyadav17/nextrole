@@ -1,6 +1,6 @@
 import {loadSources,sourceFingerprint} from './source-registry';
 import { batch,db,one,rows } from './store';
-import {fetchSourceJobs,normalizeGreenhouse,normalizeLever,SourceFetchError} from './job-feeds';
+import {fetchSourceJobs,normalizeGreenhouse,normalizeLever,normalizeExtended,SourceFetchError} from './job-feeds';
 export {normalizeGreenhouse,normalizeLever,normalizeAshby} from './job-feeds';
 import type {Job,Source} from './types';
 import {boundedJSON} from './http-json';
@@ -11,8 +11,9 @@ import {recordSourceObservation,pruneDiscoveryData} from './source-metrics';
 import {advanceJobicy} from './jobicy-sync';
 import {checkJobicyStatuses,JobicyError} from './jobicy';
 import {withJobChanges} from './job-changes';
+import {advanceSmartRecruiters} from './smartrecruiters-sync';
 type SourceSweep={startedAt:string;cursor:number;imported:number;successful:number;failures:string[];complete:boolean;registry?:string};
-type Retrieved={source:Source;jobs:Job[]|null;checkedAt:string;window?:Awaited<ReturnType<typeof advanceJobicy>>;skipReason?:string};
+type Retrieved={source:Source;jobs:Job[]|null;checkedAt:string;window?:{complete:boolean;imported:number};skipReason?:string};
 export async function syncJobs(force=false){
  const SOURCES=await loadSources(),SOURCE_REGISTRY=sourceFingerprint(SOURCES);
  const last=await one<{value:string}>('SELECT value FROM meta WHERE key=?','last_sync');
@@ -38,6 +39,7 @@ export async function syncJobs(force=false){
     const retry=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_retry:'+source.id);
     if((!force||source.provider==='jobicy')&&retry&&Date.parse(retry.value)>Date.now())return {source,jobs:null,checkedAt:new Date().toISOString(),skipReason:'retry-after'};
     if(source.provider==='jobicy')return {source,jobs:null,checkedAt:new Date().toISOString(),window:await advanceJobicy(source)};
+    if(source.provider==='smartrecruiters')return {source,jobs:null,checkedAt:new Date().toISOString(),window:await advanceSmartRecruiters(source,run!.startedAt)};
     const checkedAt=new Date().toISOString();return {source,jobs:await fetchSourceJobs(source,checkedAt),checkedAt};
     }finally{timings.set(source.id,Date.now()-started);}
    }));
@@ -58,9 +60,9 @@ export async function syncJobs(force=false){
     const statements:D1PreparedStatement[]=[];
     for(let start=0;start<jobs.length;start+=10){const chunk=jobs.slice(start,start+10);statements.push(db().prepare('INSERT INTO jobs(id,job_key,source_id,data,first_seen,last_checked,feed_checked_at,canonical_url,active) VALUES '+chunk.map(()=>'(?,?,?,?,?,?,?,?,1)').join(',')+" ON CONFLICT(id) DO UPDATE SET job_key=excluded.job_key,data=json_set(excluded.data,'$.deadline',COALESCE(json_extract(excluded.data,'$.deadline'),json_extract(jobs.data,'$.deadline'))),last_checked=excluded.last_checked,feed_checked_at=excluded.feed_checked_at,canonical_url=excluded.canonical_url,active=1").bind(...chunk.flatMap(j=>[j.id,j.key,source.id,JSON.stringify(j),j.firstSeen,j.lastChecked,now,j.canonicalUrl||null])));}
     await batch(statements);
-    await db().prepare("UPDATE jobs SET active=0,data=json_set(data,'$.change',json(?)) WHERE source_id=? AND active=1 AND feed_checked_at<>?").bind(JSON.stringify({at:item.value.checkedAt,fields:['availability'],previous:{},summary:'The employer removed this opening from its complete source feed. Review your saved plans.'}),source.id,now).run();
+    if(source.provider!=='teamtailor')await db().prepare("UPDATE jobs SET active=0,data=json_set(data,'$.change',json(?)) WHERE source_id=? AND active=1 AND feed_checked_at<>?").bind(JSON.stringify({at:item.value.checkedAt,fields:['availability'],previous:{},summary:'The employer removed this opening from its complete source feed. Review your saved plans.'}),source.id,now).run();
     await db().prepare('INSERT INTO source_runs(id,checked_at,success,count,error) VALUES(?,?,1,?,NULL) ON CONFLICT(id) DO UPDATE SET checked_at=excluded.checked_at,success=1,count=excluded.count,error=NULL').bind(source.id,item.value.checkedAt,jobs.length).run();
-    const ids=new Set(jobs.map(job=>job.id));await recordSourceObservation(source,'success',timings.get(source.id)||0,{fetched:jobs.length,unique:new Set(jobs.map(job=>job.key)).size,newJobs:jobs.filter(job=>!previous.has(job.id)).length,closed:source.provider==='jobicy'?0:prior.filter(job=>job.active&&!ids.has(job.id)).length,incomplete:jobs.filter(job=>job.evidenceComplete===false).length});
+    const ids=new Set(jobs.map(job=>job.id));await recordSourceObservation(source,'success',timings.get(source.id)||0,{fetched:jobs.length,unique:new Set(jobs.map(job=>job.key)).size,newJobs:jobs.filter(job=>!previous.has(job.id)).length,closed:['jobicy','teamtailor'].includes(source.provider)?0:prior.filter(job=>job.active&&!ids.has(job.id)).length,incomplete:jobs.filter(job=>job.evidenceComplete===false).length});
     imported+=jobs.length;successful++;
 
    }
@@ -90,7 +92,12 @@ export async function refreshJob(jobId:string){
    const status=(await checkJobicyStatuses([providerId])).get(providerId)!,availability=status==='active'?'open':status==='closed'?'closed':'unknown';
    await db().prepare("UPDATE jobs SET active=?,last_checked=?,data=json_set(data,'$.availability',?,'$.availabilityCheckedAt',?,'$.detailCheckedAt',?,'$.active',json(?),'$.lastChecked',?,'$.change',json(CASE WHEN active=1 AND ?='closed' THEN ? ELSE COALESCE(json_extract(data,'$.change'),'null') END)) WHERE id=?").bind(Number(status!=='closed'),now,availability,now,now,status==='closed'?'false':'true',now,status,JSON.stringify({at:now,fields:['availability'],previous:{},summary:'The source marked this opening closed. Your saved history is preserved.'}),jobId).run();
    return {verified:status!=='unknown',closed:status==='closed',availability};
-  }else if(source.provider==='ashby'){
+  }else if(source.provider==='smartrecruiters'){
+   const result=await fetch('https://api.smartrecruiters.com/v1/companies/'+encodeURIComponent(source.token)+'/postings/'+providerId,{signal:AbortSignal.timeout(18000),redirect:'manual',headers:{Accept:'application/json'}});
+   if(result.status===404)closed=true;
+   else{if(!result.ok)return {verified:false};const raw=await boundedJSON(result,512*1024) as Record<string,any>;if(raw.visibility!=='PUBLIC'||String(raw.company?.identifier).toLowerCase()!==source.token.toLowerCase()||String(raw.id)!==providerId)return {verified:false};latest=normalizeExtended(raw,source,now);if(!latest)return {verified:false};}
+  }else if(source.provider==='teamtailor')return {verified:false,availability:'unknown'};
+  else if(source.provider!=='greenhouse'&&source.provider!=='lever'){
    const jobs=await fetchSourceJobs(source,now);latest=jobs.find(j=>j.id===old.id)||null;closed=!latest;
   }else{
    const url=source.provider==='greenhouse'?'https://boards-api.greenhouse.io/v1/boards/'+encodeURIComponent(source.token)+'/jobs/'+providerId:'https://api.lever.co/v0/postings/'+encodeURIComponent(source.token)+'/'+providerId+'?mode=json';
