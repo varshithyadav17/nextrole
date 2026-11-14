@@ -4,7 +4,7 @@ import {normalizeExtended,SourceFetchError,sourceFeedUrl} from './job-feeds';
 import {recordSourceObservation} from './source-metrics';
 import {withJobChanges} from './job-changes';
 import type {Source,Job} from './types';
-type Snapshot={version:1;token:string;startedAt:string;ids:string[];cursor:number;complete:boolean;fetched?:number;newJobs?:number;incomplete?:number;duration?:number};
+type Snapshot={version:1;token:string;startedAt:string;runId?:string;checkpointAt?:string;ids:string[];cursor:number;complete:boolean;fetched?:number;newJobs?:number;incomplete?:number;duration?:number};
 async function json(url:string,signal:AbortSignal){const r=await fetch(url,{signal,redirect:'manual',headers:{Accept:'application/json'}});if(!r.ok){const value=r.headers.get('retry-after'),seconds=Number(value);await r.body?.cancel();throw new SourceFetchError(r.status,Math.min(86400000,Math.max(60000,value?(Number.isFinite(seconds)?seconds*1000:Date.parse(value)-Date.now()):60000)));}return boundedJSON(r,2*1024*1024) as Promise<Record<string,any>>;}
 export async function smartRecruitersIndex(source:Source,signal:AbortSignal){
  const ids:string[]=[];let total:number|undefined;
@@ -18,7 +18,10 @@ export async function smartRecruitersIndex(source:Source,signal:AbortSignal){
 export async function advanceSmartRecruiters(source:Source,sweepAt:string){
  const started=Date.now(),signal=AbortSignal.timeout(18000),key='smartrecruiters_snapshot:'+source.id;
  const row=await one<{value:string}>('SELECT value FROM meta WHERE key=?',key);let state:Snapshot|undefined;try{state=row?JSON.parse(row.value):undefined;}catch{}
- if(!state||state.token!==source.token||state.complete&&state.startedAt!==sweepAt||Date.now()-Date.parse(state.startedAt)>6*3600000)state={version:1,token:source.token,startedAt:sweepAt,ids:await smartRecruitersIndex(source,signal),cursor:0,complete:false};
+ // A global sweep can be older than the per-employer work it just started.
+ // Migrate its existing cursor once; age successful progress, not the sweep ID.
+ if(state){state.runId??=state.startedAt;state.checkpointAt??=new Date().toISOString();}
+ if(!state||state.token!==source.token||state.complete&&state.runId!==sweepAt||Date.now()-Date.parse(state.checkpointAt!)>6*3600000)state={version:1,token:source.token,startedAt:new Date().toISOString(),runId:sweepAt,checkpointAt:new Date().toISOString(),ids:await smartRecruitersIndex(source,signal),cursor:0,complete:false};
  if(state.complete)return{complete:true,imported:0};
  if(state.version!==1||!Array.isArray(state.ids)||state.ids.length>1000||!Number.isInteger(state.cursor)||state.cursor<0||state.cursor>state.ids.length)throw new Error('Invalid posting checkpoint');
  const ids=state.ids.slice(state.cursor,state.cursor+24),jobs:Job[]=[];
@@ -34,7 +37,7 @@ export async function advanceSmartRecruiters(source:Source,sweepAt:string){
  for(let start=0;start<jobs.length;start+=10){const part=jobs.slice(start,start+10);
   writes.push(db().prepare("INSERT INTO jobs(id,job_key,source_id,data,first_seen,last_checked,feed_checked_at,canonical_url,active) VALUES "+part.map(()=>'(?,?,?,?,?,?,?,?,1)').join(',')+" ON CONFLICT(id) DO UPDATE SET data=json_set(excluded.data,'$.deadline',COALESCE(json_extract(excluded.data,'$.deadline'),json_extract(jobs.data,'$.deadline'))),last_checked=excluded.last_checked,feed_checked_at=excluded.feed_checked_at,canonical_url=excluded.canonical_url,active=1").bind(...part.flatMap(job=>[job.id,job.key,source.id,JSON.stringify(job),job.firstSeen,job.lastChecked,state!.startedAt,job.canonicalUrl||null])));
  }
- state.cursor+=jobs.length;state.fetched=(state.fetched||0)+jobs.length;state.newJobs=(state.newJobs||0)+fresh;state.incomplete=(state.incomplete||0)+jobs.filter(j=>!j.evidenceComplete).length;state.duration=(state.duration||0)+Date.now()-started;
+ state.cursor+=jobs.length;state.checkpointAt=new Date().toISOString();state.fetched=(state.fetched||0)+jobs.length;state.newJobs=(state.newJobs||0)+fresh;state.incomplete=(state.incomplete||0)+jobs.filter(j=>!j.evidenceComplete).length;state.duration=(state.duration||0)+Date.now()-started;
  if(state.cursor===state.ids.length){const current=state.ids.length?await smartRecruitersIndex(source,signal):[];if(current.length!==state.ids.length||[...current].sort().join('|')!==[...state.ids].sort().join('|')){
    // The snapshot changed while collecting. Keep valid rows, but never infer closures from it.
    state.cursor=0;state.ids=current;state.startedAt=new Date().toISOString();await batch(writes);await db().prepare('INSERT INTO meta(key,value) VALUES(?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value').bind(key,JSON.stringify(state)).run();return{complete:false,imported:jobs.length,changed:true};

@@ -1,9 +1,9 @@
-import {db,one} from './store';
+import {db,one,rows} from './store';
 import {acquireLease,releaseLease} from './lease';
 import {loadSources} from './source-registry';
 import {boundedText} from './http-json';
 import {isSafeJobUrl} from './matching';
-import {employers,platforms,careerLinks,detectEmployerBoard,directoryRows,type EmployerCheck,type EmployerChecks} from './employer-directory';
+import {employers,platforms,requested,isRequestedEmployer,employerName,careerLinks,detectEmployerBoard,directoryRows,type EmployerCheck,type EmployerChecks} from './employer-directory';
 const KEY='employer_directory_v1';
 export async function employerChecks():Promise<EmployerChecks>{const row=await one<{value:string}>('SELECT value FROM meta WHERE key=?',KEY);if(!row)return{};const data=JSON.parse(row.value);if(!data||typeof data!=='object'||Array.isArray(data))throw new Error('Invalid employer directory checkpoint');return data;}
 const later=(check:EmployerCheck|undefined)=>check&&(['detected','needs-url','needs-review','access-required'].includes(check.state)||Date.now()-Date.parse(check.checkedAt)<86400000);
@@ -26,7 +26,7 @@ export async function checkEmployer(employer:(typeof employers)[number]):Promise
   return found?{state:found.candidate?'detected':'needs-review',checkedAt,...found,reason:found.candidate?'Public board identified. Validate and review access before connecting.':'Platform identified; this portal needs a connector or access review.'}:{state:'needs-review',checkedAt,reason:'The careers page needs a dedicated connector or a verified public feed.'};
  }catch(error){const code=error instanceof Error?error.message:'';return{state:code==='access-required'?'access-required':'unavailable',checkedAt,reason:code==='access-required'?'The portal limits automated access. Use the official careers page.':code==='redirect-review'?'The careers redirect needs review. Previous listings are preserved.':'The careers page could not be checked. A later check can retry.'};}
 }
-export async function employerDirectoryStatus(includeRows=false){const sources=await loadSources(),checks=await employerChecks(),entries=directoryRows(sources,checks),counts:Record<string,number>={};for(const entry of entries)counts[entry.state]=(counts[entry.state]||0)+1;return{total:entries.length,platforms:platforms.length,counts,pending:entries.some(e=>e.state!=='connected'&&!later(checks[e.id])&&!!e.careersUrl),...(includeRows?{entries,platformList:platforms}:{})};}
+export async function employerDirectoryStatus(includeRows=false){const sources=await loadSources(),checks=await employerChecks(),health=await rows<{id:string;success:number;count:number}>('SELECT id,success,count FROM source_runs'),entries=directoryRows(sources,checks,health),counts:Record<string,number>={};for(const entry of entries)counts[entry.state]=(counts[entry.state]||0)+1;const requestedConnected=new Set(sources.filter(s=>isRequestedEmployer(s.company)&&health.some(h=>h.id===s.id&&h.success===1)).map(s=>employerName(s.company)));return{requestedCoverage:{total:requested.brands.length,connected:requestedConnected.size,configured:new Set(sources.filter(s=>isRequestedEmployer(s.company)).map(s=>employerName(s.company))).size},total:entries.length,platforms:platforms.length,counts,pending:entries.some(e=>!e.sourceId&&!later(checks[e.id])&&!!e.careersUrl),...(includeRows?{entries,platformList:platforms}:{})};}
 /** Owner maintenance only. No student request triggers public page collection. */
 export async function advanceEmployerDirectory(){
  const lease=await acquireLease('employer_directory_scan',45000);if(!lease)return{pending:true,busy:true};

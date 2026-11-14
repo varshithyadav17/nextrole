@@ -16,6 +16,7 @@ export type Job = {
   sourceCategory?: 'employer'|'job-board';sourceLabel?:string;sourceSeniority?:string;
   availability?:'open'|'closed'|'unknown';availabilityCheckedAt?:string;contentCheckedAt?:string;
   countryCodes?: string[];
+  sourceLocator?:string;
   evidenceComplete?: boolean;
   evidenceVersion?: number;
   deadlineEvidence?: string;
@@ -29,8 +30,8 @@ export type Job = {
 export type RequirementCheck={key:string;label:string;status:'met'|'conflict'|'review'|'unstated';requirement:string;profile:string;evidence?:string};
 export type Match = { score: number; relevant: boolean; uncertain: boolean; reasons: string[]; cautions: string[];checks?:RequirementCheck[] };
 export type JobView = Job & { match: Match; status: JobStatus | null; stage: string | null; note: string; statusAt: string | null; remindAt: string | null };
-export type EmployerProvider='greenhouse'|'ashby'|'lever'|'smartrecruiters'|'workable'|'recruitee'|'personio'|'breezy'|'teamtailor'|'rippling'|'workday'|'oracle';
-export type Source = { id: string; company: string; provider: EmployerProvider|'jobicy'; token: string; careerUrl: string;host?:string;site?:string;region?:'de'|'com';category?:'employer'|'job-board';scope?:string };
+export type EmployerProvider='greenhouse'|'ashby'|'lever'|'smartrecruiters'|'workable'|'recruitee'|'personio'|'breezy'|'teamtailor'|'rippling'|'workday'|'oracle'|'amazon'|'microsoft'|'trakstar'|'kula'|'google';
+export type Source = { id: string; company: string; provider: EmployerProvider|'jobicy'; token: string; careerUrl: string;host?:string;site?:string;region?:'de'|'com';country?:'IN';locationId?:string;category?:'employer'|'job-board';scope?:string };
 export type Notice = { id: string; title: string; body: string; jobKey: string | null; jobId?:string|null;createdAt: string; readAt: string | null; type: string };
 export type FitAnalysis = {kind:'basic'|'ai';summary:string;strengths:{point:string;evidence:string}[];checks:string[];sourceUrl:string;cached:boolean;provider?:string;model?:string;slot?:number;notice?:string;attempts?:{slot:number;provider:string;status:string}[]};
 export const defaultProfile: Profile = {name:'',roles:['Software engineer','Data analyst'],locations:['India'],modes:['On-site','Hybrid','Remote'],skills:[],experience:0,graduationYear:'',degree:'',cgpa:null,cgpaScale:10,percentage:null,availableFrom:'',availableMonths:null,jobTypes:['Full-time','Internship'],alerts:true,reminders:true,completed:false};

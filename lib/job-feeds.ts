@@ -1,4 +1,5 @@
 import {boundedJSON,boundedText} from './http-json';
+import {readObjectArray} from './streamed-feed';
 import {EXTENDED_PROVIDERS,extendedBoard,extendedFeed,postingFields,readExtended} from './extended-feeds';
 import {extractSkills,inferMode,isSafeJobUrl,jobKey,plainText} from './matching';
 import {extractExperience} from './experience';
@@ -14,9 +15,9 @@ export function canonicalJobUrl(value:string){
  if(/^(jobs\.ashbyhq\.com|jobs(?:\.eu)?\.lever\.co)$/.test(url.hostname))url.pathname=url.pathname.replace(/\/apply\/?$/,'');
  url.pathname=url.pathname.replace(/\/$/,'');url.searchParams.sort();return url.toString();
 }
-function locationName(...values:unknown[]){return [...new Set(values.flatMap(v=>Array.isArray(v)?v:[v]).filter((v):v is string=>typeof v==='string'&&!!v.trim()).map(v=>countries[v]||v.trim()))].join(' · ').slice(0,1000)||'Not specified';}
+export function locationName(...values:unknown[]){return [...new Set(values.flatMap(v=>Array.isArray(v)?v:[v]).filter((v):v is string=>typeof v==='string'&&!!v.trim()).map(v=>countries[v]||v.trim()))].join(' · ').slice(0,1000)||'Not specified';}
 function kind(title:string,label:string,description:string){if(/\bintern(?:ship)?\b/i.test(title)||/^intern$/i.test(label))return'Internship';if(/contract|freelance|temporary/i.test(label+' '+title))return'Contract';if(/full[ -]?time/i.test(label))return'Full-time';return/full[ -]time/i.test(description)?'Full-time':'Not specified';}
-function base(raw:Record<string,unknown>,source:Source,now:string,fields:{id:unknown;title:unknown;description:string;location:string;url:unknown;published:unknown;type:string;mode?:string;identity?:string}):Job|null{
+export function normalizePosting(raw:Record<string,unknown>,source:Source,now:string,fields:{id:unknown;title:unknown;description:string;location:string;url:unknown;published:unknown;type:string;mode?:string;identity?:string}):Job|null{
  if(!/^[a-zA-Z0-9_-]{1,100}$/.test(String(fields.id))||typeof fields.title!=='string'||!fields.title.trim()||typeof fields.url!=='string'||fields.url.length>2048||!isSafeJobUrl(fields.url))return null;
  const fullText=plainText(fields.description.slice(0,200000));
  const evidenceComplete=fields.description.length<=200000&&fullText.length<=35000&&!(source.provider==='lever'&&Array.isArray(raw.lists)&&raw.lists.length>30);
@@ -26,26 +27,32 @@ function base(raw:Record<string,unknown>,source:Source,now:string,fields:{id:unk
  const explicitCountries=[raw.country,object(object(raw.address).postalAddress).addressCountry,...(Array.isArray(raw.secondaryLocations)?raw.secondaryLocations.slice(0,10).map((s:unknown)=>object(object(s).address).addressCountry):[])].filter((v):v is string=>typeof v==='string'&&/^[A-Z]{2}$/.test(v));
  return{id:source.id+':'+fields.id,key:jobKey(source.company,title,fields.location,source.provider+':'+(fields.identity||String(fields.id))),sourceId:source.id,company:source.company,title,location:fields.location,mode:fields.mode||inferMode(fields.location,description),jobType:kind(title,fields.type,description),description,url:fields.url,...(strong?{canonicalUrl:canonical}:{}),sourceUrl:source.careerUrl,publishedAt:fields.published&&Number.isFinite(Date.parse(String(fields.published)))?new Date(fields.published as string).toISOString():null,deadline:typeof raw.application_deadline==='string'&&Number.isFinite(Date.parse(raw.application_deadline))?new Date(raw.application_deadline).toISOString():null,firstSeen:now,lastChecked:now,active:true,minExperience:exp.value,experienceEvidence:exp.evidence,experienceRequirements,skills:extractSkills(description),eligibility:extractEligibility(description),countryCodes:[...new Set(explicitCountries)],evidenceComplete,evidenceVersion:1,provenance:{kind:'ats-api',url:sourceFeedUrl(source),capturedAt:now,parserVersion:1}};
 }
+export function greenhouseLocation(raw:Record<string,unknown>){
+ const metadata=Array.isArray(raw.metadata)?raw.metadata.filter(v=>/^(?:job posting location|job location|location|country|countries)$/i.test(String(object(v).name||''))).flatMap(v=>{const value=object(v).value;return Array.isArray(value)?value:[value];}):[];
+ return locationName(object(raw.location).name,metadata);
+}
+export function indiaLocation(location:string,countries:string[]=[]){return countries.includes('IN')||/\bIndia\b|\bBengaluru\b|\bBangalore\b|\bHyderabad\b|\bPune\b|\bChennai\b|\bMumbai\b|\bGurugram\b|\bGurgaon\b|\bNoida\b|\bNew Delhi\b|\bAhmedabad\b|\bKolkata\b|\bKochi\b|\bCoimbatore\b|\bIndore\b|\bJaipur\b|\bChandigarh\b/i.test(location);}
+function scopedRecord(raw:Record<string,unknown>,source:Source){if(source.country!=='IN')return true;const location=source.provider==='greenhouse'?greenhouseLocation(raw):source.provider==='lever'?locationName(object(raw.categories).location,object(raw.categories).allLocations,raw.country):locationName(raw.location,object(object(raw.address).postalAddress).addressCountry,Array.isArray(raw.secondaryLocations)?raw.secondaryLocations.flatMap(v=>[object(v).location,object(object(v).address).addressCountry]):[]);return indiaLocation(location,[String(raw.country||'')]);}
 export function normalizeGreenhouse(raw:Record<string,unknown>,source:Source,now:string):Job|null{
  if(!/^\d{1,30}$/.test(String(raw.id))||raw.internal_job_id===null)return null;
- return base(raw,source,now,{id:raw.id,title:raw.title,description:String(raw.content||''),location:locationName(object(raw.location).name),url:raw.absolute_url,published:raw.first_published,type:'',identity:String(/^\d{1,30}$/.test(String(raw.internal_job_id))?raw.internal_job_id:raw.id)});
+ return normalizePosting(raw,source,now,{id:raw.id,title:raw.title,description:String(raw.content||''),location:greenhouseLocation(raw),url:raw.absolute_url,published:raw.first_published,type:'',identity:String(/^\d{1,30}$/.test(String(raw.internal_job_id))?raw.internal_job_id:raw.id)});
 }
 export function normalizeLever(raw:Record<string,unknown>,source:Source,now:string){
  const sections=Array.isArray(raw.lists)?raw.lists.slice(0,30).map((list:unknown)=>String(object(list).text||'')+'\n'+String(object(list).content||'')).join('\n'):'';
  const description=[raw.descriptionPlain||raw.description||'',sections,raw.additionalPlain||raw.additional||''].join('\n');
  const mode=typeof raw.workplaceType==='string'?({remote:'Remote',hybrid:'Hybrid','on-site':'On-site',onsite:'On-site'} as Record<string,string>)[raw.workplaceType.toLowerCase()]:undefined;
- return base(raw,source,now,{id:raw.id,title:raw.text,description,location:locationName(object(raw.categories).location,object(raw.categories).allLocations,raw.country),url:raw.hostedUrl||raw.applyUrl,published:typeof raw.createdAt==='number'?new Date(raw.createdAt).toISOString():null,type:String(object(raw.categories).commitment||''),mode});
+ return normalizePosting(raw,source,now,{id:raw.id,title:raw.text,description,location:locationName(object(raw.categories).location,object(raw.categories).allLocations,raw.country),url:raw.hostedUrl||raw.applyUrl,published:typeof raw.createdAt==='number'?new Date(raw.createdAt).toISOString():null,type:String(object(raw.categories).commitment||''),mode});
 }
 export function normalizeAshby(raw:Record<string,unknown>,source:Source,now:string){
  if(raw.isListed===false)return null;
  const address=object(object(raw.address).postalAddress),secondary=Array.isArray(raw.secondaryLocations)?raw.secondaryLocations.slice(0,10):[];
  const mode=typeof raw.workplaceType==='string'?({remote:'Remote',hybrid:'Hybrid',onsite:'On-site'} as Record<string,string>)[raw.workplaceType.toLowerCase()]:undefined;
- return base(raw,source,now,{id:raw.id,title:raw.title,description:String(raw.descriptionPlain||raw.descriptionHtml||''),location:locationName(raw.location,address.addressCountry,secondary.map((s:unknown)=>object(s).location),secondary.map((s:unknown)=>object(object(s).address).addressCountry)),url:raw.applyUrl||raw.jobUrl,published:raw.publishedAt,type:String(raw.employmentType||''),mode:mode||(raw.isRemote===true?'Remote':undefined)});
+ return normalizePosting(raw,source,now,{id:raw.id,title:raw.title,description:String(raw.descriptionPlain||raw.descriptionHtml||''),location:locationName(raw.location,address.addressCountry,secondary.map((s:unknown)=>object(s).location),secondary.map((s:unknown)=>object(object(s).address).addressCountry)),url:raw.applyUrl||raw.jobUrl,published:raw.publishedAt,type:String(raw.employmentType||''),mode:mode||(raw.isRemote===true?'Remote':undefined)});
 }
 export function normalizeJobicy(raw:Record<string,unknown>,source:Source,now:string){
  if(!Number.isSafeInteger(raw.id)||Number(raw.id)<=0||typeof raw.companyName!=='string'||!raw.companyName.trim()||typeof raw.url!=='string')return null;
  const url=new URL(raw.url);if(url.protocol!=='https:'||url.hostname!=='jobicy.com'||url.username||url.password||!new RegExp('^/jobs/'+raw.id+'(?:-|/|$)').test(url.pathname))return null;
- const job=base(raw,{...source,company:raw.companyName.trim().slice(0,100)},now,{id:raw.id,title:raw.jobTitle,description:typeof raw.jobDescription==='string'?raw.jobDescription:'',location:typeof raw.jobGeo==='string'&&/^anywhere$/i.test(raw.jobGeo)?'Remote · region not specified':locationName(raw.jobGeo),url:raw.url,published:raw.pubDate,type:Array.isArray(raw.jobType)?raw.jobType.join(' '):'',mode:'Remote'});
+ const job=normalizePosting(raw,{...source,company:raw.companyName.trim().slice(0,100)},now,{id:raw.id,title:raw.jobTitle,description:typeof raw.jobDescription==='string'?raw.jobDescription:'',location:typeof raw.jobGeo==='string'&&/^anywhere$/i.test(raw.jobGeo)?'Remote · region not specified':locationName(raw.jobGeo),url:raw.url,published:raw.pubDate,type:Array.isArray(raw.jobType)?raw.jobType.join(' '):'',mode:'Remote'});
  if(!job)return null;
  job.canonicalUrl=canonicalJobUrl(raw.url);job.sourceUrl=job.canonicalUrl;job.sourceCategory='job-board';job.sourceLabel='Jobicy';job.sourceSeniority=typeof raw.jobLevel==='string'?raw.jobLevel.trim().slice(0,80):'Not specified';job.contentCheckedAt=now;job.availability='unknown';
  job.provenance={kind:'job-board-api',url:sourceFeedUrl(source),capturedAt:now,parserVersion:1};
@@ -56,7 +63,7 @@ export function normalizeJobicy(raw:Record<string,unknown>,source:Source,now:str
 /** Provider contracts live here; boards are configuration, never arbitrary fetch URLs. */
 export function normalizeExtended(raw:Record<string,unknown>,source:Source,now:string):Job|null{
  const p=postingFields(raw,source),country=p.raw.country;if(country==='IN'&&!/\bIndia\b/i.test(p.fields.location))p.fields.location+=' · India';
- const job=base(p.raw,source,now,p.fields);if(job&&!job.description.trim())job.evidenceComplete=false;
+ const job=normalizePosting(p.raw,source,now,p.fields);if(job&&!job.description.trim())job.evidenceComplete=false;
  if(job&&source.provider==='teamtailor'){job.availability='unknown';job.evidenceComplete=false;}
  return job;
 }
@@ -76,6 +83,11 @@ export const SOURCE_ADAPTERS:Record<Source['provider'],Adapter>={
  rippling:extra('Rippling','https://www.rippling.com/'),
  workday:extra('Workday','https://www.workday.com/en-us/products/talent-management/recruiting.html'),
  oracle:extra('Oracle Recruiting','https://docs.oracle.com/en/cloud/saas/human-resources/'),
+ amazon:extra('Amazon Jobs','https://www.amazon.jobs/en/'),
+ microsoft:extra('Microsoft Careers','https://apply.careers.microsoft.com/'),
+ trakstar:extra('Trakstar Hire','https://apiv1.recruiterbox.com/frontend_api.html'),
+ kula:extra('Kula','https://careers.kula.ai/'),
+ google:extra('Google Careers','https://www.google.com/about/careers/applications/jobs/results/'),
 };
 export function sourceBoardUrl(source:Source){return SOURCE_ADAPTERS[source.provider].board(source.token,source);}
 export function sourceFeedUrl(source:Source){return SOURCE_ADAPTERS[source.provider].feed(source.token,source);}
@@ -109,11 +121,17 @@ export async function fetchSourceJobs(source:Source,now:string):Promise<Job[]>{
    if(source.provider==='ashby'&&(item as Record<string,unknown>).isListed===false)continue;
    // Greenhouse includes prospect/talent-pool forms with no underlying job.
    if(source.provider==='greenhouse'&&(item as Record<string,unknown>).internal_job_id===null)continue;
+   if(!scopedRecord(item as Record<string,unknown>,source))continue;
    const job=SOURCE_ADAPTERS[source.provider].normalize(item as Record<string,unknown>,source,now);
    if(!job)throw new Error('Published feed contains an invalid row');
    if(seen.has(job.id))throw new Error('Feed repeated a posting across pages');seen.add(job.id);jobs.push(job);characters+=job.description.length;
    if(jobs.length>MAX_JOBS||characters>MAX_CHARACTERS)throw new Error('Feed exceeds safe memory budget');
   }
+ }
+ if(source.country==='IN'&&['greenhouse','ashby'].includes(source.provider)){
+  const response=await fetch(sourceFeedUrl(source),{signal,redirect:'manual',headers:{Accept:'application/json'}});if(!response.ok){await response.body?.cancel();throw new SourceFetchError(response.status,60000);}
+  const {metadata,count}=await readObjectArray(response,'jobs',raw=>append([raw]));
+  if(source.provider==='greenhouse'&&metadata.meta?.total!==undefined&&metadata.meta.total!==count)throw new Error('Incomplete global employer index');return jobs;
  }
  if(EXTENDED_PROVIDERS.includes(source.provider as any)){
   const request=async(url:string,init?:RequestInit,text=false)=>{
@@ -137,7 +155,7 @@ export async function fetchSourceJobs(source:Source,now:string):Promise<Job[]>{
   throw new Error('Jobicy pagination exceeds safe limit');
  }
  if(source.provider==='lever'){
-  for(let skip=0;skip<=MAX_JOBS;skip+=100){
+  for(let skip=0;skip<=(source.country==='IN'?10000:MAX_JOBS);skip+=100){
    const url=new URL(sourceFeedUrl(source));url.searchParams.set('skip',String(skip));const data=await json(url.toString(),signal);
    if(!Array.isArray(data)||data.length>100)throw new Error('Incomplete Lever page');
    append(data);if(data.length<100)return jobs;

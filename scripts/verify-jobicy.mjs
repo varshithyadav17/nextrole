@@ -1,3 +1,4 @@
+import {emptyCompanyFeed} from './empty-company-feed.mjs';
 import {readFileSync} from 'node:fs';
 
 // Uses the same real handlers and isolated D1 as verify-app. Never touches production.
@@ -34,7 +35,7 @@ export async function verifyJobicy({database,put,check,defaultProfile,SOURCES}){
   const rawJobs=Array.from({length:101},(_,i)=>({...raw,id:610001+i,url:'https://jobicy.com/jobs/'+(610001+i)+'-software-engineer'}));
   const requests=[];let sourceJobs=rawJobs,mode='paged';
   globalThis.fetch=async(input,init)=>{
-   const url=new URL(String(input));if(url.hostname==='api.smartrecruiters.com')return Response.json({content:[],totalFound:0,offset:Number(url.searchParams.get('offset')||0)});if(url.hostname!=='jobicy.com')return Response.json(url.hostname==='api.lever.co'?[]:{jobs:[],meta:{total:0}});requests.push(url);
+   const url=new URL(String(input));const extraFeed=emptyCompanyFeed(input);if(extraFeed)return extraFeed;if(url.hostname==='api.smartrecruiters.com')return Response.json({content:[],totalFound:0,offset:Number(url.searchParams.get('offset')||0)});if(url.hostname!=='jobicy.com')return Response.json(url.hostname==='api.lever.co'?[]:{jobs:[],meta:{total:0}});requests.push(url);
    check(url.hostname==='jobicy.com'&&!new Headers(init?.headers).has('Authorization')&&!new Headers(init?.headers).has('x-goog-api-key'),'Discovery contacts only the public Jobicy API without student or global API keys.');
    if(url.pathname.endsWith('/status')){
     const ids=url.searchParams.get('ids').split(',');

@@ -483,7 +483,7 @@
     "id": "employer-9fbf261b62c1d7c0",
     "name": "Microsoft",
     "sector": "Global technology",
-    "careersUrl": "https://careers.microsoft.com",
+    "careersUrl": "https://apply.careers.microsoft.com/careers?location=India",
     "origin": "India expansion research",
     "priority": "P1"
   },
@@ -1115,7 +1115,7 @@
     "id": "employer-ac243cb0eef61df9",
     "name": "Cashfree Payments",
     "sector": "Fintech and banking",
-    "careersUrl": "https://www.cashfree.com/",
+    "careersUrl": "https://careers.kula.ai/cashfree",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -1163,7 +1163,7 @@
     "id": "employer-ef3dfd0f0e4ac3a3",
     "name": "CleverTap",
     "sector": "SaaS and developer tools",
-    "careersUrl": null,
+    "careersUrl": "https://careers.kula.ai/clevertap",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -1227,7 +1227,7 @@
     "id": "employer-ad21acb889da17fe",
     "name": "Continental",
     "sector": "Semiconductor, automotive and industrial",
-    "careersUrl": null,
+    "careersUrl": "https://careers.smartrecruiters.com/Continental",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -1579,7 +1579,7 @@
     "id": "employer-e776a070909341e9",
     "name": "Glance",
     "sector": "Indian product, fintech and consumer companies",
-    "careersUrl": null,
+    "careersUrl": "https://job-boards.greenhouse.io/glance",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -1699,7 +1699,7 @@
     "id": "employer-99a684beca77b6b9",
     "name": "HighRadius",
     "sector": "SaaS and developer tools",
-    "careersUrl": null,
+    "careersUrl": "https://www.highradius.com/about/careers-list/",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -2195,7 +2195,7 @@
     "id": "employer-ab02e5a9fb466b27",
     "name": "MoEngage",
     "sector": "SaaS and developer tools",
-    "careersUrl": null,
+    "careersUrl": "https://careers.kula.ai/moengage",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -2267,7 +2267,7 @@
     "id": "employer-86980728287f8c2b",
     "name": "Nagarro",
     "sector": "Consulting, IT services and enterprise engineering",
-    "careersUrl": null,
+    "careersUrl": "https://careers.smartrecruiters.com/Nagarro1",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -2451,7 +2451,7 @@
     "id": "employer-9202af6ce925b26a",
     "name": "Oracle",
     "sector": "Global technology",
-    "careersUrl": null,
+    "careersUrl": "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -2675,7 +2675,7 @@
     "id": "employer-3ccbd9105a45d8fc",
     "name": "Salesforce",
     "sector": "Global technology",
-    "careersUrl": null,
+    "careersUrl": "https://salesforce.wd12.myworkdayjobs.com/External_Career_Site",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -2755,7 +2755,7 @@
     "id": "employer-b5738c169b693bee",
     "name": "ServiceNow",
     "sector": "Global technology",
-    "careersUrl": null,
+    "careersUrl": "https://careers.smartrecruiters.com/ServiceNow",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -2883,7 +2883,7 @@
     "id": "employer-2b78da3dc866654e",
     "name": "Spotify",
     "sector": "Global big tech and product companies",
-    "careersUrl": null,
+    "careersUrl": "https://jobs.lever.co/spotify",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -3027,7 +3027,7 @@
     "id": "employer-27b78f50b2d3d969",
     "name": "Thoughtworks",
     "sector": "Consulting, IT services and enterprise engineering",
-    "careersUrl": null,
+    "careersUrl": "https://job-boards.greenhouse.io/thoughtworks",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -3243,7 +3243,7 @@
     "id": "employer-f3d1d74bf14c42c2",
     "name": "Western Digital",
     "sector": "Semiconductor, automotive and industrial",
-    "careersUrl": null,
+    "careersUrl": "https://careers.smartrecruiters.com/WesternDigital",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -3251,7 +3251,7 @@
     "id": "employer-11f61ee7e833fac0",
     "name": "Whatfix",
     "sector": "SaaS and developer tools",
-    "careersUrl": null,
+    "careersUrl": "https://whatfix101.hire.trakstar.com/jobs",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -3579,7 +3579,7 @@
     "id": "employer-d7c3015270137585",
     "name": "JPMorgan Chase",
     "sector": "Global banking and GCCs",
-    "careersUrl": null,
+    "careersUrl": "https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001",
     "origin": "India expansion research",
     "priority": "P3"
   },

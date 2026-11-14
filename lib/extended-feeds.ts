@@ -1,10 +1,14 @@
 import type {Source} from './types';
-export const EMPLOYER_PROVIDERS=['greenhouse','lever','ashby','smartrecruiters','workable','recruitee','personio','breezy','teamtailor','rippling','workday','oracle'] as const;
+export const EMPLOYER_PROVIDERS=['greenhouse','lever','ashby','smartrecruiters','workable','recruitee','personio','breezy','teamtailor','rippling','workday','oracle','amazon','microsoft','trakstar','kula','google'] as const;
 export const EXTENDED_PROVIDERS=EMPLOYER_PROVIDERS.slice(3);
-export const PROVIDER_LABELS:Record<Source['provider'],string>={greenhouse:'Greenhouse',lever:'Lever',ashby:'Ashby',jobicy:'Jobicy',smartrecruiters:'SmartRecruiters',workable:'Workable',recruitee:'Recruitee',personio:'Personio',breezy:'Breezy HR',teamtailor:'Teamtailor',rippling:'Rippling',workday:'Workday',oracle:'Oracle Recruiting'};
+export const PROVIDER_LABELS:Record<Source['provider'],string>={greenhouse:'Greenhouse',lever:'Lever',ashby:'Ashby',jobicy:'Jobicy',smartrecruiters:'SmartRecruiters',workable:'Workable',recruitee:'Recruitee',personio:'Personio',breezy:'Breezy HR',teamtailor:'Teamtailor',rippling:'Rippling',workday:'Workday',oracle:'Oracle Recruiting',amazon:'Amazon Jobs',microsoft:'Microsoft Careers',trakstar:'Trakstar Hire',kula:'Kula',google:'Google Careers'};
 const record=(v:unknown):Record<string,any>=>v&&typeof v==='object'&&!Array.isArray(v)?v as Record<string,any>:{};
 export function validSourceAddress(s:Source){
  if(!/^[a-zA-Z0-9_-]{1,100}$/.test(s.token))return false;
+ if(s.locationId&&!/^\d{1,30}$/.test(s.locationId))return false;
+ if(s.provider==='google')return s.token==='google'&&!s.host;
+ if(s.provider==='amazon')return s.token==='amazon'&&!s.host;
+ if(s.provider==='microsoft')return s.token==='microsoft'&&!s.host;
  if(s.provider==='workday')return !!s.host&&new RegExp('^'+s.token.toLowerCase()+'\\.wd[0-9]{1,3}\\.myworkdayjobs\\.com$').test(s.host)&&/^[a-zA-Z0-9_-]{1,100}$/.test(s.site||'');
  if(s.provider==='oracle')return !!s.host&&/^[a-z0-9-]+\.fa\.(?:[a-z0-9-]+\.)?oraclecloud\.com$/.test(s.host);
  if(s.provider==='teamtailor')return !!s.host&&/^[a-z0-9-]+\.(?:teamtailor\.com|teamtailor\.jobs)$/.test(s.host);
@@ -14,6 +18,11 @@ export function extendedBoard(s:Source){
  if(!validSourceAddress(s))throw new Error('Invalid employer source address');
  const t=encodeURIComponent(s.token);
  switch(s.provider){
+ case'google':return'https://www.google.com/about/careers/applications/jobs/results/?location=India';
+ case'amazon':return'https://www.amazon.jobs/en/locations/india';
+ case'microsoft':return'https://apply.careers.microsoft.com/careers?location=India';
+ case'trakstar':return'https://'+t+'.hire.trakstar.com/jobs';
+ case'kula':return'https://careers.kula.ai/'+t;
  case'smartrecruiters':return'https://jobs.smartrecruiters.com/'+t;
  case'workable':return'https://apply.workable.com/'+t;
  case'recruitee':return'https://'+t+'.recruitee.com';
@@ -29,6 +38,11 @@ export function extendedBoard(s:Source){
 export function extendedFeed(s:Source){
  const board=extendedBoard(s),t=encodeURIComponent(s.token);
  switch(s.provider){
+ case'google':return'https://www.google.com/about/careers/applications/jobs/results/?location=India&page=1';
+ case'amazon':return'https://www.amazon.jobs/en/search.json?base_query=&loc_query=India&country=IND&offset=0&result_limit=50';
+ case'microsoft':return'https://apply.careers.microsoft.com/api/pcsx/search?domain=microsoft.com&query=&location=India&start=0&sort_by=relevance';
+ case'trakstar':return'https://jsapi.recruiterbox.com/v1/openings?client_name='+t+'&limit=10&offset=0';
+ case'kula':return'https://careers.kula.ai/'+t;
  case'smartrecruiters':return'https://api.smartrecruiters.com/v1/companies/'+t+'/postings?destination=PUBLIC&country=in&limit=100&offset=0';
  case'workable':return'https://apply.workable.com/api/v1/widget/accounts/'+t+'?details=true';
  case'recruitee':return board+'/api/offers/';
@@ -37,7 +51,7 @@ export function extendedFeed(s:Source){
  case'teamtailor':return board+'/jobs.rss';
  case'rippling':return'https://ats.rippling.com/api/v2/board/'+t+'/jobs';
  case'workday':return'https://'+s.host+'/wday/cxs/'+t+'/'+encodeURIComponent(s.site!)+'/jobs';
- case'oracle':return'https://'+s.host+'/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&limit=100&offset=0&finder='+encodeURIComponent('findReqs;siteNumber='+s.token);
+ case'oracle':return'https://'+s.host+'/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=requisitionList&finder='+encodeURIComponent('findReqs;siteNumber='+s.token+',limit=12,offset=0'+(s.country==='IN'?',locationId='+s.locationId+',location=India':''));
  default:throw new Error('Unsupported employer source');
  }
 }

@@ -125,5 +125,29 @@ export const SOURCES: Source[] = [
  {"id": "sr-nielseniq", "company": "NielsenIQ", "provider": "smartrecruiters", "token": "NielsenIQ", "careerUrl": "https://careers.smartrecruiters.com/NielsenIQ", "scope": "India · public employer postings"},
  {"id": "sr-dr-reddys", "company": "Dr Reddy’s Laboratories", "provider": "smartrecruiters", "token": "DrReddysLaboratoriesLimited", "careerUrl": "https://careers.smartrecruiters.com/DrReddysLaboratoriesLimited", "scope": "India · public employer postings"},
  {"id": "sr-ramboll", "company": "Ramboll", "provider": "smartrecruiters", "token": "Ramboll3", "careerUrl": "https://careers.smartrecruiters.com/Ramboll3", "scope": "India · public employer postings"}
+  // Exact-country public feeds verified against employer portals, 14 November 2026.
+  ,{id:'gh-databricks-india',company:'Databricks',provider:'greenhouse',token:'databricks',careerUrl:'https://www.databricks.com/company/careers/open-positions',country:'IN'},
+  {id:'gh-cloudflare-india',company:'Cloudflare',provider:'greenhouse',token:'cloudflare',careerUrl:'https://www.cloudflare.com/careers/jobs/',country:'IN'},
+  {id:'gh-thoughtworks-india',company:'Thoughtworks',provider:'greenhouse',token:'thoughtworks',careerUrl:'https://www.thoughtworks.com/careers/jobs',country:'IN'},
+  {id:'gh-highradius-india',company:'HighRadius',provider:'greenhouse',token:'highradius',careerUrl:'https://www.highradius.com/about/careers-list/',country:'IN'},
+  {id:'gh-glance-india',company:'Glance',provider:'greenhouse',token:'glance',careerUrl:'https://job-boards.greenhouse.io/glance',country:'IN'},
+  {id:'lever-spotify-india',company:'Spotify',provider:'lever',token:'spotify',careerUrl:'https://www.lifeatspotify.com/jobs',country:'IN'},
+  {id:'lever-nium-india',company:'Nium',provider:'lever',token:'nium',careerUrl:'https://jobs.lever.co/nium',country:'IN'},
+  {id:'sr-servicenow',company:'ServiceNow',provider:'smartrecruiters',token:'ServiceNow',careerUrl:'https://careers.smartrecruiters.com/ServiceNow',country:'IN'},
+  {id:'sr-nagarro',company:'Nagarro',provider:'smartrecruiters',token:'Nagarro1',careerUrl:'https://careers.smartrecruiters.com/Nagarro1',country:'IN'},
+  {id:'sr-continental',company:'Continental',provider:'smartrecruiters',token:'Continental',careerUrl:'https://careers.smartrecruiters.com/Continental',country:'IN'},
+  {id:'sr-western-digital',company:'Western Digital',provider:'smartrecruiters',token:'WesternDigital',careerUrl:'https://careers.smartrecruiters.com/WesternDigital',country:'IN'},
+  {id:'sr-arista',company:'Arista Networks',provider:'smartrecruiters',token:'AristaNetworks',careerUrl:'https://careers.smartrecruiters.com/AristaNetworks',country:'IN'},
+  {id:'google-india',company:'Google',provider:'google',token:'google',careerUrl:'https://www.google.com/about/careers/applications/jobs/results/?location=India',country:'IN'},
+  {id:'microsoft-india',company:'Microsoft',provider:'microsoft',token:'microsoft',careerUrl:'https://apply.careers.microsoft.com/careers?location=India',country:'IN'},
+  {id:'amazon-india',company:'Amazon',provider:'amazon',token:'amazon',careerUrl:'https://www.amazon.jobs/en/locations/india',country:'IN'},
+  {id:'wd-salesforce-india',company:'Salesforce',provider:'workday',token:'salesforce',host:'salesforce.wd12.myworkdayjobs.com',site:'External_Career_Site',careerUrl:'https://salesforce.wd12.myworkdayjobs.com/External_Career_Site',country:'IN'},
+  {id:'oracle-india',company:'Oracle',provider:'oracle',token:'jobsearch',host:'eeho.fa.us2.oraclecloud.com',locationId:'300000000106947',careerUrl:'https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/jobsearch',country:'IN'},
+  {id:'oracle-jpmorgan-india',company:'JPMorgan Chase',provider:'oracle',token:'CX_1001',host:'jpmc.fa.oraclecloud.com',locationId:'300000000289360',careerUrl:'https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001',country:'IN'},
+  {id:'kula-moengage',company:'MoEngage',provider:'kula',token:'moengage',careerUrl:'https://careers.kula.ai/moengage',country:'IN'},
+  {id:'kula-clevertap',company:'CleverTap',provider:'kula',token:'clevertap',careerUrl:'https://careers.kula.ai/clevertap',country:'IN'},
+  {id:'kula-cashfree',company:'Cashfree Payments',provider:'kula',token:'cashfree',careerUrl:'https://careers.kula.ai/cashfree',country:'IN'},
+  {id:'trakstar-whatfix',company:'Whatfix',provider:'trakstar',token:'whatfix101',careerUrl:'https://whatfix101.hire.trakstar.com/jobs',country:'IN'},
+  {id:'trakstar-exotel',company:'Exotel',provider:'trakstar',token:'exotel',careerUrl:'https://exotel.hire.trakstar.com/jobs',country:'IN'}
 ];
 export const SOURCE_REGISTRY = SOURCES.map(s=>s.id+':'+s.provider+':'+s.token).join('|');

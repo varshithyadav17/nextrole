@@ -13,11 +13,11 @@ const definition=z.object({
  careerUrl:z.string().url().max(2048).refine(isSafeJobUrl),
  policyUrl:z.string().url().max(2048).refine(isSafeJobUrl),
  permissionConfirmed:z.literal(true),
- host:z.string().max(200).optional(),site:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/).optional(),region:z.enum(['de','com']).optional(),
+ host:z.string().max(200).optional(),site:z.string().regex(/^[a-zA-Z0-9_-]{1,100}$/).optional(),region:z.enum(['de','com']).optional(),country:z.literal('IN').optional(),locationId:z.string().regex(/^\d{1,30}$/).optional(),
 });
 type RegisteredSource=Source&{policyUrl:string;reviewedAt:string};
 const KEY='source_registry_v1';
-export function sourceFingerprint(sources:Source[]){return sources.map(s=>[s.id,s.provider,s.token,s.host||'',s.site||'',s.region||''].join(':')).join('|');}
+export function sourceFingerprint(sources:Source[]){return sources.map(s=>[s.id,s.provider,s.token,s.host||'',s.site||'',s.region||'',s.country||'',s.locationId||''].join(':')).join('|');}
 export async function loadSources():Promise<Source[]>{
  const row=await env.DB!.prepare('SELECT value FROM meta WHERE key=?').bind(KEY).first<{value:string}>();
  if(!row)return SOURCES;

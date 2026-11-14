@@ -1,3 +1,4 @@
+import {emptyCompanyFeed} from './empty-company-feed.mjs';
 import assert from 'node:assert/strict';
 
 export async function verifyReadiness({database,put,check,job,raw,source,SOURCES,defaultProfile,keys,goodFit,aiResponse}){
@@ -25,7 +26,7 @@ export async function verifyReadiness({database,put,check,job,raw,source,SOURCES
  check(!await allowRequest('rate-check','external',12),'The source-check allowance must reject excess requests.');
 
  let calls=0,concurrent=0,peak=0;
- const feed=async input=>{calls++;concurrent++;peak=Math.max(peak,concurrent);await new Promise(r=>setTimeout(r,1));concurrent--;if(new URL(String(input)).hostname==='api.smartrecruiters.com')return Response.json({content:[],totalFound:0,offset:0});return new Response(JSON.stringify(new URL(String(input)).hostname==='api.lever.co'?[]:new URL(String(input)).hostname==='jobicy.com'?{success:true,statusCode:200,jobCount:0,jobs:[],hasMore:false,nextCursor:null}:{jobs:String(input).includes('/'+source.token+'/')?[raw]:[],meta:{total:String(input).includes('/'+source.token+'/')?1:0}}));};
+ const feed=async input=>{calls++;concurrent++;peak=Math.max(peak,concurrent);await new Promise(r=>setTimeout(r,1));concurrent--;const extraFeed=emptyCompanyFeed(input);if(extraFeed)return extraFeed;if(new URL(String(input)).hostname==='api.smartrecruiters.com')return Response.json({content:[],totalFound:0,offset:0});return new Response(JSON.stringify(new URL(String(input)).hostname==='api.lever.co'?[]:new URL(String(input)).hostname==='jobicy.com'?{success:true,statusCode:200,jobCount:0,jobs:[],hasMore:false,nextCursor:null}:{jobs:String(input).includes('/'+source.token+'/')?[raw]:[],meta:{total:String(input).includes('/'+source.token+'/')?1:0}}));};
  globalThis.fetch=feed;
  await database.prepare("DELETE FROM meta WHERE key LIKE 'jobicy_state:%'").run();
  await database.prepare('DELETE FROM meta WHERE key IN (?,?)').bind('source_sweep','last_sync_attempt').run();

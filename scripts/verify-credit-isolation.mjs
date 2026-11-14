@@ -1,3 +1,4 @@
+import {emptyCompanyFeed} from './empty-company-feed.mjs';
 // Uses the isolated test database and synthetic keys; never contacts a real provider.
 export async function verifyCreditIsolation({database,put,GET,check,job,raw,source,SOURCES,keys,goodFit,aiResponse}){
  const {syncJobs}=await import('../lib/sync.ts');
@@ -9,7 +10,7 @@ export async function verifyCreditIsolation({database,put,GET,check,job,raw,sour
  const providerRequests=[];
  globalThis.fetch=async(input,init)=>{
   const url=new URL(String(input));
-  if(url.hostname==='api.smartrecruiters.com'){sourceRequests++;return Response.json({content:[],totalFound:0,offset:Number(url.searchParams.get('offset')||0)});}
+  const extraFeed=emptyCompanyFeed(input);if(extraFeed){sourceRequests++;return extraFeed;}if(url.hostname==='api.smartrecruiters.com'){sourceRequests++;return Response.json({content:[],totalFound:0,offset:Number(url.searchParams.get('offset')||0)});}
   if(['boards-api.greenhouse.io','api.lever.co','api.ashbyhq.com','jobicy.com'].includes(url.hostname)){
    sourceRequests++;
    const jobs=url.pathname.includes('/'+source.token+'/')?[raw]:[];

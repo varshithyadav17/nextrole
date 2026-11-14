@@ -47,7 +47,7 @@ export async function POST(request:Request){
  try{
   let value:unknown;
   if(name==='nextrole_import_analytics'){const input=z.object({operation:z.enum(['begin','append','file','finalize','status']),payload:z.string().max(1100000)}).strict().parse(args);value=await importAnalytics(input.operation,JSON.parse(input.payload));}else if(name==='nextrole_send_daily_digests'){value=await drainDigests();}else if(name==='nextrole_refresh_sources'){
-   const sources=await syncJobs();
+   const sources=await syncJobs(false,{owner:true});
    let cleanup=await productCleanupStatus();
    let details={checked:0,pending:false,failures:0},alerts={processed:0,notifications:0,pending:false,busy:false},push={processed:0,sent:0,pending:false,busy:false};
    if(sources.cached&&!sources.sourcesPending){details=await refreshSavedDetails();alerts=await processAlertBatch();push=await drainPushBatch();cleanup=await pruneTransientData();}
@@ -61,7 +61,7 @@ export async function POST(request:Request){
    const last=await one<{value:string}>('SELECT value FROM meta WHERE key=?','last_sync');
    const count=await one<{n:number}>("SELECT COUNT(*) as n FROM jobs WHERE active=1 AND COALESCE(json_extract(data,'$.availability'),'open')='open'");
    const sources=await rows<{id:string;success:number;count:number;checked_at:string}>('SELECT id,success,count,checked_at,error FROM source_runs');
-   const progress=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_sweep');let sourceProgress=null;try{const state=progress?JSON.parse(progress.value):null;sourceProgress=state?{checked:state.cursor,total:SOURCES.length,complete:state.complete&&state.registry===SOURCE_REGISTRY,startedAt:state.startedAt}:null;}catch{}
+   const progress=await one<{value:string}>('SELECT value FROM meta WHERE key=?','source_sweep');let sourceProgress=null;try{const state=progress?JSON.parse(progress.value):null;sourceProgress=state?{checked:state.cursor,total:SOURCES.length,complete:state.complete&&state.registry===SOURCE_REGISTRY,startedAt:state.startedAt,work:Object.values(state.work||{})}:null;}catch{}
    const privateFiles=await one<{files:number;bytes:number}>('SELECT COUNT(*) as files,COALESCE(SUM(bytes),0) as bytes FROM resume_files');const automation=await rows<{state:string;count:number}>('SELECT state,COUNT(*) as count FROM automation_queue GROUP BY state');
    const imported=await readImportedReport(),owner=await getChatGPTUser(),combined=owner?await hostMetrics(30,owner.userId):null;
    const analyticsReport=combined&&owner?{...combined,detail:await adminReportDetails(combined,owner.userId)}:null;

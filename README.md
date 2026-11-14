@@ -1,17 +1,10 @@
 # NextRole
 
-> **Hero framing update:** the NEXT JOB storefront stays visible on shorter screens, and the street fades smoothly into the canvas. [Review and evidence](design-qa.md).
-
-> **Compact sizing update:** restored the earlier UI scale while retaining the Scout city design and animations. [Sizing notes](handoff/COMPACT-SIZING.md) · [Browser review](design-qa.md).
-
 **A calmer job search. A measurable product.**
 
 NextRole helps students and early-career candidates discover relevant openings, prepare a truthful résumé with ScoutX, and keep their applications moving. Its separate admin workspace closes the product loop: understand adoption, diagnose drop-offs, listen to students and decide what to improve.
 
 [Open NextRole](https://nextrole-scout.vercel.app) · [Measurement handbook](handoff/ADMIN-ANALYTICS.md) · [Render migration](handoff/RENDER-MIGRATION.md)
-
-> **Browser-reviewed frontend:** Jobs, Saved and page-specific Scout actions now follow the approved design composition. Desktop/mobile review fixed menu layering, wrapping, row spacing and focus behavior. [Design QA and evidence](design-qa.md) document the scoped pass, synthetic fixtures and remaining real-device/provider checks. [Release notes](handoff/FIDELITY-REVIEW.md) separate native publication from the unresolved Vercel team authorization.
-
 
 ## The product problem
 
@@ -28,6 +21,17 @@ The product hypothesis is that reliable relevance and a simpler preparation/trac
 - Choose optional alerts, nightly email and feedback. AI calls use the student's explicitly configured providers; shared source discovery does not require student API keys.
 
 Compatibility is an internal estimate, not an employer ATS result. Source coverage is limited to configured feeds and supported discovery/import workflows; the product does not claim access to every job board or universal automatic application submission.
+
+## Employer coverage
+
+Job imports and employer targets are separate. The original supplied list contains 260 distinct employer brands; the directory also includes additional targets. A brand is shown as checked only after its source completes a successful import. Empty personal search results do not hide configured companies.
+
+The shared importer supports India-scoped Google Careers, Amazon Jobs, Microsoft Careers, Greenhouse, Lever, SmartRecruiters, Workday, Oracle career portals, Kula and Trakstar. Other supported adapters remain available for verified employer boards. Provider names alone do not imply that every company on that platform is connected.
+
+Large sources checkpoint public job IDs and resume in bounded batches. Descriptions, explicit eligibility and employer URLs are retained. Failed, incomplete and rate-limited reads preserve existing jobs and students' Saved, Applied, Not interested, notes and history. Search windows never prove closure by absence.
+
+- [Complete requested-company source map](handoff/REQUESTED-COMPANY-COVERAGE.csv)
+- [Import scope, source evidence and remaining gaps](handoff/EMPLOYER-COVERAGE.md)
 
 ## Admin intelligence
 

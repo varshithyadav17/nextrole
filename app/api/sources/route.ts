@@ -9,6 +9,7 @@ import {sourceMetrics} from '../../../lib/source-metrics';
 import {discoveryStatus} from '../../../lib/discovery-sync';
 import {advanceEmployerDirectory,employerChecks,employerDirectoryStatus} from '../../../lib/employer-discovery';
 import {fetchSourceJobs} from '../../../lib/job-feeds';
+import {PAGED_COMPANY_PROVIDERS,validateCompanyBoard} from '../../../lib/company-feeds';
 export const dynamic='force-dynamic';
 const respond=(data:unknown,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store'}});
 export async function GET(request?:Request){
@@ -26,7 +27,7 @@ export async function POST(request:Request){
    if(body.action==='scan-employers')return respond(await advanceEmployerDirectory());
    const input=z.object({action:z.literal('connect-employer'),id:z.string().regex(/^employer-[a-f0-9]{16}$/),policyUrl:z.string().url().max(2048),permissionConfirmed:z.literal(true)}).strict().parse(body);
    const check=(await employerChecks())[input.id];if(!check?.candidate)throw new PublicError('This employer needs a verified public feed first.');
-   const jobs=await fetchSourceJobs(check.candidate,new Date().toISOString());if(!jobs.length)throw new PublicError('No published jobs could be validated. The feed was not connected.');
+   const jobs=PAGED_COMPANY_PROVIDERS.includes(check.candidate.provider as any)?Array((await validateCompanyBoard(check.candidate)).validated):await fetchSourceJobs(check.candidate,new Date().toISOString());if(!jobs.length)throw new PublicError('No published jobs could be validated. The feed was not connected.');
    const {id:_,...source}=check.candidate;void _;return respond({source:await registerSource({...source,policyUrl:input.policyUrl,permissionConfirmed:true}),validated:jobs.length},201);
   }
   return respond({source:await registerSource(body)},201);
