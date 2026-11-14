@@ -7,7 +7,7 @@ import type {Source,Job} from './types';
 type State={version:1;identity:string;runId:string;startedAt:string;cursor:CompanyCursor;seen:string[];imported:string[];total:number|null;consistent:boolean;complete:boolean;duration:number};
 /** Page checkpoints contain public requisition IDs only. User choices are never rewritten. */
 export async function advanceCompanySource(source:Source,sweepAt:string){
- const started=Date.now(),now=new Date().toISOString(),signal=AbortSignal.timeout(28000),key='company_snapshot_v1:'+source.id,identity=sourceFingerprint([source]);
+ const started=Date.now(),now=new Date().toISOString(),signal=AbortSignal.timeout(source.provider==='microsoft'?33000:28000),key='company_snapshot_v1:'+source.id,identity=sourceFingerprint([source]);
  const stored=await one<{value:string}>('SELECT value FROM meta WHERE key=?',key);let state:State|undefined;try{state=stored?JSON.parse(stored.value):undefined;}catch{}
  const compatible=state?.identity===identity||source.provider==='microsoft'&&state?.identity===identity.replace(/:pcsx5$/,'');
  if(!state||state.version!==1||!compatible||state.complete&&state.runId!==sweepAt||Date.now()-Date.parse(state.startedAt)>6*3600000)state={version:1,identity,runId:sweepAt,startedAt:now,cursor:{offset:0},seen:[],imported:[],total:null,consistent:true,complete:false,duration:0};else state.identity=identity;
@@ -16,7 +16,7 @@ export async function advanceCompanySource(source:Source,sweepAt:string){
  const page=await companyPage(source,state.cursor,signal);if(state.total!==null&&state.total!==page.total)state.consistent=false;state.total=page.total;
  const seen=new Set(state.seen),records:Record<string,any>[]=[];
  for(const raw of page.records){const id=companyRecordId(raw,source);if(seen.has(id)){state.consistent=false;continue;}seen.add(id);records.push(raw);}
- const jobs:Job[]=[];for(let start=0;start<records.length;start+=4){const part=await Promise.all(records.slice(start,start+4).map(async raw=>{const detail=await companyDetail(source,raw,signal);return normalizeCompany(detail,source,now);}));jobs.push(...part.filter((j):j is Job=>!!j));}
+ const jobs:Job[]=[],width=source.provider==='microsoft'?2:4;for(let start=0;start<records.length;start+=width){const part=await Promise.all(records.slice(start,start+width).map(async raw=>{const detail=await companyDetail(source,raw,signal);return normalizeCompany(detail,source,now);}));jobs.push(...part.filter((j):j is Job=>!!j));}
  const prior=jobs.length?await rows<{id:string;data:string;job_key:string;first_seen:string}>('SELECT id,data,job_key,first_seen FROM jobs WHERE id IN ('+jobs.map(()=>'?').join(',')+')',...jobs.map(j=>j.id)):[],previous=new Map(prior.map(r=>[r.id,r]));let newlyObserved=0;
  for(const job of jobs){const old=previous.get(job.id);if(old){job.key=old.job_key;job.firstSeen=old.first_seen;Object.assign(job,withJobChanges(JSON.parse(old.data),job));}else newlyObserved++;}
  const writes:D1PreparedStatement[]=[];
