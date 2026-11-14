@@ -32,6 +32,8 @@ Large sources checkpoint public job IDs and resume in bounded batches. Descripti
 
 - [Complete requested-company source map](handoff/REQUESTED-COMPANY-COVERAGE.csv)
 - [Import scope, source evidence and remaining gaps](handoff/EMPLOYER-COVERAGE.md)
+- [Source import audit — 14 November 2026](handoff/SOURCE-IMPORT-AUDIT-2026-11-14.md)
+- [Actual status for all 260 requested companies](handoff/REQUESTED-COMPANY-STATUS-2026-11-14.csv)
 
 ## Admin intelligence
 
@@ -76,14 +78,6 @@ See the [complete event/metric definitions and caveats](handoff/ADMIN-ANALYTICS.
 ## Architecture and deployment status
 
 The deployed product uses a Vercel Next.js frontend, a stateless Render authentication/API gateway, and an owner-authorized Site data service with Cloudflare D1 and private R2. The native Site remains available. Existing maintenance tools preserve source, alert and delivery checkpoints.
-
-```mermaid
-flowchart TD
-  A["Student or admin UI / Vercel"] --> B["Authentication and API gateway / Render"]
-  B --> C["D1 / private account records"]
-  B --> D["R2 / private resume files"]
-  E["Owner maintenance"] --> B
-```
 
 Render runs the Google-authentication/API tier; the frontend's forwarding mode needs no OAuth/signing secrets. Existing storage and canonical account IDs remain in place. Live checks verify Google configuration, authorization redirects, secure cookies and anonymous access boundaries. An actual account owner's consent/token exchange and account linking require that owner's sign-in. The [cutover guide](handoff/RENDER-MIGRATION.md) explains verification and rollback; a full database migration is not claimed.
 
