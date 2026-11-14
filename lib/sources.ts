@@ -158,6 +158,7 @@ export const SOURCES: Source[] = [
   {id:'wd-autodesk-india',company:'Autodesk',provider:'workday',token:'autodesk',host:'autodesk.wd1.myworkdayjobs.com',site:'Ext',careerUrl:'https://autodesk.wd1.myworkdayjobs.com/Ext',country:'IN'},
   {id:'wd-target-india',company:'Target',provider:'workday',token:'target',host:'target.wd5.myworkdayjobs.com',site:'targetcareers',careerUrl:'https://target.wd5.myworkdayjobs.com/targetcareers',country:'IN'},
   {id:'wd-bank-of-america-india',company:'Bank of America',provider:'workday',token:'ghr',host:'ghr.wd1.myworkdayjobs.com',site:'lateral-ba_continuum',careerUrl:'https://ghr.wd1.myworkdayjobs.com/lateral-ba_continuum',country:'IN'},
-  {id:'wd-walmart-india',company:'Walmart Global Tech',provider:'workday',token:'walmart',host:'walmart.wd5.myworkdayjobs.com',site:'WalmartExternalCareerSite',careerUrl:'https://walmart.wd5.myworkdayjobs.com/WalmartExternalCareerSite',country:'IN'}
+  {id:'wd-walmart-india',company:'Walmart Global Tech',provider:'workday',token:'walmart',host:'walmart.wd5.myworkdayjobs.com',site:'WalmartExternalCareerSite',careerUrl:'https://walmart.wd5.myworkdayjobs.com/WalmartExternalCareerSite',country:'IN'},
+  {id:'wd-revvity-india',company:'Revvity',provider:'workday',token:'revvity',host:'revvity.wd103.myworkdayjobs.com',site:'External',careerUrl:'https://revvity.wd103.myworkdayjobs.com/External',country:'IN'}
 ];
 export const SOURCE_REGISTRY = SOURCES.map(s=>s.id+':'+s.provider+':'+s.token).join('|');

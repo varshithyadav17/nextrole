@@ -2,7 +2,7 @@
 
 Updated 14 November 2026. Configuration counts describe code, not successful production imports. The app's source health and owner maintenance status are authoritative for the last import.
 
-The supplied master list contains **260 distinct requested brands**. This release configures **46 of those brands**, up from 17, across 102 source configurations and 100 employer brands overall. The full [260-row source map](REQUESTED-COMPANY-COVERAGE.csv) includes every remaining gap. A company name in the directory is not a working importer.
+The supplied master list contains **260 distinct requested brands**. This release configures **46 of those brands**, up from 17, across 103 source configurations and 101 employer brands overall. The full [260-row source map](REQUESTED-COMPANY-COVERAGE.csv) includes every remaining gap. A company name in the directory is not a working importer.
 
 ## Newly configured employers
 
@@ -22,6 +22,8 @@ The supplied master list contains **260 distinct requested brands**. This releas
 Nium, Arista Networks and Exotel are useful additions outside the original 260. They do not increase the requested-brand numerator.
 
 Nine additional official Workday career portals are configured for their first production import: Applied Materials, Mastercard, Wells Fargo, Thomson Reuters, Fidelity Investments, Autodesk, Target, Bank of America and Walmart Global Tech. Research-environment access results are kept separate from deployed-backend verification. These portals remain pending or need attention until a successful import validates them; they are not added to the checked-brand numerator merely by configuration.
+
+Revvity is an additional individually requested employer outside the original 260-brand master list. Its current public Workday tenant is `revvity.wd103.myworkdayjobs.com/External`; its India search returned 28 openings during validation. Its first production import is tracked separately from configuration.
 
 ## Checkpoints and matching
 
