@@ -27,8 +27,12 @@ export async function advanceSmartRecruiters(source:Source,sweepAt:string){
   const job=normalizeExtended(raw,source,new Date().toISOString());if(!job)throw new Error('Invalid employer posting');return job;
  }));jobs.push(...group);}
  const writes:D1PreparedStatement[]=[];let fresh=0,closed=0;
- for(const job of jobs){const old=await one<{data:string;job_key:string;first_seen:string}>('SELECT data,job_key,first_seen FROM jobs WHERE id=?',job.id);if(old){job.key=old.job_key;job.firstSeen=old.first_seen;Object.assign(job,withJobChanges(JSON.parse(old.data),job));}else fresh++;
-  writes.push(db().prepare("INSERT INTO jobs(id,job_key,source_id,data,first_seen,last_checked,feed_checked_at,canonical_url,active) VALUES(?,?,?,?,?,?,?,?,1) ON CONFLICT(id) DO UPDATE SET data=json_set(excluded.data,'$.deadline',COALESCE(json_extract(excluded.data,'$.deadline'),json_extract(jobs.data,'$.deadline'))),last_checked=excluded.last_checked,feed_checked_at=excluded.feed_checked_at,canonical_url=excluded.canonical_url,active=1").bind(job.id,job.key,source.id,JSON.stringify(job),job.firstSeen,job.lastChecked,state.startedAt,job.canonicalUrl||null));
+ const prior=jobs.length?await rows<{id:string;data:string;job_key:string;first_seen:string}>('SELECT id,data,job_key,first_seen FROM jobs WHERE id IN ('+jobs.map(()=>'?').join(',')+')',...jobs.map(j=>j.id)):[];
+ const previous=new Map(prior.map(r=>[r.id,r]));
+ for(const job of jobs){const old=previous.get(job.id);if(old){job.key=old.job_key;job.firstSeen=old.first_seen;Object.assign(job,withJobChanges(JSON.parse(old.data),job));}else fresh++;}
+ // Keep a large-employer batch within the free-tier query and SQL parameter budgets.
+ for(let start=0;start<jobs.length;start+=10){const part=jobs.slice(start,start+10);
+  writes.push(db().prepare("INSERT INTO jobs(id,job_key,source_id,data,first_seen,last_checked,feed_checked_at,canonical_url,active) VALUES "+part.map(()=>'(?,?,?,?,?,?,?,?,1)').join(',')+" ON CONFLICT(id) DO UPDATE SET data=json_set(excluded.data,'$.deadline',COALESCE(json_extract(excluded.data,'$.deadline'),json_extract(jobs.data,'$.deadline'))),last_checked=excluded.last_checked,feed_checked_at=excluded.feed_checked_at,canonical_url=excluded.canonical_url,active=1").bind(...part.flatMap(job=>[job.id,job.key,source.id,JSON.stringify(job),job.firstSeen,job.lastChecked,state!.startedAt,job.canonicalUrl||null])));
  }
  state.cursor+=jobs.length;state.fetched=(state.fetched||0)+jobs.length;state.newJobs=(state.newJobs||0)+fresh;state.incomplete=(state.incomplete||0)+jobs.filter(j=>!j.evidenceComplete).length;state.duration=(state.duration||0)+Date.now()-started;
  if(state.cursor===state.ids.length){const current=state.ids.length?await smartRecruitersIndex(source,signal):[];if(current.length!==state.ids.length||[...current].sort().join('|')!==[...state.ids].sort().join('|')){
