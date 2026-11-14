@@ -851,7 +851,7 @@
     "id": "employer-5c57603a43d2bc97",
     "name": "Applied Materials",
     "sector": "Global technology",
-    "careersUrl": null,
+    "careersUrl": "https://amat.wd1.myworkdayjobs.com/External",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -891,7 +891,7 @@
     "id": "employer-320d597682ed208c",
     "name": "Autodesk",
     "sector": "Global big tech and product companies",
-    "careersUrl": null,
+    "careersUrl": "https://autodesk.wd1.myworkdayjobs.com/Ext",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -923,7 +923,7 @@
     "id": "employer-cd1025489027cbad",
     "name": "Bank of America",
     "sector": "Banking, financial services and global capability centers",
-    "careersUrl": null,
+    "careersUrl": "https://ghr.wd1.myworkdayjobs.com/lateral-ba_continuum",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -2115,7 +2115,7 @@
     "id": "employer-07863e7a6a2154ba",
     "name": "Mastercard",
     "sector": "Fintech and banking",
-    "careersUrl": null,
+    "careersUrl": "https://mastercard.wd1.myworkdayjobs.com/CorporateCareers",
     "origin": "India expansion research",
     "priority": "P2"
   },
@@ -2931,7 +2931,7 @@
     "id": "employer-34a04005bcaf206e",
     "name": "Target",
     "sector": "Global big tech and product companies",
-    "careersUrl": null,
+    "careersUrl": "https://target.wd5.myworkdayjobs.com/targetcareers",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -3019,7 +3019,7 @@
     "id": "employer-926616585a6ca773",
     "name": "Thomson Reuters",
     "sector": "Banking, financial services and global capability centers",
-    "careersUrl": null,
+    "careersUrl": "https://thomsonreuters.wd5.myworkdayjobs.com/External_Career_Site",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -3227,7 +3227,7 @@
     "id": "employer-dc962111a0471a71",
     "name": "Walmart Global Tech",
     "sector": "Global big tech and product companies",
-    "careersUrl": null,
+    "careersUrl": "https://walmart.wd5.myworkdayjobs.com/WalmartExternalCareerSite",
     "origin": "Requested employer inventory",
     "priority": "P2"
   },
@@ -3507,7 +3507,7 @@
     "id": "employer-63eb27870526c72d",
     "name": "Fidelity Investments",
     "sector": "Global banking and GCCs",
-    "careersUrl": null,
+    "careersUrl": "https://fmr.wd1.myworkdayjobs.com/FidelityCareers",
     "origin": "India expansion research",
     "priority": "P3"
   },
@@ -3699,7 +3699,7 @@
     "id": "employer-62fd6c7860342a31",
     "name": "Wells Fargo",
     "sector": "Global banking and GCCs",
-    "careersUrl": null,
+    "careersUrl": "https://wf.wd1.myworkdayjobs.com/WellsFargoJobs",
     "origin": "India expansion research",
     "priority": "P3"
   },

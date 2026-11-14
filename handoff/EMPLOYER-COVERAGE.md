@@ -2,7 +2,7 @@
 
 Updated 14 November 2026. Configuration counts describe code, not successful production imports. The app's source health and owner maintenance status are authoritative for the last import.
 
-The supplied master list contains **260 distinct requested brands**. This release configures **37 of those brands**, up from 17, across 93 source configurations and 91 employer brands overall. The full [260-row source map](REQUESTED-COMPANY-COVERAGE.csv) includes every remaining gap. A company name in the directory is not a working importer.
+The supplied master list contains **260 distinct requested brands**. This release configures **46 of those brands**, up from 17, across 102 source configurations and 100 employer brands overall. The full [260-row source map](REQUESTED-COMPANY-COVERAGE.csv) includes every remaining gap. A company name in the directory is not a working importer.
 
 ## Newly configured employers
 
@@ -21,11 +21,13 @@ The supplied master list contains **260 distinct requested brands**. This releas
 
 Nium, Arista Networks and Exotel are useful additions outside the original 260. They do not increase the requested-brand numerator.
 
+Nine additional official Workday career portals are configured for their first production import: Applied Materials, Mastercard, Wells Fargo, Thomson Reuters, Fidelity Investments, Autodesk, Target, Bank of America and Walmart Global Tech. Research-environment access results are kept separate from deployed-backend verification. These portals remain pending or need attention until a successful import validates them; they are not added to the checked-brand numerator merely by configuration.
+
 ## Checkpoints and matching
 
 Large sources save public requisition IDs and page offsets after validated batches. The owner refresh can advance up to eight sources per call, with two concurrent reads and a time budget. A large pending source does not prevent the other sources in the batch from advancing. Old prefix cursors are migrated without forcing a new sweep.
 
-Workday CXS can report `total: 0` on subsequent pages while continuing to return jobs; the importer carries the verified first-page total. Microsoft details use smaller batches and retain their existing cursor. Transient failures after successful pages respect Retry-After and resume saved work. A parser revision revalidates only its affected source, preserving the rest of the sweep.
+Workday CXS can report `total: 0` on subsequent pages while continuing to return jobs; the importer carries the verified first-page total. Microsoft details use smaller batches and retain their existing cursor. Transient failures after successful pages respect Retry-After and resume saved work, with at most two requeues per source per sweep. Persistent throttling is reported as failed/deferred so other imports and alerts can finish. Microsoft's unfinished public-search checkpoint can carry across scheduled passes for up to seven days. A parser revision revalidates only its affected source, preserving the rest of the sweep.
 
 The shared catalogue is collected independently of students' preferences. India scope, experience, graduation, location and arrangement checks remain explicit. Unknown requirements stay in Needs review. The Companies view includes configured employers even when the chosen student scope has zero matches.
 
@@ -33,9 +35,9 @@ Non-2xx responses and invalid or incomplete snapshots retain existing jobs. Rate
 
 ## Remaining coverage gaps
 
-The other **223 requested brands are not claimed as connected**. Many directory entries still need an official endpoint; some employer platforms require a dedicated connector or authorized access. Public pages and tokens migrate: PhonePe and Postman's old Greenhouse routes no longer provide working feeds; Visa and Palo Alto Networks have moved to Workday; a reachable old board is not sufficient evidence of a current integration.
+The other **214 requested brands have no configured feed in this release**. Configuration alone is not a successful connection; the app reports the exact checked count separately. Many directory entries still need an official endpoint; some employer platforms require a dedicated connector or authorized access. Public pages and tokens migrate: PhonePe and Postman's old Greenhouse routes no longer provide working feeds; Visa and Palo Alto Networks have moved to Workday; a reachable old board is not sufficient evidence of a current integration.
 
-Workday and other employer-hosted portals that returned access restrictions during research were not activated simply to increase the count. Source validation never bypasses a challenge or supplies a student's API key. Additional boards must pass actual public index/detail checks before connection.
+Public employer-hosted portals that return restrictions in the deployed importer are marked as needing attention. Source validation never bypasses a challenge or supplies a student's API key. Additional boards must pass actual public index/detail checks before being counted as checked.
 
 ## Primary source references
 

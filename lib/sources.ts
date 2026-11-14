@@ -148,6 +148,16 @@ export const SOURCES: Source[] = [
   {id:'kula-clevertap',company:'CleverTap',provider:'kula',token:'clevertap',careerUrl:'https://careers.kula.ai/clevertap',country:'IN'},
   {id:'kula-cashfree',company:'Cashfree Payments',provider:'kula',token:'cashfree',careerUrl:'https://careers.kula.ai/cashfree',country:'IN'},
   {id:'trakstar-whatfix',company:'Whatfix',provider:'trakstar',token:'whatfix101',careerUrl:'https://whatfix101.hire.trakstar.com/jobs',country:'IN'},
-  {id:'trakstar-exotel',company:'Exotel',provider:'trakstar',token:'exotel',careerUrl:'https://exotel.hire.trakstar.com/jobs',country:'IN'}
+  {id:'trakstar-exotel',company:'Exotel',provider:'trakstar',token:'exotel',careerUrl:'https://exotel.hire.trakstar.com/jobs',country:'IN'},
+  // Official employer portals: a first import must validate the live India index and details.
+  {id:'wd-applied-materials-india',company:'Applied Materials',provider:'workday',token:'amat',host:'amat.wd1.myworkdayjobs.com',site:'External',careerUrl:'https://amat.wd1.myworkdayjobs.com/External',country:'IN'},
+  {id:'wd-mastercard-india',company:'Mastercard',provider:'workday',token:'mastercard',host:'mastercard.wd1.myworkdayjobs.com',site:'CorporateCareers',careerUrl:'https://mastercard.wd1.myworkdayjobs.com/CorporateCareers',country:'IN'},
+  {id:'wd-wells-fargo-india',company:'Wells Fargo',provider:'workday',token:'wf',host:'wf.wd1.myworkdayjobs.com',site:'WellsFargoJobs',careerUrl:'https://wf.wd1.myworkdayjobs.com/WellsFargoJobs',country:'IN'},
+  {id:'wd-thomson-reuters-india',company:'Thomson Reuters',provider:'workday',token:'thomsonreuters',host:'thomsonreuters.wd5.myworkdayjobs.com',site:'External_Career_Site',careerUrl:'https://thomsonreuters.wd5.myworkdayjobs.com/External_Career_Site',country:'IN'},
+  {id:'wd-fidelity-india',company:'Fidelity Investments',provider:'workday',token:'fmr',host:'fmr.wd1.myworkdayjobs.com',site:'FidelityCareers',careerUrl:'https://fmr.wd1.myworkdayjobs.com/FidelityCareers',country:'IN'},
+  {id:'wd-autodesk-india',company:'Autodesk',provider:'workday',token:'autodesk',host:'autodesk.wd1.myworkdayjobs.com',site:'Ext',careerUrl:'https://autodesk.wd1.myworkdayjobs.com/Ext',country:'IN'},
+  {id:'wd-target-india',company:'Target',provider:'workday',token:'target',host:'target.wd5.myworkdayjobs.com',site:'targetcareers',careerUrl:'https://target.wd5.myworkdayjobs.com/targetcareers',country:'IN'},
+  {id:'wd-bank-of-america-india',company:'Bank of America',provider:'workday',token:'ghr',host:'ghr.wd1.myworkdayjobs.com',site:'lateral-ba_continuum',careerUrl:'https://ghr.wd1.myworkdayjobs.com/lateral-ba_continuum',country:'IN'},
+  {id:'wd-walmart-india',company:'Walmart Global Tech',provider:'workday',token:'walmart',host:'walmart.wd5.myworkdayjobs.com',site:'WalmartExternalCareerSite',careerUrl:'https://walmart.wd5.myworkdayjobs.com/WalmartExternalCareerSite',country:'IN'}
 ];
 export const SOURCE_REGISTRY = SOURCES.map(s=>s.id+':'+s.provider+':'+s.token).join('|');
